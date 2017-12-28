@@ -1,0 +1,25 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+  <div class="container">
+    <form class="form-group">
+      <label>Name</label>
+      <input class="form-control" type="text" name="name" placeholder="Full Name">
+
+      <label>Email Address</label>
+      <input class="form-control" type="email" name="email" placeholder="johndoe@gmail.com">
+
+      <label>Username</label>
+      <input class="form-control" type="text" name="username" placeholder="j.doe">
+
+      <label>Password</label>
+      <input class="form-control" type="password" name="password" placeholder="verysecretpassword">
+
+      <label>Confirm Password</label>
+      <input class="form-control" type="password" name="confirmPassword" placeholder="verysecretpassword">
+    </form>
+
+  </div>
+
+{% endblock %}
