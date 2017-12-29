@@ -16,3 +16,7 @@ class RegisterForm(Form):
 	])
 	confirm = PasswordField('Confirm Password', 
 		[validators.EqualTo('password', message='Passwords do not match!')])
+
+class LoginForm(Form):
+	username = StringField('Username', [validators.DataRequired()])
+	password = PasswordField('Password', [validators.DataRequired()])

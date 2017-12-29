@@ -3,7 +3,7 @@ from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
 
-from iCitizenFlaskApp.forms import RegisterForm
+from iCitizenFlaskApp.forms import RegisterForm, LoginForm
 
 from iCitizenFlaskApp.dbconfig import db
 
@@ -36,9 +36,44 @@ def register():
 
 		return redirect( url_for('users.login'))
 
-
+	# Just render the template if it wasn't a POST request, or if the form failed to validate
 	return render_template('register.html', form=form)
 
 @mod.route('/login/', methods=['GET', 'POST'])
 def login():
-	return render_template('login.html')
+	form = LoginForm(request.form)
+
+	if request.method == 'POST' and form.validate():
+
+		username = form.username.data
+		entered_password = str(form.password.data)
+
+		query = {'username': username}
+		users = db['users']
+
+		user = users.find_one(query)
+		print(user)
+
+		if user is None or not sha256_crypt.verify(entered_password, user['password']):
+			flash('Invalid username or password', 'danger')
+		else:
+			session['logged_in'] = True
+			session['username'] = username
+
+			flash('You have successfully logged in!', 'success')
+			return redirect( url_for('index'))
+
+	# Just render the template if it wasn't a POST request, or if the form failed to validate
+	return render_template('login.html', form=form)
+
+@mod.route('/logout/', methods=['GET'])
+def logout():
+	session['logged_in'] = False
+	session['username'] = None
+
+	flash('You have successfully logged out!', 'success')
+	return redirect( url_for('index'))
+
+@mod.route('/dashboard/', methods=['GET'])
+def load_dashboard():
+	return render_template('dashboard.html')

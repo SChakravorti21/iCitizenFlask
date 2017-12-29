@@ -3,33 +3,31 @@
 {% block body %}
 
   {% from 'includes/_formhelpers.html' import render_field %}
-  
-  <div class="container">
-    <h1>Register</h1>
-    <form class="form-group" method="POST">
-      <div>
-        {{ render_field(form.name, class_='form-control')}}
-      </div>
-      <br>
-      <div>
-        {{ render_field(form.email, class_='form-control')}}
-      </div>
-      <br>
-      <div>
-        {{ render_field(form.username, class_='form-control')}}
-      </div>
-      <br>
-      <div>
-        {{ render_field(form.password, class_='form-control')}}
-      </div>
-      <br>
-      <div>
-        {{ render_field(form.confirm, class_='form-control')}}
-      </div>
-      <br>
-      <input type="submit" class="btn btn-primary" value="Register">
-    </form>
 
-  </div>
+  <h1>Register</h1>
+  <form class="form-group" method="POST">
+    <div>
+      {{ render_field(form.name, class_='form-control')}}
+    </div>
+    <br>
+    <div>
+      {{ render_field(form.email, class_='form-control')}}
+    </div>
+    <br>
+    <div>
+      {{ render_field(form.username, class_='form-control')}}
+    </div>
+    <br>
+    <div>
+      {{ render_field(form.password, class_='form-control')}}
+    </div>
+    <br>
+    <div>
+      {{ render_field(form.confirm, class_='form-control')}}
+    </div>
+    <br>
+    <input type="submit" class="btn btn-primary" value="Register">
+  </form>
+
 
 {% endblock %}
