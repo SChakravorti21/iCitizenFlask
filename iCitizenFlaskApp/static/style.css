@@ -1,8 +1,8 @@
 .navbar {
 	background-color: yellow;
-	margin-bottom: 2em;
+	margin-bottom: 1000px;
 }
 
-.form-group {
+.form-control {
 	background-color: green;
 }
