@@ -1,27 +1,34 @@
+import requests, json
+from congress import Congress as national
 from pygeocoder import Geocoder
 
 class Legislator(object):
 
+
     def __init__(self, level, firstName, lastName, state, chamber, id, party, district=None):
         self.level = level
-        self.firstName = firstName
-        self.lastName = lastName
+        self.first_name = firstName
+        self.last_name = lastName
         self.state = state
         self.chamber = chamber
         self.id = id
         self.party = party
+        self.district = district
 
     def print_info(self):
-        print(str(self.level) + "\n")
-        print(str(self.firstName) + "\n")
-        print(str(self.lastName) + "\n")
-        print(str(self.state) + "\n")
-        print(str(self.chamber) + "\n")
-        print(str(self.id) + "\n")
-        print(str(self.party) + "\n")
+        print("Name: {first_name} {last_name} ".format(first_name = self.first_name, last_name = self.last_name))
+        print("Chamber: {chamber}, State: {state}, Party: {party}".format(chamber = self.chamber, state = self.state, party = self.party))
+        if self.district is not None:
+            print("District: {}".format(self.district))
+
+        print('\n')
 
     @classmethod
     def get_national_legislators(cls, address, city, state, zipcode):
+        google_base = "https://www.googleapis.com/civicinfo/v2/"
+    
+        national_base = "https://api.propublica.org/congress/v1/"
+
         legislators = []
         fullAddress = address + ", " + city + ", " + state + " " + zipcode
         google_params = {"address": fullAddress, "includeOffices": True, "levels": "country", "roles": ["legislatorLowerBody","legislatorUpperBody"], "key": "AIzaSyBLns0lxH3J7iMYIMaWCUtOX5lwsKhdBd4"}
@@ -65,6 +72,8 @@ class Legislator(object):
 
     @classmethod
     def get_state_legislators(cls, address, city, state, zipcode):
+        state_base = "https://openstates.org/api/v1/"
+
         legislators = []
         fullAddress = address + ", " + city + ", " + state + " " + zipcode
         location =  Geocoder.geocode(fullAddress)
@@ -84,6 +93,5 @@ class Legislator(object):
             legislators.append(cls(level, first_name, last_name, state, chamber, id, party, district))
 
         return legislators
-
 
 
