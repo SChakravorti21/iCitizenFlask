@@ -41,6 +41,8 @@ class Bill(object):
                 billId = bill['bill_id']
                 govtrack_link = bill['govtrack_url']
 
+                
+
 
 
     
