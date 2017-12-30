@@ -94,4 +94,3 @@ class Legislator(object):
 
         return legislators
 
-

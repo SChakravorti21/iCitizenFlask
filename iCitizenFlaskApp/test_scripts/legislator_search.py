@@ -6,7 +6,7 @@ google_base = "https://www.googleapis.com/civicinfo/v2/"
 state_base = "https://openstates.org/api/v1/"
 national_base = "https://api.propublica.org/congress/v1/"
 
-def getLegislators(address, city, state, zipcode):
+def get_legislators(address, city, state, zipcode):
     fullAddress = address + ", " + city + ", " + state + " " + zipcode
     google_params = {"address": fullAddress, "includeOffices": True, "levels": "country", "roles": ["legislatorLowerBody","legislatorUpperBody"], "key": "AIzaSyBLns0lxH3J7iMYIMaWCUtOX5lwsKhdBd4"}
     google_response = requests.get(google_base+"representatives/", google_params)
