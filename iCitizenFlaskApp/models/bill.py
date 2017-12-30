@@ -1,5 +1,6 @@
 from iCitizenFlaskApp.models.legislator import Legislator
-from heapq import heappush, heappop
+import requests, json
+from heapq import heappush, heappop, heapify
 
 class Bill(object):
     def __init__(self, level, title, description, author, author_id, bill_id, govtrack_link, subjects=None, cosponsors=None):
@@ -7,7 +8,7 @@ class Bill(object):
         self.title = title
         self.description = description
         self.author = author,
-        self.author_id = authorId
+        self.author_id = author_id
         self.bill_id = bill_id
         self.govtrack_link = govtrack_link
         self.subjects = subjects
@@ -24,10 +25,13 @@ class Bill(object):
             print(str(self.level) + "\n")
 
     @classmethod
-    def get_national_bills(cls, legislators, subjects, party):
+    def get_national_bills(cls, legislators, subjects):
 
         bills = {}
         billPoints = {}
+
+        bill_heap = []
+        sorted_bills = []
 
         leg_ids = []
 
@@ -58,14 +62,15 @@ class Bill(object):
                         billPoints[bill_id] = 9
                     else:
                         billPoints[bill_id] = 4
-                    billPoints[bill_id] += bill['cosponsors']
+                    billPoints[bill_id] += (bill['cosponsors'] / 5)
                     created_bill = cls(level, title, description, author, author_id, bill_id, govtrack_link)
                     bills[bill_id] = created_bill
 
 
 
         for subject in subjects:
-            sub_bill_response = requests.get(national_base+"bills/subjects/{}.json".format(subject))
+            sub_bill_response = requests.get(national_base+"bills/subjects/{}.json".format(subject), headers=national_params)
+
             sub_bill_data = json.loads(sub_bill_response.text)['results']
 
             for bill in sub_bill_data:
@@ -86,10 +91,30 @@ class Bill(object):
                     billPoints[bill_id] += bill['cosponsors']
                     created_bill = cls(level, title, description, author, author_id, bill_id, govtrack_link)
                     bills[bill_id] = created_bill
-                    
+
+        count = 0
+
+        for bill_id in billPoints:
+            bill_heap.append((billPoints[bill_id] * -1, count, bills[bill_id]))
+            count = count + 1
+
+        heapify(bill_heap)
+
+        for bill in bill_heap:
+            popped = heappop(bill_heap)
+            sorted_bills.append(popped[1])
+
+        return sorted_bills
+
+    @classmethod
+    def get_state_bills(cls, legislators, subjects):
+        
+                         
                     
                 
                 
+
+
 
 
 
