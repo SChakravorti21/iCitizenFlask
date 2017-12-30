@@ -31,8 +31,21 @@
           <a class="nav-item nav-link" href="#">Bills</a>
         {% endif %}
       </div>
-      <div class="navbar-nav">
+      <div class="nav navbar-nav">
         {% if session.logged_in %}
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{session.username}}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/profile">Profile</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Saved Polls</a>
+              <a class="dropdown-item" href="#">Saved Events</a>
+              <a class="dropdown-item" href="#">Saved Bills</a>
+              <a class="dropdown-item" href="#">Saved Legislators</a>
+            </div>
+          </div>
           <a class="nav-item nav-link" href="/logout">Logout</a>
         {% else %}
           <a class="nav-item nav-link" href="/register">Register</a>
