@@ -88,7 +88,7 @@ class Bill(object):
                     billPoints[bill_id] += 4
                 else:
                     billPoints[bill_id] = 4
-                    billPoints[bill_id] += bill['cosponsors']
+                    billPoints[bill_id] += bill['cosponsors'] / 5
                     created_bill = cls(level, title, description, author, author_id, bill_id, govtrack_link)
                     bills[bill_id] = created_bill
 
