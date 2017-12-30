@@ -102,7 +102,7 @@ class Bill(object):
 
         for bill in bill_heap:
             popped = heappop(bill_heap)
-            sorted_bills.append(popped[1])
+            sorted_bills.append(popped[2])
 
         return sorted_bills
 
