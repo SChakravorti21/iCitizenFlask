@@ -28,10 +28,14 @@ class Bill(object):
 
         bills = {}
         billPoints = {}
+
+        leg_ids = []
+
         national_base = "https://api.propublica.org/congress/v1/"
         national_params = {"X-API-Key": "Fl38VvBXk8EFlAmEcG4N0Wq1hi6YPnyzi5YODT9k", "congress": "115"}
 
         for legislator in legislators:
+            leg_ids.append(legislator.id)
             rep_bill_response = requests.get(national_base+"members/{}/bills/updated.json".format(legislator.id), headers=national_params)
             rep_bill_data = json.loads(rep_bill_response.text)['results'][0]['bills']
 
@@ -46,18 +50,18 @@ class Bill(object):
 
                 if bill_id in billPoints:
                     if author_id == legislator.id:
+                        billPoints[bill_id] += 9
+                    else:
+                        billPoints[bill_id] += 4
+                else:
+                    if author_id == legislator.id:
                         billPoints[bill_id] = 9
                     else:
                         billPoints[bill_id] = 4
-                else:
-                    if author_id == legislator.id:
-                        billPoints[bill_id] += 9
-                    else:
-                        billPoints[bill_id] = 4
+                    billPoints[bill_id] += bill['cosponsors']
                     created_bill = cls(level, title, description, author, author_id, bill_id, govtrack_link)
                     bills[bill_id] = created_bill
 
-                billPoints[bill_id] += bill['cosponsors']
 
 
         for subject in subjects:
@@ -73,7 +77,17 @@ class Bill(object):
                 bill_id = bill['bill_id']
                 govtrack_link = bill['govtrack_url']
 
-                
+                if bill_id in billPoints:
+                    if author_id in leg_ids:
+                        billPoints[bill_id] += 9
+                    billPoints[bill_id] += 4
+                else:
+                    billPoints[bill_id] = 4
+                    billPoints[bill_id] += bill['cosponsors']
+                    created_bill = cls(level, title, description, author, author_id, bill_id, govtrack_link)
+                    bills[bill_id] = created_bill
+                    
+                    
                 
                 
 
