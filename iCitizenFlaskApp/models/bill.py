@@ -1,4 +1,4 @@
-#from iCitizenFlaskApp.models.legislator import Legislator
+from iCitizenFlaskApp.models.legislator import Legislator
 import requests, json
 from heapq import heappush, heappop, heapify
 
