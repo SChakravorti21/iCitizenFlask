@@ -6,6 +6,7 @@ app = Flask(__name__)
 def index():
 	return render_template('home.html')
 
-from iCitizenFlaskApp.views import user_routes
+from iCitizenFlaskApp.views import user_routes, user_functions
 
 app.register_blueprint(user_routes.mod)
+app.register_blueprint(user_functions.mod)

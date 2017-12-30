@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+	<div class="container" style="margin-top: 2em;">
+		<h1>Profile</h1>
+		<a href="/update-prefs/" class="btn btn-primary">Update Profile</a>
+		<hr>
+		<h3>Location</h3>
+		<div class="row">
+			<div class="col-sm-3">
+				<h6>Address</h6>
+				<p>{{user.location.address}}</p>	
+			</div>
+			<div class="col-sm-3">
+				<h6>City</h6>
+				<p>{{user.location.city}}</p>	
+			</div>
+			<div class="col-sm-3">
+				<h6>State</h6>
+				<p>{{user.location.state}}</p>	
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3">
+				<h6>Country</h6>
+				<p>{{user.location.country}}</p>	
+			</div>
+			<div class="col-sm-3">
+				<h6>Zipcode</h6>
+				<p>{{user.location.zipcode}}</p>	
+			</div>
+		</div>
+		<br>
+		<h3>Preferences</h3>
+		<div class="row">
+			<div class="col-sm-3">
+				<h6>Party</h6>
+				<p>{{user.preferences.party.title()}}</p>	
+			</div>
+			<div class="col-sm-6">
+				<h6>Subjects of interest</h6>
+				<div style="display: inline-flex;">
+					{% for topic in user.preferences.subjects %}
+						<p style="margin-right: 1em;">{{topic}}</p>	
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

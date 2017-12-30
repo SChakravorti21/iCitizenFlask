@@ -1,0 +1,73 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+  {% from 'includes/_formhelpers.html' import render_field %}
+
+    <div class="container">
+    <h1 style="margin-top: 1em;">Update Preferences</h1>
+    <br>
+    <form class="form-group" method="POST">
+      <div>
+        {{ form.political_party.label }}
+        {% for subfield in form.political_party %}
+          <div>
+            <td>{{ subfield }}</td>
+            <td>{{ subfield.label }}</td>
+          </div>
+        {% endfor %}
+        {% if form.political_party.errors %}
+          {% for error in form.political_party.errors %}
+            <span class="help-inline">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <br>
+      <div>
+        <div class="row">
+          <div class="col-sm-6">
+            {{ render_field(form.address, class_='form-control')}}
+          </div>
+          <div class="col-sm-6">
+            {{ render_field(form.city, class_='form-control')}}
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-sm-4">
+            {{ render_field(form.state, class_='form-control')}}
+          </div>
+          <div class="col-sm-4">
+            {{ render_field(form.country, class_='form-control')}}
+          </div>
+          <div class="col-sm-4">
+            {{ render_field(form.zipcode, class_='form-control')}}
+          </div>
+        </div>
+      </div>
+      <br>
+      <p>Topics of Interest</p>
+      <select id="subject-select" name="subjects" multiple="multiple">
+        {% for lower, subject in subjects %}
+          {% if lower in selected_subjects %}
+            <option selected value="{{lower}}">{{subject}}</option>
+          {% else %}
+            <option value="{{lower}}">{{subject}}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br>
+      <br>
+      <input type="submit" class="btn btn-success" value="Save">
+    </form>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('#subject-select').select2();
+    }); 
+  </script>
+{% endblock %}

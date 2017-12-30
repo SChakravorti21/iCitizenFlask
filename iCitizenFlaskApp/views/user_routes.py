@@ -5,7 +5,7 @@ from functools import wraps
 
 from iCitizenFlaskApp.forms import RegisterForm, LoginForm
 
-from iCitizenFlaskApp.dbconfig import db
+from iCitizenFlaskApp.dbconfig import db, QueryKeys
 
 mod = Blueprint('users', __name__)
 
@@ -24,10 +24,11 @@ def register():
 
 		users = db['users']
 		insert_id = users.insert_one({
-			'name': name,
-			'email': email,
-			'username': username,
-			'password': password
+			QueryKeys.NAME: name,
+			QueryKeys.EMAIL: email,
+			QueryKeys.USERNAME: username,
+			QueryKeys.PASSWORD: password,
+			QueryKeys.INPUTTED_PREFERENCES: False
 		}).inserted_id
 
 		print(str(insert_id))
@@ -58,7 +59,7 @@ def login():
 			flash('Invalid username or password', 'danger')
 		else:
 			session['logged_in'] = True
-			session['username'] = username
+			session[QueryKeys.USERNAME] = username
 
 			flash('You have successfully logged in!', 'success')
 			return redirect( url_for('index'))
@@ -69,11 +70,24 @@ def login():
 @mod.route('/logout/', methods=['GET'])
 def logout():
 	session['logged_in'] = False
-	session['username'] = None
+	session[QueryKeys.USERNAME] = None
 
 	flash('You have successfully logged out!', 'success')
 	return redirect( url_for('index'))
 
 @mod.route('/dashboard/', methods=['GET'])
 def load_dashboard():
+	# Check if preferences have been inputted
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	user = users.find_one(query)
+	print(user[QueryKeys.INPUTTED_PREFERENCES])
+	if not user[QueryKeys.INPUTTED_PREFERENCES]:
+		# Redirect to input those preferences
+		flash('''We noticed that your profile is incomplete. 
+				This information will be useful in helping us find relevant
+				information for you. We will never share any of this information externally.''', 'info')
+		return redirect( url_for('functions.update_preferences') )
+
 	return render_template('dashboard.html')

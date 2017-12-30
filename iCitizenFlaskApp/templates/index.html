@@ -6,6 +6,7 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"> -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
   <style type="text/css">
     .navbar {
       margin-bottom: 1em;
@@ -30,8 +31,21 @@
           <a class="nav-item nav-link" href="#">Bills</a>
         {% endif %}
       </div>
-      <div class="navbar-nav">
+      <div class="nav navbar-nav">
         {% if session.logged_in %}
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{session.username}}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/profile">Profile</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Saved Polls</a>
+              <a class="dropdown-item" href="#">Saved Events</a>
+              <a class="dropdown-item" href="#">Saved Bills</a>
+              <a class="dropdown-item" href="#">Saved Legislators</a>
+            </div>
+          </div>
           <a class="nav-item nav-link" href="/logout">Logout</a>
         {% else %}
           <a class="nav-item nav-link" href="/register">Register</a>
@@ -41,15 +55,17 @@
     </div>
   </nav>
 
-  <div class="container">
-    {% include 'includes/_messages.html' %}
 
-    {% block body %}
-    {% endblock %}  
-  </div>
+  {% include 'includes/_messages.html' %}
+
+  {% block body %}
+  {% endblock %}
 
 	<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  
+  {% block javascript %}
+  {% endblock %}
 </body>
 </html>

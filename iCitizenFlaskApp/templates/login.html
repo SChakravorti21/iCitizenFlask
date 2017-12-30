@@ -4,18 +4,20 @@
 
   {% from 'includes/_formhelpers.html' import render_field %}
 
-  <h1>Login</h1>
-  <form class="form-group" method="POST">
-    <div>
-      {{ render_field(form.username, class_='form-control')}}
-    </div>
-    <br>
-    <div>
-      {{ render_field(form.password, class_='form-control')}}
-    </div>
-    <br>
-    <input type="submit" class="btn btn-primary" value="Login">
-  </form>
+  <div class="container">
+    <h1>Login</h1>
+    <form class="form-group" method="POST">
+      <div>
+        {{ render_field(form.username, class_='form-control')}}
+      </div>
+      <br>
+      <div>
+        {{ render_field(form.password, class_='form-control')}}
+      </div>
+      <br>
+      <input type="submit" class="btn btn-primary" value="Login">
+    </form>
+  </div>
 
 
 {% endblock %}
