@@ -2,13 +2,13 @@ from iCitizenFlaskApp.models.legislator import Legislator
 from heapq import heappush, heappop
 
 class Bill(object):
-    def __init__(self, level, title, description, author, authorId, billId, govtrack_link, subjects=None, cosponsors=None):
+    def __init__(self, level, title, description, author, author_id, bill_id, govtrack_link, subjects=None, cosponsors=None):
         self.level = level
         self.title = title
         self.description = description
         self.author = author,
-        self.authorId = authorId
-        self.billId = billId
+        self.author_id = authorId
+        self.bill_id = bill_id
         self.govtrack_link = govtrack_link
         self.subjects = subjects
         self.cosponsors = cosponsors
@@ -26,22 +26,60 @@ class Bill(object):
     @classmethod
     def get_national_bills(cls, legislators, subjects, party):
 
+        bills = {}
+        billPoints = {}
         national_base = "https://api.propublica.org/congress/v1/"
         national_params = {"X-API-Key": "Fl38VvBXk8EFlAmEcG4N0Wq1hi6YPnyzi5YODT9k", "congress": "115"}
 
         for legislator in legislators:
             rep_bill_response = requests.get(national_base+"members/{}/bills/updated.json".format(legislator.id), headers=national_params)
             rep_bill_data = json.loads(rep_bill_response.text)['results'][0]['bills']
+
             for bill in rep_bill_data:
                 level = "national"
                 title = bill['short_title']
                 description = bill['title']
                 author = bill['sponsor_name']
-                authorId = bill['sponsor_id']
-                billId = bill['bill_id']
+                author_id = bill['sponsor_id']
+                bill_id = bill['bill_id']
+                govtrack_link = bill['govtrack_url']
+
+                if bill_id in billPoints:
+                    if author_id == legislator.id:
+                        billPoints[bill_id] = 9
+                    else:
+                        billPoints[bill_id] = 4
+                else:
+                    if author_id == legislator.id:
+                        billPoints[bill_id] += 9
+                    else:
+                        billPoints[bill_id] = 4
+                    created_bill = cls(level, title, description, author, author_id, bill_id, govtrack_link)
+                    bills[bill_id] = created_bill
+
+                billPoints[bill_id] += bill['cosponsors']
+
+
+        for subject in subjects:
+            sub_bill_response = requests.get(national_base+"bills/subjects/{}.json".format(subject))
+            sub_bill_data = json.loads(sub_bill_response.text)['results']
+
+            for bill in sub_bill_data:
+                level = "national"
+                title = bill['short_title']
+                description = bill['title']
+                author = bill['sponsor_name']
+                author_id = bill['sponsor_id']
+                bill_id = bill['bill_id']
                 govtrack_link = bill['govtrack_url']
 
                 
+                
+                
+
+
+
+
 
 
 
