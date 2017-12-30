@@ -93,4 +93,3 @@ class Legislator(object):
             legislators.append(cls(level, first_name, last_name, state, chamber, id, party, district))
 
         return legislators
-

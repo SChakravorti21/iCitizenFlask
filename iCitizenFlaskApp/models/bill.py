@@ -1,4 +1,4 @@
-from legislator import Legislator
+from iCitizenFlaskApp.models.legislator import Legislator
 from heapq import heappush, heappop
 
 class Bill(object):
