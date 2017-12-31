@@ -12,6 +12,18 @@ from iCitizenFlaskApp.models.bill import Bill
 
 mod = Blueprint('users', __name__)
 
+# Check if user logged in
+def is_logged_in(f):
+	@wraps(f)
+	def wrap(*args, **kwargs):
+		print("logged_in in session: {}".format('logged_in' in session))
+		if 'logged_in' in session and session['logged_in'] is not False:
+			return f(*args, **kwargs)
+		else:
+			flash('Unauthorized, please login', 'danger')
+			return redirect(url_for('users.login'))
+	return wrap
+
 @mod.route('/register/', methods=['GET', 'POST'])
 def register():
 	form = RegisterForm(request.form)
@@ -71,14 +83,17 @@ def login():
 	return render_template('login.html', form=form)
 
 @mod.route('/logout/', methods=['GET'])
+@is_logged_in
 def logout():
 	session['logged_in'] = False
 	session[QueryKeys.USERNAME] = None
+	session.clear()
 
 	flash('You have successfully logged out!', 'success')
 	return redirect( url_for('index'))
 
 @mod.route('/dashboard/', methods=['GET'])
+@is_logged_in
 def load_dashboard():
 	# Check if preferences have been inputted
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
@@ -96,6 +111,7 @@ def load_dashboard():
 	return render_template('dashboard.html')
 
 @mod.route('/update_db/', methods=['POST'])
+@is_logged_in
 def update_dashboard():
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
