@@ -65,7 +65,7 @@ class Legislator(object):
             id = senator['id']
             party = senator['party']
             photo_url = "https://theunitedstates.io/images/congress/original/{}.jpg".format(id)
-            legislators.append(cls(level, first_name, last_name, state, chamber, id, party, photo_url=photo_url)
+            legislators.append(cls(level, first_name, last_name, state, chamber, id, party, photo_url=photo_url))
 
 
         national_house_response = requests.get(national_base+"members/house/{}/{}/current.json".format(state, districtId), headers=national_params)
