@@ -7,6 +7,9 @@ from iCitizenFlaskApp.forms import RegisterForm, LoginForm
 
 from iCitizenFlaskApp.dbconfig import db, QueryKeys
 
+from iCitizenFlaskApp.models.legislator import Legislator
+from iCitizenFlaskApp.models.bill import Bill
+
 mod = Blueprint('users', __name__)
 
 @mod.route('/register/', methods=['GET', 'POST'])
@@ -93,5 +96,10 @@ def load_dashboard():
 	return render_template('dashboard.html')
 
 @mod.route('/dashboard/', methods=['POST'])
-def get_legislators():
-	return "Hello"
+def update_dashboard():
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	user = users.find_one(query)
+
+	return user[QueryKeys.LOCATION][QueryKeys.ADDRESS]

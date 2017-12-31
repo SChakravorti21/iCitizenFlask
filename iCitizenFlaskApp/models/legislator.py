@@ -32,7 +32,7 @@ class Legislator(object):
             "chamber": self.chamber,
             "id": self.id,
             "party": self.party,
-            "photo_url": self.photo_url
+            "photo_url": self.photo_url,
             "district": self.district
         }
 
