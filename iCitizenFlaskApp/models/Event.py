@@ -1,3 +1,4 @@
+
 import urllib.request as u
 from bs4 import BeautifulSoup
 
@@ -6,28 +7,32 @@ from textblob import TextBlob
 from textblob.wordnet import Synset
 from nltk.stem import PorterStemmer
 from nltk.tokenize import sent_tokenize, word_tokenize
-from scrapeEvents import scrape
 import time
 
 class Event:
 
-	def __init__(self, title, link, time, location, price):
+	def __init__(self, title, link, time, location, price, img_link, pts = 0):
 		self.title = title
 		self.link = link
 		self.time = time
 		self.location = location
 		self.price = price
+		self.img_link = img_link
+		self.pts = pts
 
 	def printInfo(self):
+		print('NUM POINTS = ', self.pts)
 		print('title : ', self.title)
 		print('link for more info : ', self.link)
 		print('date of event : ', self.time)
 		print('location of event: ', self.location)
 		print('price : ', self.price)
+		print('img link : ', self.img_link)
 
-	@classmethod
+
 	#param = state, city, max page num, list of subject prefs
 	#returns list of all events
+	@classmethod
 	def scrape(cls, state = 'ny', city = 'new york', max_pg_num = 1):
 
 
@@ -66,7 +71,7 @@ class Event:
 			for n in range(numEvents):
 				event_list.append(
 					cls(
-						title_boxes[n].text.strip(), 
+						title_boxes[n].text.strip().lower(), 
 						link_boxes[n]['href'], 
 						time_boxes[n].text.strip(), 
 						loc_boxes[n].text.strip(),
@@ -79,28 +84,18 @@ class Event:
 		return event_list
 
 
+	#retusn sorted list of events
 	@classmethod
-	def get_sorted_events(cls, state = 'ny', city = 'new york', pref_subjs = ['Education', 'Science'], num_pages = 3)
+	def get_sorted_events(cls, state, city, pref_subjs, num_pages):
+		
 		start_time = time.time()
 
-
-		'''plan:
-
-		for each event in event_list
-			for each word in title:
-				for each subj in pref_subjs:
-					for each word in subj:
-
-						find synonymsets of subj_word and each noun
-						find max of path similarity between subj and noun
-						sum that to total points per event
-			
-			average the num points per event
-		'''
-		event_list = scrape(state = state, city = city, max_pg_num = num_pages)
-		print('took ', time.time() - start_time, 'secs to get ', n, ' pages of events')
+		event_list = Event.scrape(state = state, city = city, max_pg_num = num_pages)
+		print('took ', time.time() - start_time, 'secs to get ', num_pages, ' pages of events')
 
 
+		for i in range(len(pref_subjs)):
+			pref_subjs[i] = pref_subjs[i].lower()
 		#goes through every combination of words in the event title and the pref subjects words
 		#finds the list of synonyms for each combination
 		#finds the max path similarity value in this list of synonyms
@@ -132,6 +127,10 @@ class Event:
 				nouns = noun_phrase.split(' ')
 				#noun is each indiv noun in the title
 				for noun in nouns:
+
+					if noun == 'and':
+						continue
+
 					for subj in pref_subjs:
 						#subj_word is each indiv subj word in pref subjs
 						subj_words = subj.split(' ')
@@ -146,6 +145,7 @@ class Event:
 
 							for i in range(len(noun_syns)):
 								for j in range(len(subj_syns)):
+
 									pathsim = noun_syns[i].path_similarity(subj_syns[j])
 									if pathsim != None:
 										if pathsim > currMax:
@@ -168,10 +168,45 @@ class Event:
 		return event_list
 
 
+	@classmethod
+	def get_top_n_events(cls, state, city, pref_subjs, num_pages, num_events):
+
+		sorted_events = Event.get_sorted_events(state = state, city = city, pref_subjs = pref_subjs, num_pages = num_pages)
+
+		top_n = []
+
+		if num_events <= len(sorted_events):
+			for i in range(num_events):
+				top_n.append(sorted_events[i])
+
+		else:
+			top_n = sorted_events
+
+			for i in range(0, len(sorted_events) - num_events):
+				top_n.pop(-1)
+
+		return top_n
 
 
 
+pref_subjs = ['college', 'education', 'art']
+event_l = Event.get_top_n_events(state = 'nj', city = 'edison', pref_subjs = pref_subjs, num_pages = 5, num_events = 10)
+for e in event_l:
+	print(e.title)
+	print('						'e.pts)
 
 
+'''plan:
 
+for each event in event_list
+	for each word in title:
+		for each subj in pref_subjs:
+			for each word in subj:
+
+				find synonymsets of subj_word and each noun
+				find max of path similarity between subj and noun
+				sum that to total points per event
+	
+	average the num points per event
+'''
 
