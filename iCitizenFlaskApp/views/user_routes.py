@@ -111,6 +111,42 @@ def load_dashboard():
 
 	return render_template('dashboard.html', db_client=user)
 
+@mod.route('/events/', methods=['GET'])
+@is_logged_in
+def load_events():
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	user = users.find_one(query)
+	return render_template('events.html', db_client=user)
+
+@mod.route('/polls/', methods=['GET'])
+@is_logged_in
+def load_polls():
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	user = users.find_one(query)
+	return render_template('events.html', db_client=user)
+
+@mod.route('/legislators/', methods=['GET'])
+@is_logged_in
+def load_legislators():
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	user = users.find_one(query)
+	return render_template('events.html', db_client=user)
+
+@mod.route('/bills/', methods=['GET'])
+@is_logged_in
+def load_bills():
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	user = users.find_one(query)
+	return render_template('events.html', db_client=user)
+
 @mod.route('/update_db/', methods=['POST'])
 @is_logged_in
 def update_db():
@@ -118,14 +154,17 @@ def update_db():
 	users = db['users']
 
 	user = users.find_one(query)
-
+	if 'national_legislators' not in user:
+    		set_legislators()
+	user = users.find_one(query)
+	
 	national_legislators = [Legislator(**kwargs) for kwargs in user['national_legislators']]
 	state_legislators = [Legislator(**kwargs) for kwargs in user['state_legislators']]
 
 	subjects = [subject for subject in user[QueryKeys.PREFERENCES]['subjects']]
 
 	national_bills = Bill.get_national_bills(national_legislators, subjects)
-	state_bills = Bill.get_state_bills(state_legislators, ["Crime", "Health"], state)
+	state_bills = Bill.get_state_bills(state_legislators, ["Crime", "Health"], user['location']['state'])
 
 	user_national_bills = db["{}_national_bills".format(session[QueryKeys.USERNAME])]
 	user_state_bills = db["{}_state_bills".format(session[QueryKeys.USERNAME])]
@@ -136,12 +175,11 @@ def update_db():
 	for bill in state_bills:
     		user_state_bills.insert(bill.json())
 
-	user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : True}})
+	user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False}})
 
 
 	return "Test wrote to DB"
 
-@mod.route('/set_legislators/', methods=['POST'])
 def set_legislators():
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']

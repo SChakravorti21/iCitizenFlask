@@ -1,0 +1,9 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+{% if db_client['update_db'] == False %}
+    <h1>Data has been written to DB</h1>
+{% endif %}
+
+{% endblock %}

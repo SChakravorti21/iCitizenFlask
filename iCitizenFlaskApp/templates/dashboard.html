@@ -16,7 +16,7 @@
 
 {% block javascript %}
 
-{% if db_client['update_db'] %}
+{% if db_client['update_db'] == True %}
 
   <script>
     $.ajax({
