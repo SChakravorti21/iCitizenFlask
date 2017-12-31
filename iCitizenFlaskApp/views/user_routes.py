@@ -43,7 +43,8 @@ def register():
 			QueryKeys.EMAIL: email,
 			QueryKeys.USERNAME: username,
 			QueryKeys.PASSWORD: password,
-			QueryKeys.INPUTTED_PREFERENCES: False
+			QueryKeys.INPUTTED_PREFERENCES: False,
+			QueryKeys.UPDATE_DB: True
 		}).inserted_id
 
 		print(str(insert_id))
@@ -108,11 +109,40 @@ def load_dashboard():
 				information for you. We will never share any of this information externally.''', 'info')
 		return redirect( url_for('functions.update_preferences') )
 
-	return render_template('dashboard.html')
+	return render_template('dashboard.html', db_client=user)
 
 @mod.route('/update_db/', methods=['POST'])
 @is_logged_in
-def update_dashboard():
+def update_db():
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	user = users.find_one(query)
+
+	national_legislators = [Legislator(**kwargs) for kwargs in user['national_legislators']]
+	state_legislators = [Legislator(**kwargs) for kwargs in user['state_legislators']]
+
+	subjects = [subject for subject in user[QueryKeys.PREFERENCES]['subjects']]
+
+	national_bills = Bill.get_national_bills(national_legislators, subjects)
+	state_bills = Bill.get_state_bills(state_legislators, ["Crime", "Health"], state)
+
+	user_national_bills = db["{}_national_bills".format(session[QueryKeys.USERNAME])]
+	user_state_bills = db["{}_state_bills".format(session[QueryKeys.USERNAME])]
+
+	for bill in national_bills:
+    		user_national_bills.insert(bill.json())
+
+	for bill in state_bills:
+    		user_state_bills.insert(bill.json())
+
+	user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : True}})
+
+
+	return "Test wrote to DB"
+
+@mod.route('/set_legislators/', methods=['POST'])
+def set_legislators():
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
 
@@ -129,11 +159,9 @@ def update_dashboard():
 	national_legislators = Legislator.get_national_legislators(address, city, state, zipcode)
 	state_legislators = Legislator.get_state_legislators(address, city, state, zipcode, latitude, longitude)
 
-	subjects = [subject for subject in user[QueryKeys.PREFERENCES]['subjects']]
+	national_legislators_jsons = [bill.json() for bill in national_legislators]
+	state_legislators_jsons = [bill.json() for bill in state_legislators]
 
-	national_bills = Bill.get_national_bills(national_legislators, subjects)
-	state_bills = Bill.get_state_bills(state_legislators, ["Crime", "Health"], state)
+	users.find_one_and_update(query, {'$set': {'national_legislators': national_legislators_jsons}})
 
-	user_bills = db["{}_bills".format(session[QueryKeys.USERNAME])]
-
-	return "Test is Done"
+	users.find_one_and_update(query, {'$set': {'state_legislators' : state_legislators_jsons}})

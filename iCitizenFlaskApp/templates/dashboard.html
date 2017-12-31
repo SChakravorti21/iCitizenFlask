@@ -16,14 +16,24 @@
 
 {% block javascript %}
 
-<script>
-  $.ajax({
-    url: "/update_db/",
-    type: "post",
-    success: function(response){
-      $('#test').html(response)
-    }
-  })
-</script>
+{% if db_client['update_db'] %}
+
+  <script>
+    $.ajax({
+      url: "/update_db/",
+      type: "post",
+      success: function(response){
+        $('#test').html(response)
+      }
+    })
+  </script>
+
+{% else %}
+
+  <script>
+    $("#test").html("Test Succeeded For Real")
+  </script>
+
+{% endif %}
 
 {% endblock %}

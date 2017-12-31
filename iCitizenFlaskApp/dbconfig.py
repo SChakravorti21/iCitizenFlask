@@ -26,3 +26,5 @@ class QueryKeys:
 	LATLONG = 'latitude_longitude'
 	LATITUDE = 'latitude'
 	LONGITUDE = 'longitude'
+
+	UPDATE_DB = 'update_db'
