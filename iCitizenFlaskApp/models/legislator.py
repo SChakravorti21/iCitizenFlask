@@ -4,8 +4,7 @@ from pygeocoder import Geocoder
 
 class Legislator(object):
 
-
-    def __init__(self, level, firstName, lastName, state, chamber, id, party, district=None):
+    def __init__(self, level, firstName, lastName, state, chamber, id, party, photo_url = None, district=None):
         self.level = level
         self.first_name = firstName
         self.last_name = lastName
@@ -13,6 +12,7 @@ class Legislator(object):
         self.chamber = chamber
         self.id = id
         self.party = party
+        self.photo_url = photo_url
         self.district = district
 
     def print_info(self):
@@ -22,6 +22,19 @@ class Legislator(object):
             print("District: {}".format(self.district))
 
         print('\n')
+
+    def json(self):
+        return {
+            "level": self.level,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "state": self.state,
+            "chamber": self.chamber,
+            "id": self.id,
+            "party": self.party,
+            "photo_url": self.photo_url
+            "district": self.district
+        }
 
     @classmethod
     def get_national_legislators(cls, address, city, state, zipcode):
@@ -51,7 +64,8 @@ class Legislator(object):
             chamber = "Senate"
             id = senator['id']
             party = senator['party']
-            legislators.append(cls(level, first_name, last_name, state, chamber, id, party))
+            photo_url = "https://theunitedstates.io/images/congress/original/{}.jpg".format(id)
+            legislators.append(cls(level, first_name, last_name, state, chamber, id, party, photo_url=photo_url)
 
 
         national_house_response = requests.get(national_base+"members/house/{}/{}/current.json".format(state, districtId), headers=national_params)
@@ -66,7 +80,8 @@ class Legislator(object):
             chamber = "House"
             id = rep['id']
             party = rep['party']
-            legislators.append(cls(level, first_name, last_name, state, chamber, id, party, districtId))
+            photo_url = "https://theunitedstates.io/images/congress/original/{}.jpg".format(id)
+            legislators.append(cls(level, first_name, last_name, state, chamber, id, party, photo_url=photo_url, district=districtId))
 
         return legislators
 
@@ -90,6 +105,7 @@ class Legislator(object):
             id = rep['id']
             party = rep['party']
             district = rep['district']
-            legislators.append(cls(level, first_name, last_name, state, chamber, id, party, district))
+            photo_url = rep['photo_url']
+            legislators.append(cls(level, first_name, last_name, state, chamber, id, party, district, photo_url))
 
         return legislators
