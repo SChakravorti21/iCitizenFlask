@@ -12,12 +12,26 @@ class Bill(object):
         self.bill_id = bill_id
         self.id = id
         self.govtrack_link = govtrack_link
+        self.url = url
 
     def printBill(self):
         print(str(self.level) + "\n")
         print(str(self.title) + "\n")
         print(str(self.description) + "\n")
         print(str(self.author) + "\n")
+
+    def json(self):
+        return {
+            "level": self.level,
+            "title": sef.title,
+            "description": self.description,
+            "author": self.author,
+            "author_id": self.author_id,
+            "bill_id": self.bill_id,
+            "id": self.id,
+            "govtrack_link": self.govtrack_link,
+            "url": self.url
+        }
 
     @classmethod
     def get_national_bills(cls, legislators, subjects):
@@ -44,7 +58,8 @@ class Bill(object):
                 description = bill['title']
                 author = bill['sponsor_name']
                 author_id = bill['sponsor_id']
-                bill_id = bill['bill_id']
+                id = bill['bill_id']
+                bill_id = id
                 govtrack_link = bill['govtrack_url']
 
                 if bill_id in billPoints:
@@ -58,7 +73,7 @@ class Bill(object):
                     else:
                         billPoints[bill_id] = 4
                     billPoints[bill_id] += (bill['cosponsors'] / 5)
-                    created_bill = cls(level, title, description, author, author_id, bill_id, govtrack_link = govtrack_link)
+                    created_bill = cls(level, title, description, author, author_id, bill_id, id, govtrack_link = govtrack_link)
                     bills[bill_id] = created_bill
 
 
@@ -75,6 +90,7 @@ class Bill(object):
                 author = bill['sponsor_name']
                 author_id = bill['sponsor_id']
                 bill_id = bill['bill_id']
+                id = bill_id
                 govtrack_link = bill['govtrack_url']
 
                 if bill_id in billPoints:

@@ -32,8 +32,9 @@ class Legislator(object):
             "chamber": self.chamber,
             "id": self.id,
             "party": self.party,
+            "photo_url": self.photo_url
             "district": self.district
-            }
+        }
 
     @classmethod
     def get_national_legislators(cls, address, city, state, zipcode):
