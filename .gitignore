@@ -1,5 +1,5 @@
 .vscode
-iCitizenFlaskApp/__pycache__
-iCitizenFlaskApp/views/__pycache__
-iCitizenFlaskApp/models/__pycache__
-iCitizenFlaskApp/static/__pycache__
+/iCitizenFlaskApp/__pycache__
+/iCitizenFlaskApp/views/__pycache__
+/iCitizenFlaskApp/models/__pycache__
+/iCitizenFlaskApp/static/__pycache__
