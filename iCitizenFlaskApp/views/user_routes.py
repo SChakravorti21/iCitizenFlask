@@ -136,6 +136,4 @@ def update_dashboard():
 
 	user_bills = db["{}_bills".format(session[QueryKeys.USERNAME])]
 
-	
-
 	return "Done"
