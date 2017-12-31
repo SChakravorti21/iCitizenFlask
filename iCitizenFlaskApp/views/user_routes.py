@@ -107,10 +107,19 @@ def update_dashboard():
 	city = location[QueryKeys.CITY]
 	state = location[QueryKeys.STATE]
 	zipcode = location[QueryKeys.ZIPCODE]
-	#latitude = location[QueryKeys.LATITUDE]
-	#longitude = location[QueryKeys.LONGITUDE]
+	latitude = location[QueryKeys.LATLONG][QueryKeys.LATITUDE]
+	longitude = location[QueryKeys.LATLONG][QueryKeys.LONGITUDE]
 
 	national_legislators = Legislator.get_national_legislators(address, city, state, zipcode)
-	state_legislators = Legislator.get_state_legislators(address, city, state, zipcode)
+	state_legislators = Legislator.get_state_legislators(address, city, state, zipcode, latitude, longitude)
+
+	subjects = [subject for subject in user[QueryKeys.PREFERENCES]['subjects']]
+
+	national_bills = Bill.get_national_bills(national_legislators, subjects)
+	state_bills = Bill.get_state_bills(state_legislators, ["Crime", "Health"], state)
+
+	user_bills = db["{}_bills".format(session[QueryKeys.USERNAME])]
+
+	
 
 	return "Done"

@@ -100,7 +100,7 @@ class Bill(object):
                 else:
                     billPoints[bill_id] = 4
                     billPoints[bill_id] += bill['cosponsors'] / 5
-                    created_bill = cls(level, title, description, author, author_id, bill_id, govtrack_link = govtrack_link)
+                    created_bill = cls(level, title, description, author, author_id, bill_id, id, govtrack_link = govtrack_link)
                     bills[bill_id] = created_bill
 
         count = 0
@@ -185,7 +185,7 @@ class Bill(object):
                     else:
                         billPoints[bill_id] = 4
                     
-                    billPoints[bill_id] += (sponsor_num[bill_id] / 5)
+                    billPoints[bill_id] += sponsor_num[bill_id]
                     created_bill = cls(level, title, description, author, author_id, bill_id, id, url = url)
                     bills[bill_id] = created_bill
 
@@ -212,7 +212,8 @@ class Bill(object):
 
             for version in state_bill_version:
                 id = version['id']
-                bill_urls[id] = version['versions'][0]['url']
+                if len(version['versions']) > 0:
+                    bill_urls[id] = version['versions'][0]['url']
 
             for sponsor in state_bill_sponsor_data:
                 id = sponsor['id']
@@ -240,7 +241,7 @@ class Bill(object):
                     billPoints[bill_id] += 4
                 else:
                     billPoints[bill_id] = 4
-                    billPoints[bill_id] += sponsor_num[bill_id] / 5
+                    billPoints[bill_id] += sponsor_num[bill_id]
                     created_bill = cls(level, title, description, author, author_id, bill_id, id, url = url)
                     bills[bill_id] = created_bill
                          
