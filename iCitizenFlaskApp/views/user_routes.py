@@ -95,11 +95,22 @@ def load_dashboard():
 
 	return render_template('dashboard.html')
 
-@mod.route('/dashboard/', methods=['POST'])
+@mod.route('/update_db/', methods=['POST'])
 def update_dashboard():
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
 
 	user = users.find_one(query)
+	location = user[QueryKeys.LOCATION]
 
-	return user[QueryKeys.LOCATION][QueryKeys.ADDRESS]
+	address = location[QueryKeys.ADDRESS]
+	city = location[QueryKeys.CITY]
+	state = location[QueryKeys.STATE]
+	zipcode = location[QueryKeys.ZIPCODE]
+	#latitude = location[QueryKeys.LATITUDE]
+	#longitude = location[QueryKeys.LONGITUDE]
+
+	national_legislators = Legislator.get_national_legislators(address, city, state, zipcode)
+	state_legislators = Legislator.get_state_legislators(address, city, state, zipcode)
+
+	return "Done"

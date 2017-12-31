@@ -91,8 +91,11 @@ class Legislator(object):
 
         legislators = []
         fullAddress = address + ", " + city + ", " + state + " " + zipcode
-        location =  Geocoder.geocode(fullAddress)
-        state_params = {"lat":location.latitude, "long":location.longitude, "apikey": "70e23970-e0b4-409b-a7d2-3e34f6b88905"}
+        if latitude is None:
+            location = Geocoder.geocode(fullAddress)
+            latitude = location.latitude
+            longitude = location.longitude
+        state_params = {"lat": latitude, "long": longitude, "apikey": "70e23970-e0b4-409b-a7d2-3e34f6b88905"}
 
         state_legislative_response = requests.get(state_base+"legislators/geo/", state_params)
         state_legislative_data = json.loads(state_legislative_response.text)
