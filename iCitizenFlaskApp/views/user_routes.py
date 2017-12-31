@@ -62,7 +62,7 @@ def login():
 			session[QueryKeys.USERNAME] = username
 
 			flash('You have successfully logged in!', 'success')
-			return redirect( url_for('index'))
+			return redirect( url_for('users.load_dashboard'))
 
 	# Just render the template if it wasn't a POST request, or if the form failed to validate
 	return render_template('login.html', form=form)
