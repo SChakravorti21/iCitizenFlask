@@ -86,7 +86,7 @@ class Legislator(object):
         return legislators
 
     @classmethod
-    def get_state_legislators(cls, address, city, state, zipcode):
+    def get_state_legislators(cls, address, city, state, zipcode, latitude=None, longitude=None):
         state_base = "https://openstates.org/api/v1/"
 
         legislators = []
