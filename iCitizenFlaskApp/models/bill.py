@@ -258,11 +258,7 @@ class Bill(object):
             sorted_bills.append(popped[2])
             print(popped[2].id + ": " + str(popped[0]))
 
-        return sorted_bills        
-
-
-
-
+        return sorted_bills
 
     
 

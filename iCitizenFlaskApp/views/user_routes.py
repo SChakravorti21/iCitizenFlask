@@ -91,3 +91,7 @@ def load_dashboard():
 		return redirect( url_for('functions.update_preferences') )
 
 	return render_template('dashboard.html')
+
+@mod.route('/dashboard/', methods=['POST'])
+def get_legislators():
+	return "Hello"
