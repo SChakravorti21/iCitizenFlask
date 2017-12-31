@@ -23,3 +23,6 @@ class QueryKeys:
 	ZIPCODE = 'zipcode'
 	PARTY = 'party'
 	TOPICS = 'subjects'
+	LATLONG = 'latitude_longitude'
+	LATITUDE = 'latitude'
+	LONGITUDE = 'longitude'

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, session, request, logging
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
+from pygeocoder import Geocoder
 
 from iCitizenFlaskApp.forms import PreferencesForm
 from iCitizenFlaskApp.dbconfig import db, QueryKeys
@@ -55,6 +56,7 @@ def update_preferences():
 			state = form.state.data
 			country = form.country.data
 			zipcode = form.zipcode.data
+			location = Geocoder.geocode("{}, {}, {}, {}, {}".format(address, city, state, country, zipcode))
 
 			address_obj = {
 				QueryKeys.ADDRESS: address,
@@ -62,6 +64,10 @@ def update_preferences():
 				QueryKeys.STATE: state,
 				QueryKeys.COUNTRY: country,
 				QueryKeys.ZIPCODE: zipcode,
+				QueryKeys.LATLONG: {
+					QueryKeys.LATITUDE: location.latitude,
+					QueryKeys.LONGITUDE: location.longitude
+				}
 			}
 
 			preferences_obj = {
