@@ -6,11 +6,12 @@ from pygeocoder import Geocoder
 from iCitizenFlaskApp.forms import PreferencesForm
 from iCitizenFlaskApp.dbconfig import db, QueryKeys
 from iCitizenFlaskApp.data import SUBJECTS
+from iCitizenFlaskApp.views.user_routes import is_logged_in
 
 mod = Blueprint('functions', __name__)
 
-
 @mod.route('/profile/', methods=['GET'])
+@is_logged_in
 def show_profile():
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
@@ -20,6 +21,7 @@ def show_profile():
 
 
 @mod.route('/update-prefs/', methods=['GET', 'POST'])
+@is_logged_in
 def update_preferences():
 	form = PreferencesForm(request.form)
 	topics = []
@@ -30,6 +32,7 @@ def update_preferences():
 	users = db['users']
 	user = users.find_one(query)
 
+	print(QueryKeys.INPUTTED_PREFERENCES)
 	if user[QueryKeys.INPUTTED_PREFERENCES]:
 		location = user[QueryKeys.LOCATION]
 
