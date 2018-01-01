@@ -1,4 +1,3 @@
-
 import urllib.request as u
 from bs4 import BeautifulSoup
 

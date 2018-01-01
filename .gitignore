@@ -1,4 +1,5 @@
 .vscode
+.idea
 /iCitizenFlaskApp/__pycache__
 /iCitizenFlaskApp/views/__pycache__
 /iCitizenFlaskApp/models/__pycache__
