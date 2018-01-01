@@ -1,12 +1,13 @@
 {% extends 'index.html' %}
 
 {% block body %}
+
+{% if db_client['update_db'] == False %}
+    <div>Data has been written to DB</div>
+{% endif %}
+
   <h1 style="text-align:center;">Relevant Events</h1>
   <hr style="color:black;">
-  <!-- replace first false with db _   client   ['update_db']-->
-  <!-- {% if False == False %}
-      <h1>Data has been written to DB</h1>
-  {% endif %} -->
 
   <div class="row">
 
@@ -22,6 +23,19 @@
           <ul class="list-group list-group-flush">
             <li class="list-group-item">{{ event.time }}</li>
             <li class="list-group-item">{{ event.price }}</li>
+            <li class="list-group-item">Relevance Score: {{ event.pts }}</li>
+
+
+            <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
+
+            <label for="id-of-input" class="custom-checkbox label_event">
+              <input type="checkbox" id="id-of-input"/>
+              <i class="glyphicon glyphicon-star-empty"></i>
+              <i class="glyphicon glyphicon-star"></i>
+              <span>Favorite</span>
+            </label>
+
+
           </ul>
           <div class="card-block">
             <a href= {{ event.link }} target="_blank" class="card-link">More Info</a>

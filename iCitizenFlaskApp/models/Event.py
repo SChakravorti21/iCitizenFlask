@@ -126,7 +126,20 @@ class Event:
 
 					for subj in pref_subjs:
 						#subj_word is each indiv subj word in pref subjs
-						subj_words = subj.split(' ')
+						subj_words = []
+
+						nouns_phrases = []
+						curr_sub = ''
+
+						for c in subj:
+							if c == (',' or '\'' or ':' or '-' or '?' or '!' or '&' or '+' or '#' or '@'):
+								continue
+							elif c == ' ' and curr_sub != '':
+								subj_words.append(curr_sub)
+								curr_sub = ''
+							else:
+								curr_sub += c
+
 						for subj_word in subj_words:
 
 							currMax = 0
@@ -151,6 +164,17 @@ class Event:
 			if(ctr != 0):
 				event.pts /= ctr
 
+		import numpy as np
+
+		event_pts=[]
+		for e in event_list:
+			event_pts.append(e.pts)
+
+		#softmax
+		event_pts = np.exp(event_pts) / float(sum(np.exp(event_pts)))
+
+		for p, e in zip(event_pts, event_list):
+			e.pts = p
 
 		import operator
 		#sort by descending

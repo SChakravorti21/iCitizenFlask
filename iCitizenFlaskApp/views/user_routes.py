@@ -126,10 +126,10 @@ def show_events():
 	subjects = prefs['subjects']
 	print(state, city)
 
-	event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 10, num_events = 15)
+	event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
 
 
-	return render_template('events.html', event_list = event_list)
+	return render_template('events.html', event_list = event_list, db_client=user)
 
 
 @mod.route('/polls/', methods=['GET'])

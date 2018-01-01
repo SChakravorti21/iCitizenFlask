@@ -33,7 +33,7 @@ def update_preferences():
 	users = db['users']
 	user = users.find_one(query)
 
-	print(QueryKeys.INPUTTED_PREFERENCES)
+	# print(QueryKeys.INPUTTED_PREFERENCES)
 	if user[QueryKeys.INPUTTED_PREFERENCES]:
 		location = user[QueryKeys.LOCATION]
 
@@ -60,7 +60,15 @@ def update_preferences():
 			state = form.state.data
 			country = form.country.data
 			zipcode = form.zipcode.data
-			location = Geocoder.geocode("{}, {}, {}, {}, {}".format(address, city, state, country, zipcode))
+
+			try:
+				location = Geocoder.geocode("{}, {}, {}, {}, {}".format(address, city, state, country, zipcode))
+				print(location)
+			except:
+				error = 'INVALID ADDRESS'
+				flash('INVALID ADDRESS', 'danger')
+				return redirect(url_for('functions.update_preferences'))
+
 
 			address_obj = {
 				QueryKeys.ADDRESS: address,
@@ -79,8 +87,8 @@ def update_preferences():
 				QueryKeys.TOPICS: topics
 			}
 
-			print(address_obj)
-			print(preferences_obj)
+			# print(address_obj)
+			# print(preferences_obj)
 
 			user = users.find_one_and_update(query, {'$set':
 				{
@@ -88,7 +96,7 @@ def update_preferences():
 					QueryKeys.PREFERENCES: preferences_obj,
 					QueryKeys.LOCATION: address_obj
 				}})
-			print(user)
+			# print(user)
 
 			flash('Your preferences have been updated!', 'success')
 			return redirect( url_for('functions.show_profile'))
