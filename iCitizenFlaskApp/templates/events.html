@@ -3,6 +3,10 @@
 {% block body %}
   <h1>Events</h1>
 
+  {% if db_client['update_db'] == False %}
+      <h1>Data has been written to DB</h1>
+  {% endif %}
+
   {% for event in event_list %}
     <div>TITLE: </div>{{event.title}}
     <div>LOCATION: </div>{{event.location}}

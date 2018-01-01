@@ -23,7 +23,7 @@ class Bill(object):
     def json(self):
         return {
             "level": self.level,
-            "title": sef.title,
+            "title": self.title,
             "description": self.description,
             "author": self.author,
             "author_id": self.author_id,
@@ -81,7 +81,10 @@ class Bill(object):
         for subject in subjects:
             sub_bill_response = requests.get(national_base+"bills/subjects/{}.json".format(subject), headers=national_params)
 
-            sub_bill_data = json.loads(sub_bill_response.text)['results']
+            sub_bill_json = json.loads(sub_bill_response.text)
+            if 'results' not in sub_bill_json:
+                continue
+            sub_bill_data = sub_bill_json['results']
 
             for bill in sub_bill_data:
                 level = "national"
@@ -111,9 +114,11 @@ class Bill(object):
 
         heapify(bill_heap)
 
-        for bill in bill_heap:
+        i = 0
+        while i < 10:
             popped = heappop(bill_heap)
             sorted_bills.append(popped[2])
+            i = i + 1
 
         return sorted_bills
 
@@ -254,10 +259,11 @@ class Bill(object):
 
         heapify(bill_heap)
 
-        for bill in bill_heap:
+        i = 0
+        while i < 10:
             popped = heappop(bill_heap)
             sorted_bills.append(popped[2])
-            print(popped[2].id + ": " + str(popped[0]))
+            i = i + 1
 
         return sorted_bills
 

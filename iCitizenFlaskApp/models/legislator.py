@@ -4,10 +4,10 @@ from pygeocoder import Geocoder
 
 class Legislator(object):
 
-    def __init__(self, level, firstName, lastName, state, chamber, id, party, photo_url = None, district=None):
+    def __init__(self, level, first_name, last_name, state, chamber, id, party, photo_url = None, district=None):
         self.level = level
-        self.first_name = firstName
-        self.last_name = lastName
+        self.first_name = first_name
+        self.last_name = last_name
         self.state = state
         self.chamber = chamber
         self.id = id
@@ -109,6 +109,6 @@ class Legislator(object):
             party = rep['party']
             district = rep['district']
             photo_url = rep['photo_url']
-            legislators.append(cls(level, first_name, last_name, state, chamber, id, party, district, photo_url))
+            legislators.append(cls(level, first_name, last_name, state, chamber, id, party, photo_url =photo_url, district=district))
 
         return legislators
