@@ -16,7 +16,7 @@
         <div class="card" style="width: 20rem; padding:30px;">
           <img class="card-img-top" src= {{ event.img_link }} alt="Card image cap">
           <div class="card-block">
-            <h4 class="card-title">{{ event.title }}</h4>
+            <h4 class="card-title">{{ event.org_title }}</h4>
             <p class="card-text">{{ event.location }}</p>
           </div>
           <ul class="list-group list-group-flush">
@@ -24,7 +24,7 @@
             <li class="list-group-item">{{ event.price }}</li>
           </ul>
           <div class="card-block">
-            <a href= {{ event.link }} class="card-link">More Info</a>
+            <a href= {{ event.link }} target="_blank" class="card-link">More Info</a>
           </div>
           </div>
 
@@ -33,13 +33,5 @@
 
   </div>
 
-
-  {% for event in event_list %}
-    <div>TITLE: </div>{{event.title}}
-    <div>LOCATION: </div>{{event.location}}
-    <div>PRICE: </div>{{event.price}}
-    <br/>
-    <br/>
-  {% endfor %}
 
 {% endblock %}

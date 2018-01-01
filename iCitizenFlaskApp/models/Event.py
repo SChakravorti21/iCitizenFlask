@@ -11,7 +11,8 @@ import time
 
 class Event:
 
-	def __init__(self, title, link, time, location, price, img_link, pts = 0):
+	def __init__(self, org_title, title, link, time, location, price, img_link, pts = 0):
+		self.org_title = org_title
 		self.title = title
 		self.link = link
 		self.time = time
@@ -61,6 +62,7 @@ class Event:
 			for n in range(numEvents):
 				event_list.append(
 					cls(
+						title_boxes[n].text.strip(),
 						title_boxes[n].text.strip().lower(),
 						link_boxes[n]['href'],
 						time_boxes[n].text.strip(),
