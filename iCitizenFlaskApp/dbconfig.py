@@ -28,3 +28,5 @@ class QueryKeys:
 	LONGITUDE = 'longitude'
 
 	UPDATE_DB = 'update_db'
+	UPDATE_EVENTS = 'update_events'
+	UPDATE_BILLS = 'update_bills'

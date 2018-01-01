@@ -21,6 +21,18 @@ class Event:
 		self.img_link = img_link
 		self.pts = pts
 
+	def json(self):
+		return {
+			"org_title": self.org_title,
+			"title": self.title,
+			"link": self.link,
+			"time": self.time,
+			"location": self.location,
+			"price": self.price,
+			"img_link": self.img_link,
+			"pts": self.pts
+		}
+
 	#param = state, city, max page num, list of subject prefs
 	#returns list of all events
 	@classmethod
