@@ -16,7 +16,7 @@
 
 {% block javascript %}
 
-{% if db_client['update_db'] == True %}
+{% if 'update_db' not in db_client or db_client['update_db'] == True %}
 
   <script>
     $.ajax({
