@@ -24,7 +24,7 @@ def show_profile():
 @mod.route('/update-prefs/', methods=['GET', 'POST'])
 @is_logged_in
 def update_preferences():
-	form = PreferencesForm(request.form)
+	form = PreferencesForm()
 	topics = []
 	error = None
 
@@ -48,10 +48,10 @@ def update_preferences():
 		topics = prefs[QueryKeys.TOPICS]
 
 	if request.method == 'POST':
+		form = PreferencesForm(request.form)
 		topics = request.form.getlist('subjects')
 		if not topics or len(topics) == 0:
 			error = 'Please choose at least one topic so that we can find bills that are relevant for you'
-			pass
 
 		if form.validate():
 			party = form.political_party.data
