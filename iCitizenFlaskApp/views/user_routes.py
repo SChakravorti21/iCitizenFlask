@@ -117,12 +117,51 @@ def load_dashboard():
 @mod.route('/events/', methods = ['GET', 'POST'])
 @is_logged_in
 def show_events():
+
+
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
     user_events = db["{}_events".format(session[QueryKeys.USERNAME])]
     user = users.find_one(query)
 
-    event_list = [EventClass(**kwargs) for kwargs in user_events.find()]
+	if request.method == 'POST':
+
+		prev_saved_events = user[QueryKeys.SAVED_EVENTS]
+		print('PREV SAVED EVENTS ARE', prev_saved_events)
+
+		new_saved_events = request.form.getlist('box')
+
+		if new_saved_events:
+
+			mergedlist = list(set(prev_saved_events + new_saved_events))
+
+			user = users.find_one_and_update(query, {'$set':
+			{
+				QueryKeys.SAVED_EVENTS: mergedlist
+			}})
+				print('NEW SAVED EVENTS iS ', mergedlist)
+				flash('TESTFLASH', 'success')
+
+
+	location = user[QueryKeys.LOCATION]
+  	state = location['state']
+  	city = location['city']
+  	prefs = user[QueryKeys.PREFERENCES]
+  	subjects = prefs['subjects']
+  	print(state, city)
+
+
+    # event_list = [EventClass(**kwargs) for kwargs in user_events.find()]
+	event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
+
+
+	saved_events = set(user[QueryKeys.SAVED_EVENTS])
+
+ 	for e in event_list:
+ 		if e.title in saved_events:
+ 			e.saved = True
+
+
     return render_template('events.html', event_list = event_list, db_client=user)
     # user_events = db["{}_events".format(session[QueryKeys.USERNAME])]
     #
@@ -157,5 +196,3 @@ def load_bills():
 
     user = users.find_one(query)
     return render_template('events.html', db_client=user)
-
-
