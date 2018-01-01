@@ -88,9 +88,7 @@ def update_events():
 
     event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
 
-    user_events = db["{}_events".format(session[QueryKeys.USERNAME])]
-
-    user_events_jsons = [event.json() for event in user_events]
+    user_events_jsons = [event.json() for event in event_list]
 
     users.find_one_and_update(query, {'$set': {'user_events': user_events_jsons}})
 
