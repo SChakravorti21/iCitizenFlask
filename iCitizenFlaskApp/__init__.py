@@ -14,7 +14,8 @@ def before_request():
 def index():
 	return render_template('home.html')
 
-from iCitizenFlaskApp.views import user_routes, user_functions
+from iCitizenFlaskApp.views import user_routes, user_functions, user_data
 
 app.register_blueprint(user_routes.mod)
 app.register_blueprint(user_functions.mod)
+app.register_blueprint(user_data.mod)

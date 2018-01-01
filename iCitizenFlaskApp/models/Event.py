@@ -12,7 +12,7 @@ import time
 class Event:
 
 	def __init__(self, org_title, title, link, time, location, price, img_link, pts = 0, _id=None):
-    		self.org_title = org_title
+		self.org_title = org_title
 		self.title = title
 		self.link = link
 		self.time = time
@@ -20,7 +20,6 @@ class Event:
 		self.price = price
 		self.img_link = img_link
 		self.pts = pts
-		self.saved = saved
 
 	def json(self):
 		return {
@@ -196,8 +195,6 @@ class Event:
 
 		print('time taken to sort by relevancy', time.time() - start_time)
 		return event_list
-
-
 
 
 	@staticmethod

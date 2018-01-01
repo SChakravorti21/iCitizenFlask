@@ -123,10 +123,7 @@ def show_events():
     user = users.find_one(query)
 
     event_list = [EventClass(**kwargs) for kwargs in user_events.find()]
-
-
-	return render_template('events.html', event_list = event_list, db_client=user)
-
+    return render_template('events.html', event_list = event_list, db_client=user)
     # user_events = db["{}_events".format(session[QueryKeys.USERNAME])]
     #
     # event_list = [Event(**kwargs) for kwargs in user_events]
@@ -161,92 +158,4 @@ def load_bills():
     user = users.find_one(query)
     return render_template('events.html', db_client=user)
 
-@mod.route('/update_bills/', methods=['POST'])
-@is_logged_in
-def update_bills():
-    import time
 
-    start_time = time.time()
-
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-    users = db['users']
-
-    user = users.find_one(query)
-    if 'national_legislators' not in user:
-        set_legislators()
-        user = users.find_one(query)
-
-    national_legislators = [Legislator(**kwargs) for kwargs in user['national_legislators']]
-    state_legislators = [Legislator(**kwargs) for kwargs in user['state_legislators']]
-
-    subjects = [subject for subject in user[QueryKeys.PREFERENCES]['subjects']]
-
-    national_bills = Bill.get_national_bills(national_legislators, subjects)
-    state_bills = Bill.get_state_bills(state_legislators, ["Crime", "Health"], user['location']['state'])
-
-    user_national_bills = db["{}_national_bills".format(session[QueryKeys.USERNAME])]
-    user_state_bills = db["{}_state_bills".format(session[QueryKeys.USERNAME])]
-    for bill in national_bills:
-        user_national_bills.insert(bill.json())
-
-    for bill in state_bills:
-        user_state_bills.insert(bill.json())
-
-    user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_BILLS : False}})
-    user = users.find_one(query)
-    if user[QueryKeys.UPDATE_EVENTS] == False:
-        user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False}})
-
-    print("Time for bills to finish: {} seconds".format(str(time.time() - start_time)))
-    return "Bills written to DB"
-
-def set_legislators():
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-    users = db['users']
-
-    user = users.find_one(query)
-    location = user[QueryKeys.LOCATION]
-
-    address = location[QueryKeys.ADDRESS]
-    city = location[QueryKeys.CITY]
-    state = location[QueryKeys.STATE]
-    zipcode = location[QueryKeys.ZIPCODE]
-    latitude = location[QueryKeys.LATLONG][QueryKeys.LATITUDE]
-    longitude = location[QueryKeys.LATLONG][QueryKeys.LONGITUDE]
-
-    national_legislators = Legislator.get_national_legislators(address, city, state, zipcode)
-    state_legislators = Legislator.get_state_legislators(address, city, state, zipcode, latitude, longitude)
-
-    national_legislators_jsons = [bill.json() for bill in national_legislators]
-    state_legislators_jsons = [bill.json() for bill in state_legislators]
-
-    users.find_one_and_update(query, {'$set': {'national_legislators': national_legislators_jsons}})
-
-    users.find_one_and_update(query, {'$set': {'state_legislators' : state_legislators_jsons}})
-
-@mod.route('/update_events/', methods=['POST'])
-@is_logged_in
-def update_events():
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-    users = db['users']
-    user = users.find_one(query)
-
-    location = user[QueryKeys.LOCATION]
-    state = location['state']
-    city = location['city']
-    prefs = user[QueryKeys.PREFERENCES]
-    subjects = prefs['subjects']
-
-    event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
-
-    user_events = db["{}_events".format(session[QueryKeys.USERNAME])]
-
-    for event in event_list:
-        user_events.insert(event.json())
-
-    user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_EVENTS : False}})
-    user = users.find_one(query)
-    if user[QueryKeys.UPDATE_BILLS] == False:
-        user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False}})
-
-    return "Events have been written"
