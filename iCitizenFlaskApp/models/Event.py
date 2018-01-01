@@ -78,7 +78,8 @@ class Event:
 
 	#retusn sorted list of events
 	@classmethod
-	def get_sorted_events(cls, state, city, pref_subjs, num_pages):
+	def get_sorted_events(cls, state = 'ny', city='new york', pref_subjs = ['politics'], num_pages = 5):
+
 
 		start_time = time.time()
 
