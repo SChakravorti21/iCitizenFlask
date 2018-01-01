@@ -1,0 +1,14 @@
+{% extends 'index.html' %}
+
+{% block body %}
+  <h1>Events</h1>
+
+  {% for event in event_list %}
+    <div>TITLE: </div>{{event.title}}
+    <div>LOCATION: </div>{{event.location}}
+    <div>PRICE: </div>{{event.price}}
+    <br/>
+    <br/>
+  {% endfor %}
+
+{% endblock %}

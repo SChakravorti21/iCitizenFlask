@@ -20,16 +20,6 @@ class Event:
 		self.img_link = img_link
 		self.pts = pts
 
-	def printInfo(self):
-		print('NUM POINTS = ', self.pts)
-		print('title : ', self.title)
-		print('link for more info : ', self.link)
-		print('date of event : ', self.time)
-		print('location of event: ', self.location)
-		print('price : ', self.price)
-		print('img link : ', self.img_link)
-
-
 	#param = state, city, max page num, list of subject prefs
 	#returns list of all events
 	@classmethod
@@ -43,7 +33,7 @@ class Event:
 		for n in range(1, max_pg_num + 1):
 
 			page_url = 'https://www.eventbrite.com/d/' + state.lower() + '--' + city.lower() + '/political-events/?crt=regular&sort=best'
-			
+
 			if n > 1:
 				page_url += ('&page=' + str(n))
 
@@ -71,9 +61,9 @@ class Event:
 			for n in range(numEvents):
 				event_list.append(
 					cls(
-						title_boxes[n].text.strip().lower(), 
-						link_boxes[n]['href'], 
-						time_boxes[n].text.strip(), 
+						title_boxes[n].text.strip().lower(),
+						link_boxes[n]['href'],
+						time_boxes[n].text.strip(),
 						loc_boxes[n].text.strip(),
 						price_boxes[n].text,
 						image_boxes[n].img['src']
@@ -87,7 +77,7 @@ class Event:
 	#retusn sorted list of events
 	@classmethod
 	def get_sorted_events(cls, state, city, pref_subjs, num_pages):
-		
+
 		start_time = time.time()
 
 		event_list = Event.scrape(state = state, city = city, max_pg_num = num_pages)
@@ -155,7 +145,7 @@ class Event:
 								ctr += 1
 								event.pts += currMax
 
-			if(ctr != 0):			
+			if(ctr != 0):
 				event.pts /= ctr
 
 
@@ -168,32 +158,34 @@ class Event:
 		return event_list
 
 
-	@classmethod
-	def get_top_n_events(cls, state, city, pref_subjs, num_pages, num_events):
-
-		sorted_events = Event.get_sorted_events(state = state, city = city, pref_subjs = pref_subjs, num_pages = num_pages)
-
-		top_n = []
-
-		if num_events <= len(sorted_events):
-			for i in range(num_events):
-				top_n.append(sorted_events[i])
-
-		else:
-			top_n = sorted_events
-
-			for i in range(0, len(sorted_events) - num_events):
-				top_n.pop(-1)
-
-		return top_n
 
 
 
-pref_subjs = ['college', 'education', 'art']
-event_l = Event.get_top_n_events(state = 'nj', city = 'edison', pref_subjs = pref_subjs, num_pages = 5, num_events = 10)
-for e in event_l:
-	print(e.title)
-	print('						'e.pts)
+def get_top_n_events(state, city, pref_subjs, num_pages, num_events):
+
+	sorted_events = Event.get_sorted_events(state = state, city = city, pref_subjs = pref_subjs, num_pages = num_pages)
+
+	top_n = []
+
+	if num_events <= len(sorted_events):
+		for i in range(num_events):
+			top_n.append(sorted_events[i])
+
+	else:
+		top_n = sorted_events
+
+		for i in range(0, len(sorted_events) - num_events):
+			top_n.pop(-1)
+
+	return top_n
+
+
+
+# pref_subjs = ['college', 'education', 'art']
+# event_l = Event.get_top_n_events(state = 'ny', city = 'new york', pref_subjs = pref_subjs, num_pages = 1, num_events = 10)
+# for e in event_l:
+# 	print(e.title)
+# 	print('						', e.pts)
 
 
 '''plan:
@@ -206,7 +198,6 @@ for each event in event_list
 				find synonymsets of subj_word and each noun
 				find max of path similarity between subj and noun
 				sum that to total points per event
-	
+
 	average the num points per event
 '''
-

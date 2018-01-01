@@ -10,6 +10,26 @@ from iCitizenFlaskApp.views.user_routes import is_logged_in
 
 mod = Blueprint('functions', __name__)
 
+@mod.route('/events', methods = ['GET', 'POST'])
+@is_logged_in
+def show_events():
+	from iCitizenFlaskApp.models import Event as EventClass
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+	user = users.find_one(query)
+
+	location = user[QueryKeys.LOCATION]
+	state = location['state']
+	city = location['city']
+	prefs = user[QueryKeys.PREFERENCES]
+	subjects = prefs['subjects']
+	print(state, city)
+
+	event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 5, num_events = 10)
+
+
+	return render_template('events.html', event_list = event_list)
+
 @mod.route('/profile/', methods=['GET'])
 @is_logged_in
 def show_profile():
@@ -88,10 +108,10 @@ def update_preferences():
 					QueryKeys.LOCATION: address_obj
 				}})
 			print(user)
-			
+
 			flash('Your preferences have been updated!', 'success')
 			return redirect( url_for('functions.show_profile'))
 
-	return render_template('update_preferences.html', form=form, 
-		subjects=[(str(subject).strip(), subject) for subject in SUBJECTS], 
+	return render_template('update_preferences.html', form=form,
+		subjects=[(str(subject).strip(), subject) for subject in SUBJECTS],
 		selected_subjects=topics, error=error)
