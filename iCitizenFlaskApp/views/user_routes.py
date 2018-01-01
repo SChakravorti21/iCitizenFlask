@@ -124,7 +124,32 @@ def show_events():
 
     event_list = [EventClass(**kwargs) for kwargs in user_events.find()]
 
-    return render_template('events.html', event_list = event_list, db_client=user)
+
+	location = user[QueryKeys.LOCATION]
+	state = location['state']
+	city = location['city']
+	prefs = user[QueryKeys.PREFERENCES]
+	subjects = prefs['subjects']
+	print(state, city)
+
+	flash('These events are shown according to your profile prefereces', 'info')
+
+	event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
+
+	saved_events = set(user[QueryKeys.SAVED_EVENTS])
+
+	for e in event_list:
+		if e.title in saved_events:
+			e.saved = True
+
+
+	return render_template('events.html', event_list = event_list, db_client=user)
+
+    # user_events = db["{}_events".format(session[QueryKeys.USERNAME])]
+    #
+    # event_list = [Event(**kwargs) for kwargs in user_events]
+    #
+    # return render_template('events.html', event_list = event_list, db_client=user)
 
 
 @mod.route('/polls/', methods=['GET'])
@@ -243,6 +268,3 @@ def update_events():
         user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False}})
 
     return "Events have been written"
-        
-
-
