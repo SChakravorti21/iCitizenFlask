@@ -12,6 +12,8 @@ class QueryKeys:
 	PASSWORD = 'password'
 	INPUTTED_PREFERENCES = 'inputted_prefs'
 
+	#stores arrayist of saved event titles
+	SAVED_EVENTS = 'saved_events'
 
 	PREFERENCES = 'preferences'
 	LOCATION = 'location'

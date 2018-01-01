@@ -44,7 +44,8 @@ def register():
 			QueryKeys.USERNAME: username,
 			QueryKeys.PASSWORD: password,
 			QueryKeys.INPUTTED_PREFERENCES: False,
-			QueryKeys.UPDATE_DB: True
+			QueryKeys.UPDATE_DB: True,
+			QueryKeys.SAVED_EVENTS: None
 		}).inserted_id
 
 		print(str(insert_id))
@@ -115,9 +116,30 @@ def load_dashboard():
 @is_logged_in
 def show_events():
 	from iCitizenFlaskApp.models import Event as EventClass
+
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
 	user = users.find_one(query)
+
+	if request.method == 'POST':
+
+		prev_saved_events = user[QueryKeys.SAVED_EVENTS]
+		print('PREV SAVED EVENTS ARE', prev_saved_events)
+
+		new_saved_events = request.form.getlist('box')
+
+		if new_saved_events:
+
+			mergedlist = list(set(prev_saved_events + new_saved_events))
+
+			user = users.find_one_and_update(query, {'$set':
+				{
+					QueryKeys.SAVED_EVENTS: mergedlist
+				}})
+			print('NEW SAVED EVENTS iS ', mergedlist)
+
+
+
 
 	location = user[QueryKeys.LOCATION]
 	state = location['state']
@@ -126,7 +148,15 @@ def show_events():
 	subjects = prefs['subjects']
 	print(state, city)
 
+	flash('These events are shown according to your profile prefereces', 'info')
+
 	event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
+
+	saved_events = set(user[QueryKeys.SAVED_EVENTS])
+
+	for e in event_list:
+		if e.title in saved_events:
+			e.saved = True
 
 
 	return render_template('events.html', event_list = event_list, db_client=user)

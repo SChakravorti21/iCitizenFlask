@@ -3,10 +3,9 @@
 }
 
 
-.label_event input[type="checkbox"] {
-  display: none !important;
-}
 
+#star-check-id {
+}
 .custom-checkbox {
   margin-left: 2em;
   position: relative;

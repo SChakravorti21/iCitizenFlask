@@ -11,7 +11,7 @@ import time
 
 class Event:
 
-	def __init__(self, org_title, title, link, time, location, price, img_link, pts = 0):
+	def __init__(self, org_title, title, link, time, location, price, img_link, pts = 0, saved = False):
 		self.org_title = org_title
 		self.title = title
 		self.link = link
@@ -20,6 +20,7 @@ class Event:
 		self.price = price
 		self.img_link = img_link
 		self.pts = pts
+		self.saved = saved
 
 	#param = state, city, max page num, list of subject prefs
 	#returns list of all events

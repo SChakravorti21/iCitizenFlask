@@ -1,5 +1,6 @@
 {% extends 'index.html' %}
 
+<link rel="stylesheet" type="text/css" href="/static/dist/css/event.css">
 {% block body %}
 
 {% if db_client['update_db'] == False %}
@@ -7,9 +8,14 @@
 {% endif %}
 
   <h1 style="text-align:center;">Relevant Events</h1>
-  <hr style="color:black;">
+  <hr style="border-top: 1px solid #8c8b8b;">
+  <input type="submit" class="btn btn-primary" value="Update Saved Events"
+            form="save_events_form" style="margin-left:50px">
 
-  <div class="row">
+  <hr style="border-top: 1px solid #8c8b8b;">
+
+    <form class="form-group" method="POST" id="save_events_form">
+        <div class="row">
 
     {% for event in event_list %}
       <div class="col-4 col-sm-6 col-md-4 col-lg-4 col-xl-4">
@@ -27,12 +33,10 @@
 
 
             <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
+            <label class="custom-checkbox label_event" style="margin: 20px 0px -10px 20px">
 
-            <label for="id-of-input" class="custom-checkbox label_event">
-              <input type="checkbox" id="id-of-input"/>
-              <i class="glyphicon glyphicon-star-empty"></i>
-              <i class="glyphicon glyphicon-star"></i>
-              <span>Favorite</span>
+              <input type="checkbox" name = "box" value="{{ event.title }}" {% if event.saved %} checked {% endif %}/>
+                <span>Add to Saved Events</span>
             </label>
 
 
@@ -44,8 +48,10 @@
 
         </div>
       {% endfor %}
+      </div>
+    </form>
 
-  </div>
+
 
 
 {% endblock %}
