@@ -1,6 +1,5 @@
 import urllib.request as u
 from bs4 import BeautifulSoup
-
 from textblob import Word
 from textblob import TextBlob
 from textblob.wordnet import Synset
