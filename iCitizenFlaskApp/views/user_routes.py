@@ -104,21 +104,33 @@ def load_dashboard():
 	print(user[QueryKeys.INPUTTED_PREFERENCES])
 	if not user[QueryKeys.INPUTTED_PREFERENCES]:
 		# Redirect to input those preferences
-		flash('''We noticed that your profile is incomplete. 
+		flash('''We noticed that your profile is incomplete.
 				This information will be useful in helping us find relevant
 				information for you. We will never share any of this information externally.''', 'info')
 		return redirect( url_for('functions.update_preferences') )
 
 	return render_template('dashboard.html', db_client=user)
 
-@mod.route('/events/', methods=['GET'])
+@mod.route('/events/', methods = ['GET', 'POST'])
 @is_logged_in
-def load_events():
+def show_events():
+	from iCitizenFlaskApp.models import Event as EventClass
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
-
 	user = users.find_one(query)
-	return render_template('events.html', db_client=user)
+
+	location = user[QueryKeys.LOCATION]
+	state = location['state']
+	city = location['city']
+	prefs = user[QueryKeys.PREFERENCES]
+	subjects = prefs['subjects']
+	print(state, city)
+
+	event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 5, num_events = 10)
+
+
+	return render_template('events.html', event_list = event_list)
+
 
 @mod.route('/polls/', methods=['GET'])
 @is_logged_in
@@ -157,7 +169,7 @@ def update_db():
 	if 'national_legislators' not in user:
     		set_legislators()
 	user = users.find_one(query)
-	
+
 	national_legislators = [Legislator(**kwargs) for kwargs in user['national_legislators']]
 	state_legislators = [Legislator(**kwargs) for kwargs in user['state_legislators']]
 
