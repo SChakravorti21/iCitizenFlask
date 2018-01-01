@@ -22,28 +22,32 @@
 {% if db_client['update_db'] == True %}
 
   <script>
+    var result1;
+    var result2;
     $.ajax({
       url: "/update_bills/",
       type: "post",
       success: function(response){
-        $('#bill_test').html(response)
+        result1 = response
+        $('#bill_test').html(result1)
       }
-    })
-  </script>
-  <script>
+    });
     $.ajax({
       url: "/update_events/",
       type: "post",
       success: function(response) {
-        $('#event_test').html(response)
+        result2 = response
+        $('#event_test').html(result2)
       }
-    })
+    });
+    
+    
   </script>
 
 {% else %}
 
   <script>
-    $("#test").html("All data exists in DB")
+    $("#bill_test").html("All data exists in DB")
   </script>
 
 {% endif %}

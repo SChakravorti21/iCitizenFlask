@@ -11,7 +11,7 @@ import time
 
 class Event:
 
-	def __init__(self, org_title, title, link, time, location, price, img_link, pts = 0):
+	def __init__(self, org_title, title, link, time, location, price, img_link, pts = 0, _id=None):
 		self.org_title = org_title
 		self.title = title
 		self.link = link
@@ -199,24 +199,24 @@ class Event:
 
 
 
+	@staticmethod
+	def get_top_n_events(state, city, pref_subjs, num_pages, num_events):
 
-def get_top_n_events(state, city, pref_subjs, num_pages, num_events):
+		sorted_events = Event.get_sorted_events(state = state, city = city, pref_subjs = pref_subjs, num_pages = num_pages)
 
-	sorted_events = Event.get_sorted_events(state = state, city = city, pref_subjs = pref_subjs, num_pages = num_pages)
+		top_n = []
 
-	top_n = []
+		if num_events <= len(sorted_events):
+			for i in range(num_events):
+				top_n.append(sorted_events[i])
 
-	if num_events <= len(sorted_events):
-		for i in range(num_events):
-			top_n.append(sorted_events[i])
+		else:
+			top_n = sorted_events
 
-	else:
-		top_n = sorted_events
+			for i in range(0, len(sorted_events) - num_events):
+				top_n.pop(-1)
 
-		for i in range(0, len(sorted_events) - num_events):
-			top_n.pop(-1)
-
-	return top_n
+		return top_n
 
 
 

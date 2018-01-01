@@ -9,7 +9,7 @@ from iCitizenFlaskApp.dbconfig import db, QueryKeys
 
 from iCitizenFlaskApp.models.legislator import Legislator
 from iCitizenFlaskApp.models.bill import Bill
-from iCitizenFlaskApp.models import Event as EventClass
+from iCitizenFlaskApp.models.event import Event as EventClass
 
 mod = Blueprint('users', __name__)
 
@@ -117,9 +117,12 @@ def load_dashboard():
 @mod.route('/events/', methods = ['GET', 'POST'])
 @is_logged_in
 def show_events():
+    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+    users = db['users']
     user_events = db["{}_events".format(session[QueryKeys.USERNAME])]
+    user = users.find_one(query)
 
-    event_list = [Event(**kwargs) for kwargs in user_events]
+    event_list = [EventClass(**kwargs) for kwargs in user_events.find()]
 
     return render_template('events.html', event_list = event_list, db_client=user)
 
@@ -154,6 +157,10 @@ def load_bills():
 @mod.route('/update_bills/', methods=['POST'])
 @is_logged_in
 def update_bills():
+    import time
+
+    start_time = time.time()
+
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
 
@@ -172,7 +179,6 @@ def update_bills():
 
     user_national_bills = db["{}_national_bills".format(session[QueryKeys.USERNAME])]
     user_state_bills = db["{}_state_bills".format(session[QueryKeys.USERNAME])]
-
     for bill in national_bills:
         user_national_bills.insert(bill.json())
 
@@ -184,6 +190,7 @@ def update_bills():
     if user[QueryKeys.UPDATE_EVENTS] == False:
         user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False}})
 
+    print("Time for bills to finish: {} seconds".format(str(time.time() - start_time)))
     return "Bills written to DB"
 
 def set_legislators():
