@@ -183,22 +183,26 @@ def show_legislators():
 def show_bills():
     return render_template('bills.html')
 
-@mod.route('/get-bills-db/', methods=['POST'])
+@mod.route('/get-state-bills-db/', methods=['POST'])
 @is_logged_in
-def get_bills():
+def get_state_bills():
+    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+    users = db['users']
+
+    user = users.find_one(query)
+
+    state_bills_jsons = user['state_bills'] if 'state_bills' in user else None
+
+    return json.dumps(state_bills_jsons, sort_keys=True, indent=4, default=json_util.default)
+
+@mod.route('/get-national-bills-db/', methods=['POST'])
+@is_logged_in
+def get_national_bills():
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
 
     user = users.find_one(query)
 
     national_bill_jsons = user['national_bills'] if 'national_bills' in user else None
-
-    state_bills_jsons = user['state_bills'] if 'state_bills' in user else None
-
-    '''
-    jsons = []
-    jsons.append(national_bill_jsons)
-    jsons.append(state_bills_jsons)
-    '''
 
     return json.dumps(national_bill_jsons, sort_keys=True, indent=4, default=json_util.default)
