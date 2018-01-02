@@ -13,11 +13,19 @@
     <div id="event_test">
 
     </div>
+    <div id="poll_test">
+
+    </div>
   </div>
 
 {% endblock %}
 
 {% block javascript %}
+
+  <script type="text/javascript">
+    console.log("{{ db_client.update_db|safe }}");
+
+  </script>
 
 {% if db_client['update_db'] == True %}
 

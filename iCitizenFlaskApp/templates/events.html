@@ -33,7 +33,19 @@
 
             <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
             <label class="custom-checkbox label_event" style="margin: 20px 0px -10px 20px">
+            <label for="id-of-input" class="custom-checkbox label_event">
+              <input type="checkbox" id="id-of-input"/>
+              <div class="glyphicon glyphicon-star-empty"></div>
+              <div class="glyphicon glyphicon-star"></div>
+              <span>Favorite</span>
+            </label>
 
+
+          </ul>
+          <div class="card-block">
+            <a href="{{ event.link }}" target="_blank" class="card-link">More Info</a>
+          </div>
+          </div>
                 <input type="checkbox" name = "box" value="{{ event.title }}" {% if event.saved %} checked {% endif %}/>
                 <span>Add to Saved Events</span>
             </label>
@@ -44,14 +56,14 @@
             <a href= {{ event.link }} target="_blank" class="card-link">More Info</a>
             </div>
             </div>
-
         </div>
         {% endfor %}
         </div>
     </form>
+
+{% else %}
+    <h1>DB CLIENT UPDATE DB IS TRUE</h1>
 {% endif %}
-
-
 
 
 {% endblock %}
