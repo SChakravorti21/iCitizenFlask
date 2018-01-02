@@ -47,7 +47,8 @@ def register():
             QueryKeys.INPUTTED_PREFERENCES: False,
             QueryKeys.UPDATE_DB: True,
             QueryKeys.UPDATE_EVENTS: True,
-            QueryKeys.UPDATE_BILLS: True
+            QueryKeys.UPDATE_BILLS: True,
+			QueryKeys.SAVED_EVENTS: []
         }).inserted_id
 
         print(str(insert_id))
@@ -141,6 +142,7 @@ def show_events():
 
 	event_list = [EventClass(**kwargs) for kwargs in user_events.find()]
 	# event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
+
 
 	saved_events = set(user[QueryKeys.SAVED_EVENTS])
 
