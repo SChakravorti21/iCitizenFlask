@@ -113,7 +113,7 @@ def load_dashboard():
                 information for you. We will never share any of this information externally.''', 'info')
         return redirect( url_for('functions.update_preferences') )
 
-    
+
 
     return render_template('dashboard.html', db_client=user)
 
@@ -126,27 +126,27 @@ def show_events():
     '''
     if request.method == 'POST':
         prev_saved_events = user[QueryKeys.SAVED_EVENTS]
-        print('PREV SAVED EVENTS ARE', prev_saved_events)
-
-        new_saved_events = request.form.getlist('box')
-
-        if new_saved_events:
-
-            mergedlist = list(set(prev_saved_events + new_saved_events))
-
-            user = users.find_one_and_update(query, {'$set':{QueryKeys.SAVED_EVENTS: mergedlist}})
-            print('NEW SAVED EVENTS iS ', mergedlist)
-            flash('TESTFLASH', 'success')
+		update_user_saved_events(prev_saved_events)
+        flash('TESTFLASH', 'success')
     '''
 
 
     event_list = [EventClass(**kwargs) for kwargs in user[QueryKeys.EVENT_LIST]]
 
-
-    #saved_events = set(user[QueryKeys.SAVED_EVENTS])
-
-
     return render_template('events.html', event_list = event_list, db_client=user)
+
+
+def update_user_saved_events(prev_saved_events):
+	print('PREV SAVED EVENTS ARE', prev_saved_events)
+
+	new_saved_events = request.form.getlist('box')
+
+	if new_saved_events:
+
+		mergedlist = list(set(prev_saved_events + new_saved_events))
+
+		user = users.find_one_and_update(query, {'$set':{QueryKeys.SAVED_EVENTS: mergedlist}})
+		print('NEW SAVED EVENTS iS ', mergedlist)
 
 
 @mod.route('/polls/', methods=['GET'])
