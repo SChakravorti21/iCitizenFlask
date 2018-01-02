@@ -33,3 +33,4 @@ class QueryKeys:
 
 	UPDATE_EVENTS = 'update_events'
 	UPDATE_BILLS = 'update_bills'
+	UPDATE_POLLS = 'update_polls'

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, session, request, logging
 from functools import wraps
+from apiclient.discovery import build
 
 from iCitizenFlaskApp.dbconfig import db, QueryKeys
 
@@ -98,3 +99,30 @@ def update_events():
         user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False}})
 
     return "Events have been written"
+
+@mod.route('/update_polls/', methods=['POST'])
+@is_logged_in
+def update_polls():
+    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+    users = db['users']
+    user = users.find_one(query)
+
+    service = build('civicinfo', 'v2', developerKey='AIzaSyBPGcxWwvhkETJav0mjck4jF1lHRuKiQmc')
+    elections = service.elections()
+
+    location = user[QueryKeys.LOCATION]
+    address = "{}, {}, {}, {} {}".format(location[QueryKeys.ADDRESS],
+                                            location[QueryKeys.CITY],
+                                            location[QueryKeys.STATE],
+                                            location[QueryKeys.COUNTRY],
+                                            location[QueryKeys.ZIPCODE])
+    info = service.elections().voterInfoQuery(address=address, electionId="2000", 
+        returnAllAvailableData=True, officialOnly=False).execute()
+
+    print(info)
+
+    users.find_one_and_update(query, {'$set': {'user_polls': info}})
+
+    user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_POLLS : False}})
+
+    return "Polls written to DB"
