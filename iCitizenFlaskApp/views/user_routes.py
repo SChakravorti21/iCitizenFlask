@@ -138,7 +138,7 @@ def show_events():
     if request.method == 'POST':
         prev_saved_events = user[QueryKeys.SAVED_EVENTS]
 		update_user_saved_events(prev_saved_events)
-        flash('TESTFLASH', 'success')
+        flash('events have been updated!', 'success')
     '''
 
 
