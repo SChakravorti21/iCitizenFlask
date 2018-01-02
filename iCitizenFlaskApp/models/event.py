@@ -68,9 +68,11 @@ class Event:
 
 			numEvents = len(title_boxes)
 
+			event_titles = set([])
+
 			for n in range(numEvents):
 
-				dup = False
+
 				e_to_add = cls(
 					org_title = title_boxes[n].text.strip(),
 					title = title_boxes[n].text.strip().lower(),
@@ -81,17 +83,10 @@ class Event:
 					img_link = image_boxes[n].img['src']
 				)
 
-				for e in event_list:
-					if e.title == e_to_add.title:
-						dup = True
-						print('THERE IS A DUPE')
-						break
-				if not dup:
+				if e_to_add.title not in event_titles:
+					event_titles.add(e_to_add.title)
 					event_list.append(e_to_add)
 
-
-
-		print('got events')
 		return event_list
 
 
@@ -100,11 +95,13 @@ class Event:
 	def get_sorted_events(cls, state, city, pref_subjs, num_pages):
 
 		start_time = time.time()
-		# event_list = Event.scrape(state = state, city = city, max_pg_num = num_pages)
+		event_list = Event.scrape(state = state, city = city, max_pg_num = num_pages)
 
 		print('took ', time.time() - start_time, 'secs to get ', num_pages, ' pages of events')
 
-		event_list = [cls(title = 'prohibition pub crawl', org_title = 'PROHIBITION PUB CRAWL')]
+		# event_list = [cls(title = 'prohibition pub crawl', org_title = 'PROHIBITION PUB CRAWL', link = 1, time=1,location=1,price=1,img_link=1)]
+
+
 		for p in pref_subjs:
 			print(p)
 
@@ -211,7 +208,7 @@ class Event:
 							event.pts += currMax
 
 			if(ctr != 0):
-				event.pts /= len(event_words)
+				event.pts /= ctr
 
 		# import numpy as np
         #
@@ -254,11 +251,9 @@ class Event:
 		return top_n
 
 
-
-
-event_l = Event.get_top_n_events(num_events = 10)
-for e in event_l:
-	print(e.title, '			', e.pts)
+# event_l = Event.get_top_n_events(num_events = 10)
+# for e in event_l:
+# 	print(e.title, '\n       ', e.pts)
 
 
 '''plan:
