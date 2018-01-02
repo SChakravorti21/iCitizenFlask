@@ -3,12 +3,15 @@
 {% block body %}
 
   <div class="container">
-    <div id="test">
+    <div id="bill_test">
 
     </div>
     <div class="alert alert-info">
       <h3>You're back!</h3>
       <h3><small>Welcome back, {{session.username}}.</small></h3>
+    </div>
+    <div id="event_test">
+
     </div>
   </div>
 
@@ -16,22 +19,14 @@
 
 {% block javascript %}
 
-{% if 'update_db' not in db_client or db_client['update_db'] == True %}
+{% if db_client['update_db'] == True %}
 
-  <script>
-    $.ajax({
-      url: "/update_db/",
-      type: "post",
-      success: function(response){
-        $('#test').html(response)
-      }
-    })
-  </script>
+  <script src="{{ url_for('static', filename='dist/js/data_loader.js') }}"></script>
 
 {% else %}
 
   <script>
-    $("#test").html("Test Succeeded For Real")
+    $("#bill_test").html("All data exists in DB")
   </script>
 
 {% endif %}
