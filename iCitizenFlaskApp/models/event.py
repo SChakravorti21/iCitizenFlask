@@ -159,7 +159,7 @@ class Event:
 
 			for c in old_title:
 				if (c in chars_to_skip or c.isdigit() or c.strip() == '') and curr.strip() != '':
-					if curr not in stop_words:
+					if curr.strip() not in stop_words and len(curr.strip()) > 1:
 						event_words.append(curr.strip())
 						curr = ''
 					else:
@@ -168,7 +168,7 @@ class Event:
 					curr += c
 
 			#get the last word in phrase
-			if curr not in stop_words:
+			if curr.strip() not in stop_words and len(curr.strip()) > 1:
 				event_words.append(curr.strip())
 				curr = ''
 
@@ -201,7 +201,7 @@ class Event:
 									if pathsim > currMax:
 										currMax = pathsim
 
-						# print(word, 'vs', subj_word, 'score =', currMax)
+						print(word, 'vs', subj_word, 'score =', currMax)
 
 						if(currMax != 0):
 							ctr += 1
@@ -251,9 +251,9 @@ class Event:
 		return top_n
 
 
-# event_l = Event.get_top_n_events(num_events = 10)
-# for e in event_l:
-# 	print(e.title, '\n       ', e.pts)
+event_l = Event.get_top_n_events(num_events = 10)
+for e in event_l:
+	print(e.title, '\n       ', e.pts)
 
 
 '''
