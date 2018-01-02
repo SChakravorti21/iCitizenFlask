@@ -113,6 +113,8 @@ def load_dashboard():
                 information for you. We will never share any of this information externally.''', 'info')
         return redirect( url_for('functions.update_preferences') )
 
+    
+
     return render_template('dashboard.html', db_client=user)
 
 @mod.route('/events/', methods = ['GET', 'POST'])
@@ -135,35 +137,16 @@ def show_events():
             user = users.find_one_and_update(query, {'$set':{QueryKeys.SAVED_EVENTS: mergedlist}})
             print('NEW SAVED EVENTS iS ', mergedlist)
             flash('TESTFLASH', 'success')
-
-
-    location = user[QueryKeys.LOCATION]
-    state = location['state']
-    city = location['city']
-    prefs = user[QueryKeys.PREFERENCES]
-    subjects = prefs['subjects']
-    print(state, city)
     '''
 
+
     event_list = [EventClass(**kwargs) for kwargs in user[QueryKeys.EVENT_LIST]]
-    # event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
 
 
     #saved_events = set(user[QueryKeys.SAVED_EVENTS])
 
-    '''
-    for e in event_list:
-        if e.title in saved_events:
-            e.saved = True
-    '''
-
 
     return render_template('events.html', event_list = event_list, db_client=user)
-    # user_events = db["{}_events".format(session[QueryKeys.USERNAME])]
-    #
-    # event_list = [Event(**kwargs) for kwargs in user_events]
-    #
-    # return render_template('events.html', event_list = event_list, db_client=user)
 
 
 @mod.route('/polls/', methods=['GET'])
