@@ -3,13 +3,11 @@ from bs4 import BeautifulSoup
 from textblob import Word
 from textblob import TextBlob
 from textblob.wordnet import Synset
-from nltk.stem import PorterStemmer
-from nltk.tokenize import sent_tokenize, word_tokenize
 import time
 
 class Event:
 
-	def __init__(self, org_title, title, link, time, location, price, img_link, pts = 0, _id=None, saved = False):
+	def __init__(self, org_title, title, link, time, location, price, img_link, pts = 0, saved = False):
 		self.org_title = org_title
 		self.title = title
 		self.link = link
@@ -54,7 +52,6 @@ class Event:
 
 			soup = BeautifulSoup(page, 'html.parser')
 
-
 			#if page goes out of bounds, break
 
 			out_of_bounds_box = soup.find('div', attrs = {'class': 'js-search-error-container'})
@@ -72,17 +69,27 @@ class Event:
 			numEvents = len(title_boxes)
 
 			for n in range(numEvents):
-				event_list.append(
-					cls(
-						title_boxes[n].text.strip(),
-						title_boxes[n].text.strip().lower(),
-						link_boxes[n]['href'],
-						time_boxes[n].text.strip(),
-						loc_boxes[n].text.strip(),
-						price_boxes[n].text,
-						image_boxes[n].img['src']
-					)
+
+				dup = False
+				e_to_add = cls(
+					org_title = title_boxes[n].text.strip(),
+					title = title_boxes[n].text.strip().lower(),
+					link = link_boxes[n]['href'],
+					time = time_boxes[n].text.strip(),
+					location = loc_boxes[n].text.strip(),
+					price = price_boxes[n].text,
+					img_link = image_boxes[n].img['src']
 				)
+
+				for e in event_list:
+					if e.title == e_to_add.title:
+						dup = True
+						print('THERE IS A DUPE')
+						break
+				if not dup:
+					event_list.append(e_to_add)
+
+
 
 		print('got events')
 		return event_list
@@ -90,17 +97,19 @@ class Event:
 
 	#retusn sorted list of events
 	@classmethod
-	def get_sorted_events(cls, state = 'ny', city='new york', pref_subjs = ['politics'], num_pages = 5):
-
+	def get_sorted_events(cls, state, city, pref_subjs, num_pages):
 
 		start_time = time.time()
+		# event_list = Event.scrape(state = state, city = city, max_pg_num = num_pages)
 
-		event_list = Event.scrape(state = state, city = city, max_pg_num = num_pages)
 		print('took ', time.time() - start_time, 'secs to get ', num_pages, ' pages of events')
 
+		event_list = [cls(title = 'prohibition pub crawl', org_title = 'PROHIBITION PUB CRAWL')]
+		for p in pref_subjs:
+			print(p)
 
 		for i in range(len(pref_subjs)):
-			pref_subjs[i] = pref_subjs[i].lower()
+			pref_subjs[i] = pref_subjs[i].replace(',', '').lower()
 		#goes through every combination of words in the event title and the pref subjects words
 		#finds the list of synonyms for each combination
 		#finds the max path similarity value in this list of synonyms
@@ -109,84 +118,112 @@ class Event:
 		#find the average of the pts in the object
 		#repeat for each event
 		#sort events by descending order according to pts
+
+		chars_to_skip = {',', '\'', '"', ':', '-', '?', '!', '&', '+', '#', '@', '/',
+						'\\', '(', ')', '{', '}', '%', '^', '*', '_'}
+		stop_words = {'a','in', 's', 'do', 'that', 'between', 'most', 'who', 'their',
+		'now', 'be', 'which', 'ourselves', 'my', 'some', 'of', 'the', 'to', 'hasn',
+		'about', 'was', 'before', 'its', 'but', 'with', 'have', 'on', 'own', 'ma',
+		'them', 'doesn', 'mustn', 'a', 'same', 'yourself', 'y', 'is', 'for', 'where',
+		'aren', 'had', 'didn', 'o', 'this', 'himself', 'in', 'further', 'only', 'against',
+		't', 'each', 'as', 'i', 'just', 'if', 'out', 'were', 'from', 'has', 'again',
+		 'through', 'we', 'how', 'me', 'so', 'does', 'off', 'yourselves', 'you', 'below',
+		  'wasn', 'been', 'because', 'any', 'am', 'will', 're', 'ain', 'during', 'or',
+		   'than', 'your', 'when', 'these', 'wouldn', 'll', 'haven', 'itself', 'more',
+		    'she', 'while', 'yours', 'by', 'both', 'couldn', 'his', 'at', 'down', 've',
+			 'mightn', 'and', 'after', 'then', 'theirs', 'it', 'such', 'our', 'those',
+			  'don', 'what', 'he', 'themselves', 'd', 'whom', 'him', 'above', 'ours',
+			   'once', 'can', 'weren', 'under', 'not', 'there', 'here', 'shan', 'why',
+			    'being', 'they', 'm', 'won', 'into', 'over', 'up', 'needn', 'few', 'isn',
+				 'are', 'shouldn', 'too', 'hadn', 'myself', 'did', 'her', 'having', 'very',
+				  'herself', 'doing', 'hers', 'should', 'no', 'all', 'nor', 'an', 'other',
+				   'until'}
+
+
 		for event in event_list:
 
 			ctr = 0
 			pts_to_assign = 0
+
 			old_title = event.title
-			nouns_phrases = []
+			event_words = []
 			curr = ''
 
+			# for c in old_title:
+			# 	if c in chars_to_skip or c.isdigit():
+			# 		continue
+			# 	elif c.strip() == '' and curr.strip() != '':
+
+			# 		if curr not in stop_words:
+			# 			event_words.append(curr.strip())
+			# 		curr = ''
+			# 	else:
+			# 		curr += c
+
 			for c in old_title:
-				if c == (',' or '\'' or ':' or '-' or '?' or '!' or '&' or '+' or '#' or '@'):
-					continue
-				elif c == ' ' and curr != '':
-					nouns_phrases.append(curr)
-					curr = ''
+				if (c in chars_to_skip or c.isdigit() or c.strip() == '') and curr.strip() != '':
+					if curr not in stop_words:
+						event_words.append(curr.strip())
+						curr = ''
+					else:
+						curr = ''
 				else:
 					curr += c
 
-			# nouns_phrases = TextBlob(old_title).noun_phrases
-			# nouns_phrases = old_title.split(' ')
-			for noun_phrase in nouns_phrases:
-				nouns = noun_phrase.split(' ')
-				#noun is each indiv noun in the title
-				for noun in nouns:
+			#get the last word in phrase
+			if curr not in stop_words:
+				event_words.append(curr.strip())
+				curr = ''
 
-					if noun == 'and':
-						continue
 
-					for subj in pref_subjs:
-						#subj_word is each indiv subj word in pref subjs
-						subj_words = []
+			for word in event_words:
 
-						nouns_phrases = []
-						curr_sub = ''
+				for subj in pref_subjs:
 
-						for c in subj:
-							if c == (',' or '\'' or ':' or '-' or '?' or '!' or '&' or '+' or '#' or '@'):
-								continue
-							elif c == ' ' and curr_sub != '':
-								subj_words.append(curr_sub)
-								curr_sub = ''
-							else:
-								curr_sub += c
+					#subj_words is each indiv subj phrase in pref subjs
+					subj_words = subj.split(' ')
+					# print(subj_words)
 
-						for subj_word in subj_words:
+					for subj_word in subj_words:
 
-							currMax = 0
-							noun_syns = Word(noun).synsets
-							subj_syns = Word(subj_word).synsets
+						if subj_word in stop_words:
+							continue
 
-							if len(noun_syns) == 0 or len(subj_syns) == 0:
-								break;
+						currMax = 0
+						word_syns = Word(word).synsets
+						subj_syns = Word(subj_word).synsets
 
-							for i in range(len(noun_syns)):
-								for j in range(len(subj_syns)):
+						if len(word_syns) == 0 or len(subj_syns) == 0:
+							break;
 
-									pathsim = noun_syns[i].path_similarity(subj_syns[j])
-									if pathsim != None:
-										if pathsim > currMax:
-											currMax = pathsim
+						for i in range(len(word_syns)):
+							for j in range(len(subj_syns)):
 
-							if(currMax != 0):
-								ctr += 1
-								event.pts += currMax
+								pathsim = word_syns[i].path_similarity(subj_syns[j])
+								if pathsim != None:
+									if pathsim > currMax:
+										currMax = pathsim
+
+						# print(word, 'vs', subj_word, 'score =', currMax)
+
+						if(currMax != 0):
+							ctr += 1
+							event.pts += currMax
 
 			if(ctr != 0):
-				event.pts /= ctr
+				event.pts /= len(event_words)
 
-		import numpy as np
-
-		event_pts=[]
-		for e in event_list:
-			event_pts.append(e.pts)
-
-		#softmax
-		event_pts = np.exp(event_pts) / float(sum(np.exp(event_pts)))
-
-		for p, e in zip(event_pts, event_list):
-			e.pts = p
+		# import numpy as np
+        #
+		# event_pts=[]
+		# for e in event_list:
+		# 	event_pts.append(e.pts)
+        #
+		# #softmax
+		# event_pts = np.exp(event_pts) / float(sum(np.exp(event_pts)))
+        #
+		# for p, e in zip(event_pts, event_list):
+		# 	e.pts = p
 
 		import operator
 		#sort by descending
@@ -198,7 +235,7 @@ class Event:
 
 
 	@staticmethod
-	def get_top_n_events(state, city, pref_subjs, num_pages, num_events):
+	def get_top_n_events(state = 'ny', city = 'new york', pref_subjs = ['education, finance, economy, financial, scholarship, school'], num_pages = 5, num_events = 15):
 
 		sorted_events = Event.get_sorted_events(state = state, city = city, pref_subjs = pref_subjs, num_pages = num_pages)
 
@@ -218,11 +255,10 @@ class Event:
 
 
 
-# pref_subjs = ['college', 'education', 'art']
-# event_l = Event.get_top_n_events(state = 'ny', city = 'new york', pref_subjs = pref_subjs, num_pages = 1, num_events = 10)
-# for e in event_l:
-# 	print(e.title)
-# 	print('						', e.pts)
+
+event_l = Event.get_top_n_events(num_events = 10)
+for e in event_l:
+	print(e.title, '			', e.pts)
 
 
 '''plan:
