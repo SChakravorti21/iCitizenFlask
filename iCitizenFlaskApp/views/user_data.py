@@ -25,6 +25,7 @@ def call_celery_task():
 def load_db(username):
     update_bills(username)
     update_events(username)
+    update_polls(username)
 
 def update_bills(username):
     import time
@@ -111,10 +112,8 @@ def update_events(username):
 
     return "Events have been written"
 
-@mod.route('/update_polls/', methods=['POST'])
-@is_logged_in
-def update_polls():
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+def update_polls(username):
+    query = {QueryKeys.USERNAME: username}
     users = db['users']
     user = users.find_one(query)
 
