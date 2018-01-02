@@ -9,21 +9,33 @@ from iCitizenFlaskApp.models.event import Event as EventClass
 
 from iCitizenFlaskApp.views.user_routes import is_logged_in
 
+from iCitizenFlaskApp import celery_app
+
 mod = Blueprint('data', __name__)
 
-@mod.route('/update_bills/', methods=['POST'])
+@mod.route('/load_db/', methods=["POST"])
 @is_logged_in
-def update_bills():
+def call_celery_task():
+    username = session[QueryKeys.USERNAME]
+    load_db.delay(username)
+    return "Work assigned to celery worker"
+
+@celery_app.task
+def load_db(username):
+    update_bills(username)
+    update_events(username)
+
+def update_bills(username):
     import time
 
     start_time = time.time()
 
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+    query = {QueryKeys.USERNAME: username}
     users = db['users']
 
     user = users.find_one(query)
     if 'national_legislators' not in user:
-        set_legislators()
+        set_legislators(username)
         user = users.find_one(query)
 
     national_legislators = [Legislator(**kwargs) for kwargs in user['national_legislators']]
@@ -49,8 +61,8 @@ def update_bills():
     print("Time for bills to finish: {} seconds".format(str(time.time() - start_time)))
     return "Bills written to DB"
 
-def set_legislators():
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+def set_legislators(username):
+    query = {QueryKeys.USERNAME: username}
     users = db['users']
 
     user = users.find_one(query)
@@ -73,10 +85,9 @@ def set_legislators():
 
     users.find_one_and_update(query, {'$set': {'state_legislators' : state_legislators_jsons}})
 
-@mod.route('/update_events/', methods=['POST'])
-@is_logged_in
-def update_events():
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+
+def update_events(username):
+    query = {QueryKeys.USERNAME: username}
     users = db['users']
     user = users.find_one(query)
 

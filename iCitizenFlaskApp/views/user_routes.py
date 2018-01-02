@@ -121,9 +121,9 @@ def show_events():
 
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
-    user_events = db["{}_events".format(session[QueryKeys.USERNAME])]
     user = users.find_one(query)
 
+    '''
 	if request.method == 'POST':
 
 		prev_saved_events = user[QueryKeys.SAVED_EVENTS]
@@ -149,17 +149,19 @@ def show_events():
   	prefs = user[QueryKeys.PREFERENCES]
   	subjects = prefs['subjects']
   	print(state, city)
+    '''
 
-
-    event_list = [EventClass(**kwargs) for kwargs in user_events.find()]
+    event_list = [EventClass(**kwargs) for kwargs in user[QueryKeys.EVENT_LIST]]
 	# event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
 
 
-	saved_events = set(user[QueryKeys.SAVED_EVENTS])
+	#saved_events = set(user[QueryKeys.SAVED_EVENTS])
 
+    '''
  	for e in event_list:
  		if e.title in saved_events:
  			e.saved = True
+    '''
 
 
     return render_template('events.html', event_list = event_list, db_client=user)
@@ -177,7 +179,7 @@ def load_polls():
     users = db['users']
 
     user = users.find_one(query)
-    return render_template('events.html', db_client=user)
+    return render_template('polls.html', db_client=user)
 
 @mod.route('/legislators/', methods=['GET'])
 @is_logged_in
@@ -186,7 +188,7 @@ def load_legislators():
     users = db['users']
 
     user = users.find_one(query)
-    return render_template('events.html', db_client=user)
+    return render_template('legislators.html', db_client=user)
 
 @mod.route('/bills/', methods=['GET'])
 @is_logged_in
@@ -195,4 +197,4 @@ def load_bills():
     users = db['users']
 
     user = users.find_one(query)
-    return render_template('events.html', db_client=user)
+    return render_template('bills.html', db_client=user)

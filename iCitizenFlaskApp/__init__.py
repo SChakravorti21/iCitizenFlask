@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, session
+from iCitizenFlaskApp.celery_worker import make_celery
 import datetime
 
 app = Flask(__name__)
@@ -13,6 +14,8 @@ def before_request():
 @app.route('/', methods=['GET'])
 def index():
 	return render_template('home.html')
+
+celery_app = make_celery(app)
 
 from iCitizenFlaskApp.views import user_routes, user_functions, user_data
 

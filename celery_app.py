@@ -1,0 +1,1 @@
+from iCitizenFlaskApp import celery_app

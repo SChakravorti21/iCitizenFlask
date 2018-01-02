@@ -2,7 +2,7 @@ var result1;
 var result2;
 
 $.ajax({
-    url: "/update_bills/",
+    url: "/load_db/",
     type: "post",
     success: function(response){
     result1 = response
@@ -10,11 +10,3 @@ $.ajax({
     }
 });
 
-$.ajax({
-    url: "/update_events/",
-    type: "post",
-    success: function(response) {
-    result2 = response
-    $('#event_test').html(result2)
-    }
-});
