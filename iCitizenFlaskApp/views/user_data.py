@@ -8,14 +8,10 @@ from iCitizenFlaskApp.models.legislator import Legislator
 from iCitizenFlaskApp.models.bill import Bill
 from iCitizenFlaskApp.models.event import Event as EventClass
 
-from iCitizenFlaskApp.views.user_routes import is_logged_in
-
 from iCitizenFlaskApp import celery_worker_bills, celery_worker_events, celery_worker_polls
 
 mod = Blueprint('data', __name__)
 
-@mod.route('/load_db/', methods=["POST"])
-@is_logged_in
 def call_celery_task():
     username = session[QueryKeys.USERNAME]
     load_bills.delay(username)

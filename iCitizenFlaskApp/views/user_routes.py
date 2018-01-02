@@ -2,10 +2,14 @@ from flask import Blueprint, render_template, flash, redirect, url_for, session,
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
+import json
+from bson import json_util
 
 from iCitizenFlaskApp.forms import RegisterForm, LoginForm
 
 from iCitizenFlaskApp.dbconfig import db, QueryKeys
+
+from iCitizenFlaskApp.views.user_data import call_celery_task
 
 from iCitizenFlaskApp.models.legislator import Legislator
 from iCitizenFlaskApp.models.bill import Bill
@@ -94,6 +98,12 @@ def logout():
     session[QueryKeys.USERNAME] = None
     session.clear()
 
+    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+    users = db['users']
+
+    users.find_one_and_update(query, {'$set':{QueryKeys.UPDATE_DB: True}})
+    users.find_one_and_update(query, {'$set':{QueryKeys.UPDATE_BILLS: True}})
+    users.find_one_and_update(query, {'$set':{QueryKeys.UPDATE_EVENTS: True}})
     flash('You have successfully logged out!', 'success')
     return redirect( url_for('index'))
 
@@ -111,9 +121,10 @@ def load_dashboard():
         flash('''We noticed that your profile is incomplete.
                 This information will be useful in helping us find relevant
                 information for you. We will never share any of this information externally.''', 'info')
-        return redirect( url_for('functions.update_preferences') )
+        return redirect( url_for('functions.update_preferences'))
 
-
+    if user[QueryKeys.UPDATE_DB]:
+        call_celery_task()
 
     return render_template('dashboard.html', db_client=user)
 
@@ -151,7 +162,7 @@ def update_user_saved_events(prev_saved_events):
 
 @mod.route('/polls/', methods=['GET'])
 @is_logged_in
-def load_polls():
+def show_polls():
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
 
@@ -160,7 +171,7 @@ def load_polls():
 
 @mod.route('/legislators/', methods=['GET'])
 @is_logged_in
-def load_legislators():
+def show_legislators():
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
 
@@ -169,9 +180,25 @@ def load_legislators():
 
 @mod.route('/bills/', methods=['GET'])
 @is_logged_in
-def load_bills():
+def show_bills():
+    return render_template('bills.html')
+
+@mod.route('/get-bills-db/', methods=['POST'])
+@is_logged_in
+def get_bills():
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
 
     user = users.find_one(query)
-    return render_template('bills.html', db_client=user)
+
+    national_bill_jsons = user['national_bills'] if 'national_bills' in user else None
+
+    state_bills_jsons = user['state_bills'] if 'state_bills' in user else None
+
+    '''
+    jsons = []
+    jsons.append(national_bill_jsons)
+    jsons.append(state_bills_jsons)
+    '''
+
+    return json.dumps(national_bill_jsons, sort_keys=True, indent=4, default=json_util.default)

@@ -102,9 +102,6 @@ class Event:
 		# event_list = [cls(title = 'prohibition pub crawl', org_title = 'PROHIBITION PUB CRAWL', link = 1, time=1,location=1,price=1,img_link=1)]
 
 
-		for p in pref_subjs:
-			print(p)
-
 		for i in range(len(pref_subjs)):
 			pref_subjs[i] = pref_subjs[i].replace(',', '').lower()
 		#goes through every combination of words in the event title and the pref subjects words
@@ -249,11 +246,6 @@ class Event:
 				top_n.pop(-1)
 
 		return top_n
-
-
-event_l = Event.get_top_n_events(num_events = 10)
-for e in event_l:
-	print(e.title, '\n       ', e.pts)
 
 
 '''
