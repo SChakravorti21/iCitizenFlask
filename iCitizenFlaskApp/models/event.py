@@ -256,8 +256,7 @@ class Event:
 # 	print(e.title, '\n       ', e.pts)
 
 
-'''plan:
-
+'''
 for each event in event_list
 	for each word in title:
 		for each subj in pref_subjs:
