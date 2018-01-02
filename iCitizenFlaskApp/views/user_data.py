@@ -10,7 +10,7 @@ from iCitizenFlaskApp.models.event import Event as EventClass
 
 from iCitizenFlaskApp.views.user_routes import is_logged_in
 
-from iCitizenFlaskApp import celery_app
+from iCitizenFlaskApp import celery_worker_bills, celery_worker_events, celery_worker_polls
 
 mod = Blueprint('data', __name__)
 
@@ -18,13 +18,25 @@ mod = Blueprint('data', __name__)
 @is_logged_in
 def call_celery_task():
     username = session[QueryKeys.USERNAME]
-    load_db.delay(username)
-    return "Work assigned to celery worker"
+    load_bills.delay(username)
+    load_events.delay(username)
+    load_polls.delay(username)
+    return "Work assigned to celery workers"
+    
 
-@celery_app.task
-def load_db(username):
+@celery_worker_bills.task
+def load_bills(username):
+    print("started bills")
     update_bills(username)
+
+@celery_worker_events.task
+def load_events(username):
+    print("started events")
     update_events(username)
+
+@celery_worker_polls.task
+def load_polls(username):
+    print("started polls")
     update_polls(username)
 
 def update_bills(username):
@@ -51,7 +63,7 @@ def update_bills(username):
     national_bills_jsons = [bill.json() for bill in national_bills]
     state_bills_jsons = [bill.json() for bill in state_bills]
 
-    users.find_one_and_update(query, {'$set': {'national_bils': national_bills_jsons}})
+    users.find_one_and_update(query, {'$set': {'national_bills': national_bills_jsons}})
 
     users.find_one_and_update(query, {'$set': {'state_bills' : state_bills_jsons}})
 

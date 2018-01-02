@@ -15,7 +15,9 @@ def before_request():
 def index():
 	return render_template('home.html')
 
-celery_app = make_celery(app)
+celery_worker_bills = make_celery(app)
+celery_worker_events = make_celery(app)
+celery_worker_polls = make_celery(app)
 
 from iCitizenFlaskApp.views import user_routes, user_functions, user_data
 

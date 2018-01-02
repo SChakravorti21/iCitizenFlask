@@ -1,1 +1,1 @@
-from iCitizenFlaskApp import celery_app
+from iCitizenFlaskApp import celery_worker_bills, celery_worker_events, celery_worker_polls
