@@ -130,20 +130,7 @@ def load_dashboard():
 @mod.route('/events/', methods = ['GET', 'POST'])
 @is_logged_in
 def show_events():
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-    users = db['users']
-    user = users.find_one(query)
-    '''
-    if request.method == 'POST':
-        prev_saved_events = user[QueryKeys.SAVED_EVENTS]
-		update_user_saved_events(prev_saved_events)
-        flash('events have been updated!', 'success')
-    '''
-
-
-    event_list = [EventClass(**kwargs) for kwargs in user[QueryKeys.EVENT_LIST]]
-
-    return render_template('events.html', event_list = event_list, db_client=user)
+    return render_template('events.html')
 
 
 def update_user_saved_events(prev_saved_events):
@@ -162,20 +149,12 @@ def update_user_saved_events(prev_saved_events):
 @mod.route('/polls/', methods=['GET'])
 @is_logged_in
 def show_polls():
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-    users = db['users']
-
-    user = users.find_one(query)
-    return render_template('polls.html', db_client=user)
+    return render_template('polls.html')
 
 @mod.route('/legislators/', methods=['GET'])
 @is_logged_in
 def show_legislators():
-    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-    users = db['users']
-
-    user = users.find_one(query)
-    return render_template('legislators.html', db_client=user)
+    return render_template('legislators.html')
 
 @mod.route('/bills/', methods=['GET'])
 @is_logged_in
