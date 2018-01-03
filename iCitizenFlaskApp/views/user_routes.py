@@ -208,3 +208,27 @@ def get_user_polls():
     user_polls_jsons = user['user_polls'] if 'user_polls' in user else None
 
     return json.dumps(user_polls_jsons, sort_keys=True, indent=4, default=json_util.default)
+
+@mod.route('/get-state-legislators-db/', methods=['POST'])
+@is_logged_in
+def get_user_polls():
+    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+    users = db['users']
+
+    user = users.find_one(query)
+
+    user_legislators_jsons = user['state_legislators'] if 'state_legislators' in user else None
+
+    return json.dumps(user_legislators_jsons, sort_keys=True, indent=4, default=json_util.default)
+
+@mod.route('/get-national-legislators-db/', methods=['POST'])
+@is_logged_in
+def get_user_polls():
+    query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+    users = db['users']
+
+    user = users.find_one(query)
+
+    user_legislators_jsons = user['national_legislators'] if 'national_legislators' in user else None
+
+    return json.dumps(user_legislators_jsons, sort_keys=True, indent=4, default=json_util.default)
