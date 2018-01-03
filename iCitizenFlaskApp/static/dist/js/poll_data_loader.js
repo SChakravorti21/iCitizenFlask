@@ -1,22 +1,22 @@
-var eventInterval;
+var pollInterval;
 var count = 1;
 
-function fetchevents() {
+function fetchpolls() {
     $.ajax({
-        url: "/get-user-events-db/",
+        url: "/get-user-polls/",
         type: "post",
         dataType: "json",
         success: function(response){
             if(response != null){
-                events = response;
-                for (bill of events) {
-                    $('#event_'+count).html(event['title']);
+                polls = response;
+                for (poll of polls) {
+                    $('#event_'+count).html(poll['title']);
                     count++;
                 }
             }
             if(count >= 10) {
                 console.log("Event interval has been cleared")
-                clearInterval(eventInterval)
+                clearInterval(pollInterval)
             } else {
                 console.log("Still polling")
             }
@@ -25,5 +25,5 @@ function fetchevents() {
 }
 
 $(document).ready(function(){
-    eventInterval = setInterval(fetchevents, 5000);
+    pollInterval = setInterval(fetchpolls, 5000);
 })
