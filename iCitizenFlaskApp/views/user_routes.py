@@ -211,7 +211,7 @@ def get_user_polls():
 
 @mod.route('/get-state-legislators-db/', methods=['POST'])
 @is_logged_in
-def get_user_polls():
+def get_state_legislators():
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
 
@@ -223,7 +223,7 @@ def get_user_polls():
 
 @mod.route('/get-national-legislators-db/', methods=['POST'])
 @is_logged_in
-def get_user_polls():
+def get_national_legislators():
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
 
