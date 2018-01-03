@@ -198,8 +198,6 @@ class Event:
 									if pathsim > currMax:
 										currMax = pathsim
 
-						print(word, 'vs', subj_word, 'score =', currMax)
-
 						if(currMax != 0):
 							ctr += 1
 							event.pts += currMax
