@@ -6,64 +6,49 @@
 {% if db_client['update_db'] == False %}
     <div>Data has been written to DB</div>
 
-    <h1 style="text-align:center;">Relevant Events</h1>
-    <hr style="border-top: 1px solid #8c8b8b;">
-    <input type="submit" class="btn btn-primary" value="Update Saved Events"
+  <h1 style="text-align:center;">Relevant Events</h1>
+  <hr style="border-top: 1px solid #8c8b8b;">
+  <input type="submit" class="btn btn-primary" value="Update Saved Events"
             form="save_events_form" style="margin-left:50px">
 
-    <hr style="border-top: 1px solid #8c8b8b;">
+  <hr style="border-top: 1px solid #8c8b8b;">
 
     <form class="form-group" method="POST" id="save_events_form">
         <div class="row">
 
     {% for event in event_list %}
-        <div class="col-4 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+      <div class="col-4 col-sm-6 col-md-4 col-lg-4 col-xl-4">
 
         <div class="card" style="width: 20rem; padding:30px;">
-            <img class="card-img-top" src= {{ event.img_link }} alt="Card image cap">
-            <div class="card-block">
+          <img class="card-img-top" src= {{ event.img_link }} alt="Card image cap">
+          <div class="card-block">
             <h4 class="card-title">{{ event.org_title }}</h4>
             <p class="card-text">{{ event.location }}</p>
-            </div>
-            <ul class="list-group list-group-flush">
+          </div>
+          <ul class="list-group list-group-flush">
             <li class="list-group-item">{{ event.time }}</li>
             <li class="list-group-item">{{ event.price }}</li>
             <li class="list-group-item">Relevance Score: {{ event.pts }}</li>
 
-
-            <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
             <label class="custom-checkbox label_event" style="margin: 20px 0px -10px 20px">
-            <label for="id-of-input" class="custom-checkbox label_event">
-              <input type="checkbox" id="id-of-input"/>
-              <div class="glyphicon glyphicon-star-empty"></div>
-              <div class="glyphicon glyphicon-star"></div>
-              <span>Favorite</span>
+
+              <input type="checkbox" name = "box" value="{{ event.title }}" {% if event.saved %} checked {% endif %}/>
+                <span>Add to Saved Events</span>
             </label>
 
 
           </ul>
           <div class="card-block">
-            <a href="{{ event.link }}" target="_blank" class="card-link">More Info</a>
-          </div>
-          </div>
-                <input type="checkbox" name = "box" value="{{ event.title }}" {% if event.saved %} checked {% endif %}/>
-                <span>Add to Saved Events</span>
-            </label>
-
-
-            </ul>
-            <div class="card-block">
             <a href= {{ event.link }} target="_blank" class="card-link">More Info</a>
-            </div>
-            </div>
+          </div>
+          </div>
+
         </div>
-        {% endfor %}
-        </div>
+      {% endfor %}
+      </div>
     </form>
 
-{% else %}
-    <h1>DB CLIENT UPDATE DB IS TRUE</h1>
-{% endif %}
 
+{% endif %}
 
 {% endblock %}
