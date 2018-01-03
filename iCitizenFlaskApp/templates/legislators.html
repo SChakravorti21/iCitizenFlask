@@ -2,8 +2,71 @@
 
 {% block body %}
 
-{% if db_client['update_db'] == False %}
-    <h1>Data has been written to DB</h1>
-{% endif %}
+<div class="container">
+    <div id="legislator_national_1">
 
+    </div>
+    <div id="legislator_national_2">
+        
+    </div>
+    <div id="legislator_national_3">
+        
+    </div>
+    <div id="legislator_national_4">
+        
+    </div>
+    <div id="legislator_national_5">
+        
+    </div>
+    <div id="legislator_national_6">
+        
+    </div>
+    <div id="legislator_national_7">
+    
+    </div>
+    <div id="legislator_national_8">
+
+    </div>
+    <div id="legislator_national_9">
+
+    </div>
+    <div id="legislator_national_10">
+
+    </div>
+    <div id="legislator_state_1">
+        
+    </div>
+    <div id="legislator_state_2">
+        
+    </div>
+    <div id="legislator_state_3">
+        
+    </div>
+    <div id="legislator_state_4">
+        
+    </div>
+    <div id="legislator_state_5">
+        
+    </div>
+    <div id="legislator_state_6">
+        
+    </div>
+    <div id="legislator_state_7">
+        
+    </div>
+    <div id="legislator_state_8">
+        
+    </div>
+    <div id="legislator_state_9">
+        
+    </div>
+    <div id="legislator_state_10">
+        
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='dist/js/legislator_data_loader.js') }}"></script>
 {% endblock %}
