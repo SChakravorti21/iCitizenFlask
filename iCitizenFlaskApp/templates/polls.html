@@ -2,8 +2,85 @@
 
 {% block body %}
 
-{% if db_client['update_db'] == False %}
-    <h1>Data has been written to DB</h1>
-{% endif %}
+<style type="text/css">
+	a.font-awesome-link {
+		color: rgba(0, 0, 0, 1);
+    	text-decoration: none;
+	}
 
+	a.font-awesome-link:hover {
+		color: rgba(0, 0, 0, 0.5); 
+		text-decoration:none; 
+		cursor:pointer;  
+	}
+
+</style>
+
+<div class="container">
+    <div class="poll_1">
+    	
+    </div>
+    <div class="poll_2">
+    	
+    </div>
+    <div class="poll_3">
+    	
+    </div>
+    <div class="poll_4">
+    	
+    </div>
+    <div class="poll_5">
+    	
+    </div>
+    <div class="poll_6">
+    	
+    </div>
+    <div class="poll_7">
+    	
+    </div>
+    <div class="poll_8">
+    	
+    </div>
+    <div class="poll_9">
+    	
+    </div>
+    <div class="poll_10">
+    	
+    </div>
+    <div class="poll_11">
+    	
+    </div>
+    <div class="poll_12">
+    	
+    </div>
+    <div class="poll_13">
+    	
+    </div>
+    <div class="poll_14">
+    	
+    </div>
+    <div class="poll_15">
+    	
+    </div>
+    <div class="poll_16">
+    	
+    </div>
+    <div class="poll_17">
+    	
+    </div>
+    <div class="poll_18">
+    	
+    </div>
+    <div class="poll_19">
+    	
+    </div>
+    <div class="poll_20">
+    	
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='dist/js/poll_data_loader.js') }}"></script>
 {% endblock %}

@@ -57,6 +57,7 @@ function fetchnationallegs() {
                         `)
                     count++;
                 }
+                clearTimeout(nationalInterval)
             }
             if(count >= 10) {
                 console.log("National legislator interval has been cleared")
