@@ -54,10 +54,13 @@ function fetchnationalbills() {
             }
             if(count >= 10) {
                 console.log("National interval has been cleared")
-                clearInterval(nationalInterval)
+                clearTimeout(nationalInterval)
             } else {
                 console.log("Still polling")
             }
+        },
+        complete: function(data) {
+            setTimeout(nationalInterval, 1000);
         }
     })
 }
@@ -75,7 +78,7 @@ function fetchstatebills() {
                     html = `
                         <div class="row">
                             <div class="col">
-                                <div class="card mb-4" style='height: 25rem; box-shadow: -5px 5px rgba(120,144,156,0.3);'>
+                                <div class="card mb-4" style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
                                     <div class="card-header">Bill ID: ` + bill['level'].toUpperCase() + `: ` + bill['bill_id'] + `</div>
                                     <div class="card-block">
                                         <h4 class="card-title">Author: ` + bill['author'] + `</h4>
@@ -93,14 +96,17 @@ function fetchstatebills() {
             }
             if(count >= 20) {
                 console.log("State interval has been cleared")
-                clearInterval(stateInterval)
+                clearTimeout(stateInterval)
             } else {
                 console.log("Still polling")
             }
+        },
+        complete: function(data) {
+            setTimeout(stateInterval, 1000);
         }
     });
 }
 $(document).ready(function(){
-    nationalInterval = setInterval(fetchnationalbills, 2000);
-    stateInterval = setInterval(fetchstatebills, 2000);
+    nationalInterval = setTimeout(fetchnationalbills, 1000);
+    stateInterval = setTimeout(fetchstatebills, 1000);
 })

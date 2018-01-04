@@ -45,8 +45,8 @@ function fetchnationallegs() {
                                             border-radius: 1em;'>
                                     </div>
                                     <div class='col-sm-8 pull-left'>
-                                        <h6 class='card-title'>Chamber: ` + legislator['chamber'] + `</h6><br>
-                                        <p class='card-text'>` + info + `</p>
+                                        <h6 class='card-title' style='color: cornflowerblue;'>Chamber: ` + legislator['chamber'] + `</h6><br>
+                                        <p class='card-text' style='color: coral;'>` + info + `</p>
                                     </div>
                                 </div>
                                 
@@ -111,8 +111,8 @@ function fetchstatelegs() {
                                             border-radius: 1em;'>
                                     </div>
                                     <div class='col-sm-8 pull-left'>
-                                        <h6 class='card-title'>Chamber: ` + chamber + `</h6><br>
-                                        <p class='card-text'>` + info + `</p>
+                                        <h6 class='card-title' style='color: cornflowerblue;'>Chamber: ` + chamber + `</h6><br>
+                                        <p class='card-text' style='color: coral;'>` + info + `</p>
                                     </div>
                                 </div>
                                 
