@@ -94,7 +94,11 @@ def update_preferences():
 				{
 					QueryKeys.INPUTTED_PREFERENCES: True,
 					QueryKeys.PREFERENCES: preferences_obj,
-					QueryKeys.LOCATION: address_obj
+					QueryKeys.LOCATION: address_obj,
+					QueryKeys.UPDATE_DB: True,
+					QueryKeys.UPDATE_EVENTS: True,
+					QueryKeys.UPDATE_BILLS: True,
+					QueryKeys.UPDATE_POLLS: True
 				}})
 			# print(user)
 
