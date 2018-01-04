@@ -4,8 +4,12 @@
 
 <h1 style="text-align:center;">Relevant Events</h1>
 <hr style="border-top: 1px solid #8c8b8b;">
+<input type="submit" class="btn btn-primary" value="Update Saved Events"
+          form="save_events_form" style="margin-left:50px">
 
-<div class="row">
+<hr style="border-top: 1px solid #8c8b8b;">
+
+<form class="form-group" method="POST" id="save_events_form">
 
   <div class="container">
     <div id="event_1"></div>
@@ -24,8 +28,7 @@
     <div id="event_14"></div>
     <div id="event_15"></div>
   </div>
-
-</div>
+</form>
 
 {% endblock %}
 

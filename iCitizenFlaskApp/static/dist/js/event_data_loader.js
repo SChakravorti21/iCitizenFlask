@@ -9,47 +9,58 @@ function fetchevents() {
         success: function(response){
             if(response != null){
                 events = response;
+
+
                 for (event of events) {
 
                   html = `
+                    <div class="card mb-4" style='height: 25rem; box-shadow: -5px 5px rgba(120,144,156,0.3);'>
+                        <h4 class="card-header" style="background-color: #cadbf7;"> ` + event['org_title'] + `</h4>
+                        <div class = "card-block">
+                            <div class="row ml-3" style = "height: 16rem;">
+                                <div class="col-sm-3"
+                                    style="
+                                    background-image: url(` + event['img_link'] + `);
+                                    background-repeat: no-repeat;
+                                    background-position: center;
+                                    background-size: cover;
+                                    border: 0.25em solid #59698d;
+                                    border-radius: 1em;"/>
 
-                  <div> TEST</div>
+
+                               <ul class="list-group list-group-flush">
+                                   <li class="list-group-item">` + event['location'] + `</li>
+                                   <li class="list-group-item" style="background-color: #e5e6e8;">` + event['time'] + `</li>
+                                   <li class="list-group-item">` + event['price'] + `</li>
+                                   <li class="list-group-item" style="background-color: #e5e6e8;">Relevance Score: ` + event['pts'] + `</li>
+                                   <li class="list-group-item">
+                                      <a class="btn btn-info" target="_blank" href="`+ event['link'] + `">More Info</a>
+
+                                   </li>
+                               </ul>
+
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="card-footer">
+
+                        <label class="custom-checkbox label_event" style="margin: 20px 0px -10px 20px">
+                            <input type="checkbox" name = "box" style="transform: scale(1.5);"/>
+                            <font size="+0">Add to Saved Events</font>
+                            <br>
+                        </label>
+
+                        </div>
+
+
+                    </div>
 
                   `
-                  // html = `
-                  //
-                  // <div class="col-4 col-sm-6 col-md-4 col-lg-4 col-xl-4">
-                  //
-                  //   <div class="card" style="width: 20rem; padding:30px;">
-                  //     <img class="card-img-top" src=` + event['img_link']  + `alt="Card image cap">
-                  //     <div class="card-block">
-                  //       <h4 class="card-title">` + event['org_title']  + `</h4>
-                  //       <p class="card-text"> ` + event['location']   +   `</p>
-                  //     </div>
-                  //     <ul class="list-group list-group-flush">
-                  //       <li class="list-group-item">` + event['time'] + `</li>
-                  //       <li class="list-group-item">`  + event['price'] + `</li>
-                  //       <li class="list-group-item">Relevance Score: ` + event['pts'] + `</li>
-                  //
-                  //       <label class="custom-checkbox label_event" style="margin: 20px 0px -10px 20px">
-                  //
-                  //         <input type="checkbox" name = "box" value=` + event['title'] + ` {% if ` + event['saved'] + ` %} checked {% endif %}/>
-                  //           <span>Add to Saved Events</span>
-                  //       </label>
-                  //
-                  //
-                  //     </ul>
-                  //     <div class="card-block">
-                  //       <a href=` + event['link']  + `target="_blank" class="card-link">More Info</a>
-                  //     </div>
-                  //     </div>
-                  //
-                  //   </div>
-                  //
-                  //
-                  //
-                  //
-                  // `
 
                     $('#event_'+count).html(html);
                     count++;
@@ -66,5 +77,5 @@ function fetchevents() {
 }
 
 $(document).ready(function(){
-    eventInterval = setInterval(fetchevents, 5000);
+    eventInterval = setInterval(fetchevents, 500);
 })
