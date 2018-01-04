@@ -13,12 +13,12 @@ function fetchnationalbills() {
                     html = `
                         <div class="row" style="padding-top: 1.5rem">
                             <div class="col">
-                                <div class="card mb-4" style='height: 22.5rem; box-shadow: -5px 5px rgba(120,144,156,0.3);'>
+                                <div class="card mb-4" style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
                                     <div class="card-header">` + bill['level'].toUpperCase() + `</div>
                                     <div class="card-block">
-                                        <h4 class="card-title" style="height:2.5rem; color:teal">Author: ` + bill['author'] + `</h4>
-                                        <h5 class="card-subtitle mb-2 text-muted" style="color:green; height:2rem; display:inline">Bill Title: </h5>
-                                        <h5 class="card-subtitle" style="height:2rem; color:red; display:inline">` + bill['title'] + `</h5>
+                                        <h4 class="card-title" style="color:teal">Author: ` + bill['author'] + `</h4>
+                                        <h5 class="card-subtitle mb-2 text-muted" style="color:green; display:inline">Bill Title: </h5>
+                                        <h5 class="card-subtitle" style="color:red; display:inline">` + bill['title'] + `</h5>
                                         <p></p>
                                         <p class=".text-info card-text" style="line-height: 2rem; font-size: 20px">Bill Description: ` + bill['description'] + `</p>
                                         <a class="btn btn-info" href="`+ bill['govtrack_link'] + `">Bill Link</a>
@@ -34,10 +34,13 @@ function fetchnationalbills() {
             }
             if(count >= 10) {
                 console.log("National interval has been cleared")
-                clearInterval(nationalInterval)
+                clearTimeout(nationalInterval)
             } else {
                 console.log("Still polling")
             }
+        },
+        complete: function(data) {
+            setTimeout(nationalInterval, 1000);
         }
     })
 }
@@ -55,7 +58,7 @@ function fetchstatebills() {
                     html = `
                         <div class="row">
                             <div class="col">
-                                <div class="card mb-4" style='height: 25rem; box-shadow: -5px 5px rgba(120,144,156,0.3);'>
+                                <div class="card mb-4" style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
                                     <div class="card-header">Bill ID: ` + bill['level'].toUpperCase() + `: ` + bill['bill_id'] + `</div>
                                     <div class="card-block">
                                         <h4 class="card-title">Author: ` + bill['author'] + `</h4>
@@ -73,14 +76,17 @@ function fetchstatebills() {
             }
             if(count >= 20) {
                 console.log("State interval has been cleared")
-                clearInterval(stateInterval)
+                clearTimeout(stateInterval)
             } else {
                 console.log("Still polling")
             }
+        },
+        complete: function(data) {
+            setTimeout(stateInterval, 1000);
         }
     });
 }
 $(document).ready(function(){
-    nationalInterval = setInterval(fetchnationalbills, 2000);
-    stateInterval = setInterval(fetchstatebills, 2000);
+    nationalInterval = setTimeout(fetchnationalbills, 1000);
+    stateInterval = setTimeout(fetchstatebills, 1000);
 })

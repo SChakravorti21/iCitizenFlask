@@ -93,8 +93,6 @@ function fetchpolls() {
                                 }
                                 details += '</div></div>'
                             }
-
-                            details += '<br><br>';
                             candidateCount++;
                         }
                     }
@@ -108,8 +106,8 @@ function fetchpolls() {
                         <div class='card mb-4' style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
                             <h4 class='card-header'>`+ type +`</h4>
                             <div class='card-block'>
-                                <h6 class='card-title'>` + title + `</h6>
-                                <p class='card-text'>` + info + `</p>
+                                <h6 class='card-title' style='color: cornflowerblue;'>` + title + `</h6>
+                                <p class='card-text' style='color: coral;'>` + info + `</p>
                                 <button class='btn btn-info mb-2' type='button' data-toggle='collapse' 
                                     data-target='#` + detailsId + `' aria-expanded="false" aria-controls="collapseExample">
                                     More info
