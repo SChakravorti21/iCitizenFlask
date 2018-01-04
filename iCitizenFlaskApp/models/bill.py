@@ -3,7 +3,8 @@ import requests, json
 from heapq import heappush, heappop, heapify
 
 class Bill(object):
-    def __init__(self, level, title, description, author, author_id, bill_id, id, govtrack_link=None, url=None):
+    def __init__(self, level, title, description, author, author_id, bill_id, id, author_party, author_state, cosponsor_num, created_date,
+                 last_action = None, govtrack_link=None, url=None):
         self.level = level
         self.title = title
         self.description = description
@@ -11,6 +12,11 @@ class Bill(object):
         self.author_id = author_id
         self.bill_id = bill_id
         self.id = id
+        self.author_party = author_party
+        self.author_state = author_state
+        self.cosponsor_num = cosponsor_num
+        self.created_date = created_date
+        self.last_action = last_action
         self.govtrack_link = govtrack_link
         self.url = url
 
@@ -29,6 +35,11 @@ class Bill(object):
             "author_id": self.author_id,
             "bill_id": self.bill_id,
             "id": self.id,
+            "author_party": self.author_party,
+            "author_state": self.author_state,
+            "consponsor_num": self.cosponsor_num,
+            "created_date": self.created_date,
+            "last_action": self.last_action,
             "govtrack_link": self.govtrack_link,
             "url": self.url
         }
@@ -60,20 +71,26 @@ class Bill(object):
                 author_id = bill['sponsor_id']
                 id = bill['bill_id']
                 bill_id = id
+                author_state = bill['sponsor_state']
+                author_party = bill['sponsor_party']
+                created_date = bill['introduced_date']
+                last_action = "{} on {}".format(bill['latest_major_action'], bill['latest_major_action_date'])
                 govtrack_link = bill['govtrack_url']
+                cosponsor_num = bill['cosponsors']
 
                 if bill_id in billPoints:
                     if author_id == legislator.id:
-                        billPoints[bill_id] += 9
-                    else:
                         billPoints[bill_id] += 4
+                    else:
+                        billPoints[bill_id] += 2
                 else:
                     if author_id == legislator.id:
-                        billPoints[bill_id] = 9
-                    else:
                         billPoints[bill_id] = 4
+                    else:
+                        billPoints[bill_id] = 2
                     billPoints[bill_id] += (bill['cosponsors'] / 5)
-                    created_bill = cls(level, title, description, author, author_id, bill_id, id, govtrack_link = govtrack_link)
+                    created_bill = cls(level, title, description, author, author_id, bill_id, id, author_party, author_state, cosponsor_num, created_date, 
+                                        last_action = last_action, govtrack_link = govtrack_link)
                     bills[bill_id] = created_bill
 
 
@@ -94,16 +111,22 @@ class Bill(object):
                 author_id = bill['sponsor_id']
                 bill_id = bill['bill_id']
                 id = bill_id
+                author_state = bill['sponsor_state']
+                author_party = bill['sponsor_party']
+                created_date = bill['introduced_date']
+                last_action = "{} on {}".format(bill['latest_major_action'], bill['latest_major_action_date'])
                 govtrack_link = bill['govtrack_url']
+                cosponsor_num = bill['cosponsors']
 
                 if bill_id in billPoints:
                     if author_id in leg_ids:
-                        billPoints[bill_id] += 9
-                    billPoints[bill_id] += 4
+                        billPoints[bill_id] += 4
+                    billPoints[bill_id] += 5
                 else:
-                    billPoints[bill_id] = 4
+                    billPoints[bill_id] = 5
                     billPoints[bill_id] += bill['cosponsors'] / 5
-                    created_bill = cls(level, title, description, author, author_id, bill_id, id, govtrack_link = govtrack_link)
+                    created_bill = cls(level, title, description, author, author_id, bill_id, id, author_party, author_state, cosponsor_num, created_date, 
+                                        last_action = last_action, govtrack_link = govtrack_link)
                     bills[bill_id] = created_bill
 
         count = 0
@@ -120,6 +143,7 @@ class Bill(object):
             sorted_bills.append(popped[2])
             i = i + 1
 
+        print('success')
         return sorted_bills
 
     @classmethod
@@ -172,12 +196,17 @@ class Bill(object):
                     continue
 
                 level = "state"
-                title = bill['title']
-                description = None
+                title = None
+                description = bill['title']
                 id = bill['bill_id']
                 author_id = sponsor_ids[bill_id]
                 url = bill_urls[bill_id]
                 author = sponsor_names[bill_id]
+                author_state = bill['state']
+                author_party = legislator.party
+                created_date = bill['created_at']
+                last_action = bill['updated_at']
+                cosponsor_num = sponsor_num[bill_id]
 
                 if bill_id in billPoints:
                     if author_id == legislator.id:
@@ -191,7 +220,8 @@ class Bill(object):
                         billPoints[bill_id] = 4
                     
                     billPoints[bill_id] += sponsor_num[bill_id]
-                    created_bill = cls(level, title, description, author, author_id, bill_id, id, url = url)
+                    created_bill = cls(level, title, description, author, author_id, bill_id, id, author_party, author_state, cosponsor_num, created_date, 
+                                     last_action = last_action, url = url)
                     bills[bill_id] = created_bill
 
         for subject in subjects:
@@ -233,12 +263,17 @@ class Bill(object):
                 if bill_id not in bill_urls or bill_id not in sponsor_names:
                     continue
 
-                title = bill['title']
-                description = None
+                title = None
+                description = bill['title']
                 id = bill['bill_id']
                 author_id = sponsor_ids[bill_id]
                 url = bill_urls[bill_id]
                 author = sponsor_names[bill_id]
+                author_state = bill['state']
+                author_party = None
+                created_date = bill['created_at']
+                last_action = bill['updated_at']
+                cosponsor_num = sponsor_num[bill_id]
 
                 if bill_id in billPoints:
                     if author_id in leg_ids:
@@ -247,7 +282,8 @@ class Bill(object):
                 else:
                     billPoints[bill_id] = 4
                     billPoints[bill_id] += sponsor_num[bill_id]
-                    created_bill = cls(level, title, description, author, author_id, bill_id, id, url = url)
+                    created_bill = cls(level, title, description, author, author_id, bill_id, id, author_party, author_state, cosponsor_num, created_date, 
+                                        last_action = last_action, url = url)
                     bills[bill_id] = created_bill
                          
                     
@@ -265,6 +301,7 @@ class Bill(object):
             sorted_bills.append(popped[2])
             i = i + 1
 
+        print('success')
         return sorted_bills
 
     

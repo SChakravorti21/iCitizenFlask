@@ -5,4 +5,4 @@ from iCitizenFlaskApp.models.legislator import Legislator
 #bills = Bill.get_national_bills(legislators, ["meat"])
 
 state_legislators = Legislator.get_state_legislators("17 Queensboro Terrace", "East Windsor", "NJ", "08520")
-Bill.get_state_bills(state_legislators, ["Crime"], "NJ")                
+state_bills = Bill.get_state_bills(state_legislators, ["Crime"], "NJ")                
