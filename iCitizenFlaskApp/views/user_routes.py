@@ -185,7 +185,7 @@ def get_national_bills():
 
     return json.dumps(national_bill_jsons, sort_keys=True, indent=4, default=json_util.default)
 
-@mod.route('/get-user-events/', methods=['POST'])
+@mod.route('/get-user-events-db/', methods=['POST'])
 @is_logged_in
 def get_user_events():
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
