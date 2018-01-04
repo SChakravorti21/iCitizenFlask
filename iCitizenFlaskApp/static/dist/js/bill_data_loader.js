@@ -34,8 +34,8 @@ function fetchnationalbills() {
                                 <h5 class="card-subtitle" style="height:2rem; color:red; display:inline">` + bill['title'] + `</h5>
                                 <p></p>
                                 <p class=".text-info card-text" style="line-height: 2rem; font-size: 20px">Bill Description: ` + bill['description'] + `</p>
-                                <a class="btn btn-info" href="`+ bill['govtrack_link'] + `">Bill Link</a>
-                                <button class="btn btn-primary float-right" type='button' data-toggle='collapse' 
+                                <a class="btn btn-info" target="_blank" href="`+ bill['govtrack_link'] + `">Bill Link</a>
+                                <button class="btn btn-primary float-right" type='button' data-toggle='collapse'
                                     data-target='#` + detailsId + `' aria-expanded="false" aria-controls="collapseExample">
                                     More info
                                 </button>
@@ -46,7 +46,7 @@ function fetchnationalbills() {
                             </div>
                             <div class="card-footer text-muted">BILL ID: ` + bill['bill_id'].toUpperCase() + `</div>
                         </div>
-                            
+
                     `
                     $('#bill_'+count).html(html);
                     count++;
@@ -98,7 +98,7 @@ function fetchstatebills() {
                                 <p></p>
                                 <p class=".text-info card-text" style="line-height: 2rem; font-size: 20px">Bill Description: ` + bill['description'] + `</p>
                                 <a class="btn btn-info" href="`+ bill['url'] + `">Bill Link</a>
-                                <button class="btn btn-primary float-right" type='button' data-toggle='collapse' 
+                                <button class="btn btn-primary float-right" type='button' data-toggle='collapse'
                                     data-target='#` + detailsId + `' aria-expanded="false" aria-controls="collapseExample">
                                     More info
                                 </button>
@@ -109,7 +109,7 @@ function fetchstatebills() {
                             </div>
                             <div class="card-footer text-muted">BILL ID: ` + bill['bill_id'].toUpperCase() + `</div>
                         </div>
-                            
+
                     `
                     $('#bill_'+count).html(html);
                     count++;
