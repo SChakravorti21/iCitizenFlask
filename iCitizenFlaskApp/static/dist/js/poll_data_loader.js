@@ -21,6 +21,8 @@ function convertCamelToTitle(text) {
 
 var pollInterval;
 var count = 1;
+var polls = null;
+
 function fetchpolls() {
     $.ajax({
         url: "/get-user-polls/",
@@ -30,7 +32,8 @@ function fetchpolls() {
             if(response != null){
                 polls = response;
                 console.log(polls['contests']);
-                for (poll of polls['contests']) {
+                polls = polls['contests'];
+                for (poll of polls) {
                     if(count > 20)
                         break;
 
@@ -104,7 +107,14 @@ function fetchpolls() {
 
                     $('.poll_'+count).html(`
                         <div class='card mb-4' style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
-                            <h4 class='card-header'>`+ type +`</h4>
+                            <div class='card-header clearfix d-inline-flex'>
+                                <h4 class='mr-auto'>`+ type +`</h4>
+                                <!-- data-count is used for saving and retrieving polls -->
+                                <div class='star-holder' data-count='`+(count-1)+`'>
+                                    <i style='color: tomato;' 
+                                        class='fa-2x far fa-star' data-fa-transform="shrink-7"></i>
+                                </div>
+                            </div>
                             <div class='card-block'>
                                 <h6 class='card-title' style='color: cornflowerblue;'>` + title + `</h6>
                                 <p class='card-text' style='color: coral;'>` + info + `</p>
@@ -137,4 +147,9 @@ function fetchpolls() {
 
 $(document).ready(function(){
     pollInterval = setTimeout(fetchpolls, 1000);
-})
+
+    $('body').on('click', '.star-holder', function() {
+        var index = $(this).attr('data-count');
+        console.log(polls[index]);
+    })
+});
