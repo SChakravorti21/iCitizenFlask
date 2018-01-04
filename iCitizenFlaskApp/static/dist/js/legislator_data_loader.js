@@ -86,7 +86,7 @@ function fetchstatelegs() {
                     var party = legislator['party'];
                     var info = '';
                     if( legislator['district'] ){
-                        info += 'District: ' + legislator['district'] + '<br><br>';
+                        info += 'District: ' + legislator['photo_url'] + '<br><br>';
                     }
                     var level = legislator['level'];
                     info += 'Level: ' + level.charAt(0).toUpperCase() + level.substring(1, level.length) + '<br><br>';
@@ -103,7 +103,7 @@ function fetchstatelegs() {
                                 <div class="row ml-3" style='height: 16rem;'>
                                     <div class="col-sm-3" 
                                         style='
-                                            background-image: url(` + legislator['photo_url'] + `);
+                                            background-image: url(` + legislator['district'] + `);
                                             background-repeat: no-repeat;
                                             background-position: center;
                                             background-size: cover;
