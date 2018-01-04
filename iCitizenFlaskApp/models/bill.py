@@ -171,7 +171,7 @@ class Bill(object):
                 if bill_id not in sponsor_names or bill_id not in bill_urls:
                     continue
 
-                level = "national"
+                level = "state"
                 title = bill['title']
                 description = None
                 id = bill['bill_id']
