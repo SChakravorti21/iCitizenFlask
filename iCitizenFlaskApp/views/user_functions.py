@@ -116,7 +116,12 @@ def update_preferences():
 @is_logged_in
 def save_event():
 	event_to_save = request.get_json()
+
+	print('INSIDE SAVE EVENT === ', event_to_save)
+	print(event_to_save.keys())
+
 	event_id = event_to_save[QueryKeys.EVENT_ID]
+	print(event_id)
 
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
@@ -129,10 +134,15 @@ def save_event():
 	if len(curr_saved_events) > 0 and event_id in curr_saved_events:
 		return 'False'
 
-	event_query = QueryKeys.SAVED_EVENTS + '.' + event_id
+	event_query = QueryKeys.SAVED_EVENTS + '.' + str(event_id)
+
+	print('QUERY = ', query)
+	print('EVENT_QUERY = ', event_query)
+	print('EVENT TO SAVE = ', event_to_save)
+
 	users.find_one_and_update(query, {'$set': {event_query: event_to_save}})
-	print(event_id)
-	#saved_polls : {id: jbasjhfbjsh, another_id: ajsdbljsab}
+
+	#saved_events : {id: jbasjhfbjsh, another_id: ajsdbljsab}
 	#dot notation selects a key
 
 	return 'True'

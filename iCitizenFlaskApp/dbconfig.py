@@ -32,7 +32,7 @@ class QueryKeys:
 	UPDATE_EVENTS = 'update_events'
 	UPDATE_BILLS = 'update_bills'
 
-	EVENT_LIST = 'user_events'
+	USER_EVENTS = 'user_events'
 	SAVED_EVENTS = 'saved_events'
 
 	UPDATE_POLLS = 'update_polls'

@@ -194,12 +194,11 @@ def get_national_bills():
 def get_user_events():
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
-
     user = users.find_one(query)
 
-    user_events_jsons = user[QueryKeys.EVENT_LIST] if QueryKeys.EVENT_LIST in user else None
+    user_events_jsons = user[QueryKeys.USER_EVENTS] if QueryKeys.USER_EVENTS in user else None
     saved_events_jsons = user[QueryKeys.SAVED_EVENTS] if QueryKeys.SAVED_EVENTS in user else {}
-    comb_json = {QueryKeys.EVENT_LIST: user_events_jsons,
+    comb_json = {QueryKeys.USER_EVENTS: user_events_jsons,
                 QueryKeys.SAVED_EVENTS: saved_events_jsons}
 
     print('SAVED EVENTS = ', saved_events_jsons)
