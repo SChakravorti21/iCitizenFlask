@@ -161,10 +161,10 @@ class Event:
 						if len(word_syns) == 0 or len(subj_syns) == 0:
 							break;
 
-						for i in range(len(word_syns)):
-							for j in range(len(subj_syns)):
+						for word_syn in word_syns:
+							for subj_syn in subj_syns:
 
-								pathsim = word_syns[i].path_similarity(subj_syns[j])
+								pathsim = word_syn.path_similarity(subj_syn)
 								if pathsim != None:
 									if pathsim > currMax:
 										currMax = pathsim
