@@ -40,3 +40,9 @@ class QueryKeys:
 	USER_POLLS = 'user_polls'
 	SAVED_POLLS = 'saved_polls'
 	POLL_ID = 'poll_id'
+
+	NATIONAL_BILLS = 'national_bills'
+	SAVED_NATIONAL_BILLS = 'saved_national_bills'
+
+	STATE_BILLS = 'state_bills'
+	SAVED_STATE_BILLS = 'saved_state_bills'

@@ -148,3 +148,77 @@ def delete_saved_poll():
 	users.find_one_and_update(query, {'$unset': {poll_query: save}})
 
 	return 'True'
+
+@mod.route('/save-national-bill/', methods=['POST'])
+@is_logged_in
+def save_national_bill():
+	save = request.get_json()
+	bill_id = save['bill_id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+	current_saved_bills = current_user_state['saved_national_bills'] if 'saved_national_bills' in current_user_state else None
+	if current_saved_bills and bill_id in current_saved_bills:
+		return 'False'
+
+	print(bill_id)
+	bill_query = "saved_national_bills" + "." + bill_id
+	users.find_one_and_update(query, {'$set': {bill_query: save}})
+
+	return 'True'
+
+@mod.route('/save-state-bill/', methods=['POST'])
+@is_logged_in
+def save_state_bill():
+	save = request.get_json()
+	bill_id = save['bill_id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+	current_saved_bills = current_user_state['saved_state_bills'] if 'saved_state_bills' in current_user_state else None
+	if current_saved_bills and bill_id in current_saved_bills:
+		return 'False'
+
+	print(bill_id)
+	bill_query = "saved_state_bills" + "." + bill_id
+	users.find_one_and_update(query, {'$set': {bill_query: save}})
+
+	return 'True'
+
+@mod.route('/delete-saved-national-bill/', methods=['POST'])
+@is_logged_in
+def delete_national_bill():
+	save = request.get_json()
+	bill_id = save['bill_id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+
+	print(bill_id)
+	bill_query = 'saved_national_bills' + "." + bill_id
+	users.find_one_and_update(query, {'$unset': {bill_query: save}})
+
+	return 'True'
+
+@mod.route('/delete-saved-state-bill/', methods=['POST'])
+@is_logged_in
+def delete_state_bill():
+	save = request.get_json()
+	bill_id = save['bill_id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+
+	print(bill_id)
+	bill_query = 'saved_state_bills' + "." + bill_id
+	users.find_one_and_update(query, {'$unset': {bill_query: save}})
+
+	return 'True'
