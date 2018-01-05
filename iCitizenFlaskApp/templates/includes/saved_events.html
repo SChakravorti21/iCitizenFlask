@@ -1,0 +1,44 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+<h1 style="text-align:center;">Saved Events</h1>
+<hr style="border-top: 1px solid #8c8b8b;">
+
+<form class="form-group" method="POST" id="save_events_form">
+
+  <div class="container">
+    <div id="loader" style="height: 45rem; display: flex; align-items: center; justify-content: center">
+        <div class="loader" style="border: 1em solid black; border-top: 1em solid teal;
+            border-radius: 50%; width: 10em; height: 10em; animation: spin 1s linear infinite">
+            <style type="text/css">
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        </div>
+    </div>
+    <div id="event_1"></div>
+    <div id="event_2"></div>
+    <div id="event_3"></div>
+    <div id="event_4"></div>
+    <div id="event_5"></div>
+    <div id="event_6"></div>
+    <div id="event_7"></div>
+    <div id="event_8"></div>
+    <div id="event_9"></div>
+    <div id="event_10"></div>
+    <div id="event_11"></div>
+    <div id="event_12"></div>
+    <div id="event_13"></div>
+    <div id="event_14"></div>
+    <div id="event_15"></div>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='dist/js/get_saved_events.js') }}"></script>
+{% endblock %}

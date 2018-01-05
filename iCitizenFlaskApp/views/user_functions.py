@@ -136,9 +136,9 @@ def save_event():
 
 	event_query = QueryKeys.SAVED_EVENTS + '.' + str(event_id)
 
-	print('QUERY = ', query)
-	print('EVENT_QUERY = ', event_query)
-	print('EVENT TO SAVE = ', event_to_save)
+	# print('QUERY = ', query)
+	# print('EVENT_QUERY = ', event_query)
+	# print('EVENT TO SAVE = ', event_to_save)
 
 	users.find_one_and_update(query, {'$set': {event_query: event_to_save}})
 
@@ -160,7 +160,7 @@ def delete_saved_event():
 
 	print(event_id)
 
-	event_query = QueryKeys.SAVED_EVENTS + "." + event_id
+	event_query = QueryKeys.SAVED_EVENTS + "." + str(event_id)
 	users.find_one_and_update(query, {'$unset': {event_query: event_to_delete}})
 	return 'True'
 

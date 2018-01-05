@@ -1,37 +1,27 @@
 var eventInterval;
 var count = 1;
-var events = null;
 
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
 var solidStar =   "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
 
 function fetchevents() {
     $.ajax({
-        url: "/get-user-events-db/",
+        url: "/fetch-saved-events/",
         type: "post",
         dataType: "json",
         success: function(response){
             if(response != null){
-                var saved_events = response["saved_events"];
+                var saved_events = response
 
-                for (event of saved_events) {
-
-
+                for (var key in saved_events) {
+                  event = saved_events[key]
 
                   if(count > 15) {
                     break;
                   }
 
-                  var saved = "saved=";
-                  if(event["event_id"] in saved_events) {
-                      saved += "'true'";
-                  }
-                  else {
-                    saved += "'false'";
-                  }
-                  console.log(saved);
-
-                  var star = (saved === "saved='true'") ? solidStar : regularStar;
+                  var saved = "saved='true'";
+                  var star = solidStar;
 
                   html = `
                     <div class="card mb-4" style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
@@ -65,7 +55,7 @@ function fetchevents() {
                             <div class='star-holder' data-count='`+ count +`' ` + saved + `>`
                                 + star + `
                                 <font>Save Event</font>
-                        </div>
+                            </div>
                         </div>
                       </div> `
 
