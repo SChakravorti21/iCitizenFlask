@@ -6,21 +6,20 @@ var solidStar = "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-tra
 
 function fetchnationalbills() {
     $.ajax({
-        url: "/get-national-bills-db/",
+        url: "/get-saved-national-bills/",
         type: "post",
         dataType: "json",
         success: function(response){
             if(response != null){
                 var count = 1;
-                nationalBills = response['national_bills'];
-                var savedBills = response['saved_national_bills'];
-                for (bill of nationalBills) {
+                nationalBills = response;
+                for (var key in nationalBills) {
+                    bill = nationalBills[key];
                     if(count > 10)
                         break;
 
-                    var saved = "saved=" + ( (bill['bill_id'] in savedBills) ? "'true'" : "'false'");
-                    console.log(saved);
-                    var star = (saved === "saved='true'") ? solidStar : regularStar;
+                    var saved = "saved='true'"
+                    var star = solidStar;
                     detailsId = 'bill_' + count + '_info';
                     var num = bill['cosponsor_num']
                     if(bill['cosponsor_num'] == null)
@@ -39,7 +38,7 @@ function fetchnationalbills() {
                         <div class="card mb-4" style="box-shadow: -5px 5px rgba(120,144,156,0.3);">
                             <div class="card-header clearfix d-inline-flex">` + 
                                 `<h4 class='mr-auto'>` + bill['level'].toUpperCase() + `</h4>
-                                <div class='star-holder' level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div> 
+                                <div class='star-holder' bill_id="`+ bill['bill_id'] + `" level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div>
                             </div>
                             <div class="card-block">
                                 <h4 class="card-title" style="height:2.5rem; color:teal">Author: ` + bill['author'] + `</h4>
@@ -82,21 +81,20 @@ function fetchnationalbills() {
 
 function fetchstatebills() {
     $.ajax({
-        url: "/get-state-bills-db/",
+        url: "/get-saved-state-bills/",
         type: "post",
         dataType: "json",
         success: function(response){
             if(response != null){
                 var count = 11;
-                stateBills = response['state_bills'];
-                var savedBills = response['saved_state_bills'];
-                for (bill of stateBills) {
+                stateBills = response;
+                for (var key in stateBills) {
+                    bill = stateBills[key];
                     if(count >= 20)
                         break;
                     
-                    var saved = "saved=" + ( (bill['bill_id'] in savedBills) ? "'true'" : "'false'");
-                    console.log(saved);
-                    var star = (saved === "saved='true'") ? solidStar : regularStar;
+                    var saved = "saved='true'"
+                    var star = solidStar;
 
                     detailsId = 'bill_' + count + '_info';
                     var num = bill['cosponsor_num']
@@ -117,7 +115,7 @@ function fetchstatebills() {
                         <div class="card mb-4" style="box-shadow: -5px 5px rgba(120,144,156,0.3);">
                             <div class="card-header clearfix d-inline-flex">` + 
                                 `<h4 class='mr-auto'>` + bill['level'].toUpperCase() + `</h4>
-                                <div class='star-holder' level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div>
+                                <div class='star-holder' bill_id="`+ bill['bill_id'] + `" level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div>
                             </div>
                             <div class="card-block">
                                 <h4 class="card-title" style="height:2.5rem; color:teal">Author: ` + bill['author'] + `</h4>
@@ -161,9 +159,8 @@ $(document).ready(function(){
     $('body').on('click', 'div.star-holder', function() {
         var div = $(this);
         var level = $(this).attr('level');
-        var index = $(this).attr('data-count');
+        var id = $(this).attr('bill_id');
         console.log('Sending: ');
-        console.log('here index: ' + index);
         if(level === 'national') {
             if(div.attr('saved') === 'false') {
                 console.log('was not saved');
@@ -171,7 +168,7 @@ $(document).ready(function(){
                     url: '/save-national-bill/',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(nationalBills[index - 1]),
+                    data: JSON.stringify(nationalBills[id]['bill_id']),
                     success: function(data) {
                         if(data) {
                             console.log('Post successful. Result: ');
@@ -184,12 +181,11 @@ $(document).ready(function(){
                 });
             } else {
                 console.log('was saved');
-                console.log('index: ' + (index - 1));
                 $.ajax({
                     url: '/delete-saved-national-bill/',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({'bill_id': nationalBills[index - 1]['bill_id']}),
+                    data: JSON.stringify({'bill_id': nationalBills[id]['bill_id']}),
                     success: function(data) {
                         if(data) {
                             console.log('Post successful. Result: ');
@@ -208,7 +204,7 @@ $(document).ready(function(){
                     url: '/save-state-bill/',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(stateBills[index - 11]),
+                    data: JSON.stringify(stateBills[id]['bill_id']),
                     success: function(data) {
                         if(data) {
                             console.log('Post successful. Result: ');
@@ -221,12 +217,11 @@ $(document).ready(function(){
                 });
             } else {
                 console.log('was saved');
-                console.log('index: ' + (index - 1));
                 $.ajax({
                     url: '/delete-saved-state-bill/',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({'bill_id': stateBills[index - 11]['bill_id']}),
+                    data: JSON.stringify({'bill_id': stateBills[id]['bill_id']}),
                     success: function(data) {
                         if(data) {
                             console.log('Post successful. Result: ');

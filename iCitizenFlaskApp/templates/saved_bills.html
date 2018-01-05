@@ -1,3 +1,43 @@
 {% extends 'index.html' %}
 
+{% block body %}
 
+<div class="container">
+    <div id="loader" style="height: 45rem; display: flex; align-items: center; justify-content: center">
+        <div class="loader" style="border: 1em solid black; border-top: 1em solid teal;
+            border-radius: 50%; width: 10em; height: 10em; animation: spin 1s linear infinite">
+            <style type="text/css">
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        </div>
+    </div>
+    <div id="bill_1"></div>
+    <div id="bill_2"></div>
+    <div id="bill_3"></div>
+    <div id="bill_4"></div>
+    <div id="bill_5"></div>
+    <div id="bill_6"></div>
+    <div id="bill_7"></div>
+    <div id="bill_8"></div>
+    <div id="bill_9"></div>
+    <div id="bill_10"></div>
+    <div id="bill_11"></div>
+    <div id="bill_12"></div>
+    <div id="bill_13"></div>
+    <div id="bill_14"></div>
+    <div id="bill_15"></div>
+    <div id="bill_16"></div>
+    <div id="bill_17"></div>
+    <div id="bill_18"></div>
+    <div id="bill_19"></div>
+    <div id="bill_20"></div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='dist/js/get_saved_bills.js') }}"></script>
+{% endblock %}

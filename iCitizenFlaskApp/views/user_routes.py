@@ -257,3 +257,5 @@ def get_national_legislators():
     }
 
     return json.dumps(ret_json, sort_keys=True, indent=4, default=json_util.default)
+
+

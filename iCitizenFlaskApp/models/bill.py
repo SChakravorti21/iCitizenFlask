@@ -31,7 +31,7 @@ class Bill(object):
             "id": self.id,
             "author_party": self.author_party,
             "author_state": self.author_state,
-            "consponsor_num": self.cosponsor_num,
+            "cosponsor_num": self.cosponsor_num,
             "created_date": self.created_date,
             "last_action": self.last_action,
             "govtrack_link": self.govtrack_link,
