@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, session, request, logging
+from flask import Blueprint, render_template, flash, redirect, url_for, session, request, logging, json
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
 from pygeocoder import Geocoder
@@ -104,3 +104,20 @@ def update_preferences():
 	return render_template('update_preferences.html', form=form,
 		subjects=[(str(subject).strip(), subject) for subject in SUBJECTS],
 		selected_subjects=topics, error=error)
+
+@mod.route('/save-poll/', methods=['POST'])
+@is_logged_in
+def save_poll():
+	save = request.get_json()
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+	current_saved_polls = current_user_state['saved_polls'] if 'saved_polls' in current_user_state else None
+	if current_saved_polls and save in current_saved_polls:
+		return 'False'
+
+	users.find_one_and_update(query, {'$push': {'saved_polls': save}})
+
+	return 'True'

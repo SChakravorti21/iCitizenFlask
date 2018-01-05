@@ -110,9 +110,9 @@ function fetchpolls() {
                             <div class='card-header clearfix d-inline-flex'>
                                 <h4 class='mr-auto'>`+ type +`</h4>
                                 <!-- data-count is used for saving and retrieving polls -->
-                                <div class='star-holder' data-count='`+(count-1)+`'>
+                                <div class='' data-count='`+ count +`'>
                                     <i style='color: tomato;' 
-                                        class='fa-2x far fa-star' data-fa-transform="shrink-7"></i>
+                                        class='fa-2x far fa-star star-holder' data-fa-transform="shrink-7"></i>
                                 </div>
                             </div>
                             <div class='card-block'>
@@ -130,7 +130,6 @@ function fetchpolls() {
                         </div> `);
                     count++;
                 }
-                clearTimeout(pollInterval);
             }
             if(count >= 20) {
                 console.log("Poll interval has been cleared")
@@ -149,7 +148,27 @@ $(document).ready(function(){
     pollInterval = setTimeout(fetchpolls, 1000);
 
     $('body').on('click', '.star-holder', function() {
-        var index = $(this).attr('data-count');
-        console.log(polls[index]);
+        var index = $(this).parent().attr('data-count');
+        console.log('Sending: ');
+        console.log(polls[index - 1])
+
+        if($(this).hasClass("far")) {
+            $.ajax({
+                url: '/save-poll/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(polls[index - 1]),
+                success: function(data) {
+                    if(data) {
+                        console.log('Post successful. Result: ');
+                        console.log(data);
+                        $(this).removeClass("far");
+                        $(this).addClass("fas");
+                    }
+                }
+            });
+        } else {
+
+        }
     })
 });
