@@ -135,27 +135,7 @@ def load_dashboard():
 @mod.route('/events/', methods = ['GET', 'POST'])
 @is_logged_in
 def show_events():
-    # if request.methods == 'POST':
-    #     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-    #     users = db['users']
-    #     user = users.find_one(query)
-    #     prev_saved_events = user[QueryKeys.SAVED_EVENTS]
-    #     update_user_saved_events(prev_saved_events)
-
     return render_template('events.html')
-
-
-def update_user_saved_events(prev_saved_events):
-	print('PREV SAVED EVENTS ARE', prev_saved_events)
-
-	new_saved_events = request.form.getlist('box')
-
-	if new_saved_events:
-
-		mergedlist = list(set(prev_saved_events + new_saved_events))
-
-		user = users.find_one_and_update(query, {'$set':{QueryKeys.SAVED_EVENTS: mergedlist}})
-		print('NEW SAVED EVENTS iS ', mergedlist)
 
 
 @mod.route('/polls/', methods=['GET'])
@@ -206,7 +186,8 @@ def get_user_events():
     user = users.find_one(query)
 
     user_event_jsons = user['user_events'] if 'user_events' in user else None
-
+    print('user events = ', user_event_jsons)
+    print('got THE  user events')
     return json.dumps(user_event_jsons, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-user-polls/', methods=['POST'])
@@ -222,7 +203,7 @@ def get_user_polls():
 
     ret_json = {
         QueryKeys.USER_POLLS: user_polls_jsons,
-        QueryKeys.SAVED_POLLS: saved_polls_json 
+        QueryKeys.SAVED_POLLS: saved_polls_json
     }
 
     return json.dumps(ret_json, sort_keys=True, indent=4, default=json_util.default)

@@ -18,7 +18,7 @@ def call_celery_task():
     load_events.delay(username)
     load_polls.delay(username)
     return "Work assigned to celery workers"
-    
+
 
 @celery_worker_bills.task
 def load_bills(username):
@@ -111,6 +111,8 @@ def update_events(username):
 
     user_events_jsons = [event.json() for event in event_list]
 
+    print('EVENTS:',user_events_jsons)
+
     users.find_one_and_update(query, {'$set': {'user_events': user_events_jsons}})
 
     user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_EVENTS : False}})
@@ -136,7 +138,7 @@ def update_polls(username):
                                             location[QueryKeys.STATE],
                                             location[QueryKeys.COUNTRY],
                                             location[QueryKeys.ZIPCODE])
-    info = service.elections().voterInfoQuery(address=address, electionId="2000", 
+    info = service.elections().voterInfoQuery(address=address, electionId="2000",
         returnAllAvailableData=True, officialOnly=False).execute()
 
     if info:

@@ -5,6 +5,10 @@ from textblob import TextBlob
 from textblob.wordnet import Synset
 import time
 
+
+
+
+
 class Event:
 
 
@@ -140,7 +144,24 @@ class Event:
 		for event in event_list:
 
 			ctr = 0
-			event_words = getKeywords(event.title)
+
+
+			event_words = []
+			curr = ''
+
+			for c in event.title:
+
+				if (c in Event.chars_to_skip or c.isdigit() or c.strip() == ''):
+					if curr.strip() not in Event.stop_words and len(curr.strip()) > 1:
+						event_words.append(curr.strip())
+					curr = ''
+				else:
+					curr += c
+
+			#get the last word in phrase
+			if curr.strip() not in Event.stop_words and len(curr.strip()) > 1:
+				event_words.append(curr.strip())
+				curr = ''
 
 
 			for word in event_words:
@@ -185,28 +206,6 @@ class Event:
 		print('time taken to sort by relevancy', time.time() - start_time)
 		return event_list
 
-
-	@staticmethod
-	def getKeywords(phrase):
-
-		key_wds = []
-		curr = ''
-
-		for c in phrase:
-
-			if (c in Event.chars_to_skip or c.isdigit() or c.strip() == ''):
-				if curr.strip() not in Event.stop_words and len(curr.strip()) > 1:
-					key_wds.append(curr.strip())
-				curr = ''
-			else:
-				curr += c
-
-		#get the last word in phrase
-		if curr.strip() not in Event.stop_words and len(curr.strip()) > 1:
-			key_wds.append(curr.strip())
-			curr = ''
-
-		return key_wds
 
 
 	@staticmethod

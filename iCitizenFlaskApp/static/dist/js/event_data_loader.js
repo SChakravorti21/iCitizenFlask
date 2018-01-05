@@ -51,6 +51,8 @@ function fetchevents() {
                         </div>
                       </div> `
 
+                      // html = `<div>test</div>`
+
                     $('#event_'+count).html(html);
                     $('#loader').html("");
                     $('#loader').attr('style', '')
