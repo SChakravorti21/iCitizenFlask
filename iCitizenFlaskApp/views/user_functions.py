@@ -209,6 +209,11 @@ def save_legislator():
 	save = request.get_json()
 	legislator_id = save['id']
 
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+
 	current_saved_legislators = current_user_state[QueryKeys.SAVED_LEGISLATORS] if QueryKeys.SAVED_LEGISLATORS in current_user_state else None
 	if current_saved_legislators and legislator_id in current_saved_legislators:
 		return 'False'
@@ -224,6 +229,9 @@ def save_legislator():
 def delete_saved_legislator():
 	save = request.get_json()
 	legislator_id = save['id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
 
 	print( legislator_id)
 	legislator_query = QueryKeys.SAVED_LEGISLATORS + "." + legislator_id
