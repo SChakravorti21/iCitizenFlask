@@ -152,23 +152,19 @@ $(document).ready(function(){
         console.log('Sending: ');
         console.log(polls[index - 1])
 
-        if($(this).hasClass("far")) {
-            $.ajax({
-                url: '/save-poll/',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(polls[index - 1]),
-                success: function(data) {
-                    if(data) {
-                        console.log('Post successful. Result: ');
-                        console.log(data);
-                        $(this).removeClass("far");
-                        $(this).addClass("fas");
-                    }
+        $.ajax({
+            url: '/save-poll/',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(polls[index - 1]),
+            success: function(data) {
+                if(data) {
+                    console.log('Post successful. Result: ');
+                    console.log(data);
+                    $(this).removeClass("far");
+                    $(this).addClass("fas");
                 }
-            });
-        } else {
-
-        }
+            }
+        });
     })
 });
