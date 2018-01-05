@@ -135,11 +135,11 @@ function fetchpolls() {
                         </div> `
                     );
 
-                    $('#loader').html("");
-                    $('#loader').attr('style', '');
                     count++;
                 }
 
+                $('#loader').html("");
+                $('#loader').attr('style', '');
                 console.log("Poll interval has been cleared");
                 clearTimeout(pollInterval);
 

@@ -192,3 +192,40 @@ def delete_saved_poll():
 	users.find_one_and_update(query, {'$unset': {poll_query: save}})
 
 	return 'True'
+
+@mod.route('/save-legislator/', methods=['POST'])
+@is_logged_in
+def save_legislator():
+	save = request.get_json()
+	legislator_id = save['id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+	current_saved_legislators = current_user_state['saved_polls'] if 'saved_polls' in current_user_state else None
+	if current_saved_legislators and legislator_id in current_saved_legislators:
+		return 'False'
+
+	print( legislator_id)
+	legislator_query = QueryKeys.SAVED_LEGISLATORS + "." + legislator_id
+	users.find_one_and_update(query, {'$set': {legislator_query: save}})
+
+	return 'True'
+
+@mod.route('/delete-saved-legislator/', methods=['POST'])
+@is_logged_in
+def delete_saved_legislator():
+	save = request.get_json()
+	legislator_id = save['id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+
+	print( legislator_id)
+	legislator_query = QueryKeys.SAVED_LEGISLATORS + "." + legislator_id
+	users.find_one_and_update(query, {'$unset': {legislator_query: save}})
+
+	return 'Request to delete made'
