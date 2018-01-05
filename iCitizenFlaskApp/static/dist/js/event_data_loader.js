@@ -1,5 +1,9 @@
 var eventInterval;
 var count = 1;
+var events = null;
+
+var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
+var solidStar = "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
 
 function fetchevents() {
     $.ajax({
@@ -9,10 +13,15 @@ function fetchevents() {
         success: function(response){
             if(response != null){
                 events = response;
+                var saved_events = response['saved_events'];
+                events = events['user_events'];
 
                 for (event of events) {
-                  if(count > 10)
+                  if(count > 15) {
                     break;
+                  }
+
+                  var isCurrSaved = 
 
                   html = `
                     <div class="card mb-4" style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
@@ -43,15 +52,14 @@ function fetchevents() {
                             </div>
                         </div>
                         <div class="card-footer">
-                          <label class="custom-checkbox label_event">
-                              <input type="checkbox" name = "box" style="transform: scale(1.5); margin-right: 0.5em;"/>
-                              <font size="+0">Add to Saved Events</font>
-                              <br>
-                          </label>
+                            <div class='star-holder' data-count='`+ count +`' ` + saved + `>`
+                                + star + `
+                                <font>Save Event</font>
+                        </div>
                         </div>
                       </div> `
 
-                      // html = `<div>test</div>`
+
 
                     $('#event_'+count).html(html);
                     $('#loader').html("");
@@ -74,4 +82,20 @@ function fetchevents() {
 
 $(document).ready(function(){
     eventInterval = setTimeout(fetchevents, 1000);
+
+    $('body').on('click', 'div.star-holder', function() {
+
+        var div = $(this);
+        var index = $(this).attr('data-count');
+        console.log('event being saved:' + index)
+
+        if(div.attr('saved'))
+
+    });
+
+
+
+
+
+
 })
