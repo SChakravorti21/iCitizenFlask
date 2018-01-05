@@ -14,10 +14,10 @@ function fetchevents() {
                 for (event of events) {
 
                   html = `
-                    <div class="card mb-4" style='height: 25rem; box-shadow: -5px 5px rgba(120,144,156,0.3);'>
+                    <div class="card mb-4" style="box-shadow: -5px 5px rgba(120,144,156,0.3);">
                         <h4 class="card-header" style="background-color: #cadbf7;"> ` + event['org_title'] + `</h4>
                         <div class = "card-block">
-                            <div class="row ml-3" style = "height: 16rem;">
+                            <div class="row ml-3">
                                 <div class="col-sm-3"
                                     style="
                                     background-image: url(` + event['img_link'] + `);
