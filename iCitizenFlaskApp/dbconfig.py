@@ -12,8 +12,6 @@ class QueryKeys:
 	PASSWORD = 'password'
 	INPUTTED_PREFERENCES = 'inputted_prefs'
 
-	#stores arrayist of saved event titles
-	SAVED_EVENTS = 'saved_events'
 
 	PREFERENCES = 'preferences'
 	LOCATION = 'location'
@@ -35,10 +33,13 @@ class QueryKeys:
 	UPDATE_BILLS = 'update_bills'
 
 	EVENT_LIST = 'user_events'
+	SAVED_EVENTS = 'saved_events'
+
 	UPDATE_POLLS = 'update_polls'
 
 	USER_POLLS = 'user_polls'
 	SAVED_POLLS = 'saved_polls'
+	EVENT_ID = 'event_id'
 	POLL_ID = 'poll_id'
 
 	NATIONAL_BILLS = 'national_bills'

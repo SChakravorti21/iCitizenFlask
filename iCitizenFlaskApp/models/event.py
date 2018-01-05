@@ -44,6 +44,15 @@ class Event:
 		self.pts = pts
 		self.saved = saved
 
+		h = 0
+		for c in self.title:
+			h = (31 * h + ord(c)) & 0xFFFFFFFF
+		hc = ((h + 0x80000000) & 0xFFFFFFFF) - 0x80000000
+
+		self.event_id = hc
+
+
+
 	def json(self):
 		return {
 			"org_title": self.org_title,
@@ -54,7 +63,8 @@ class Event:
 			"price": self.price,
 			"img_link": self.img_link,
 			"pts": self.pts,
-			"saved": self.saved
+			"saved": self.saved,
+			"event_id": self.event_id
 		}
 
 	#param = state, city, max page num, list of subject prefs
@@ -230,7 +240,7 @@ class Event:
 
 # events = Event.get_top_n_events()
 # for e in events:
-# 	print(e.pts, '======', e.title)
+# 	print(e.event_id)
 
 '''
 for each event in event_list

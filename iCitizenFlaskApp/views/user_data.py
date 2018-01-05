@@ -123,7 +123,7 @@ def update_events(username):
     return "Events have been written"
 
 def update_polls(username):
-    from uuid import uuid4
+    import hashlib
 
     query = {QueryKeys.USERNAME: username}
     users = db['users']
@@ -145,7 +145,10 @@ def update_polls(username):
         # Set a unique id for each poll, used when saving polls
         contests = info['contests']
         for data in contests:
-            poll_id = str(uuid4())
+            # First cast the data into a string, encode that to bytes, and finally get a hash for it
+            # (does not need to be cyptographically secure, just need to store in db)
+            hash_obj = hashlib.md5(str(data).encode('utf-8'))
+            poll_id = hash_obj.hexdigest()
             print('ID when storing: {}'.format(poll_id))
             data[QueryKeys.POLL_ID] = poll_id
 

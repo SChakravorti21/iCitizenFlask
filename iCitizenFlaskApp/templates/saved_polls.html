@@ -1,0 +1,111 @@
+{% extends 'index.html' %}
+
+{% block body %}
+
+	<style type="text/css">
+		a.font-awesome-link {
+			color: rgba(0, 0, 0, 1);
+	    	text-decoration: none;
+		}
+
+		a.font-awesome-link:hover {
+			color: rgba(0, 0, 0, 0.5); 
+			text-decoration:none; 
+			cursor:pointer;  
+		}
+
+	    .fa-star:hover {
+	        -webkit-animation: fa-spin 0.75s linear;
+	        -moz-animation: fa-spin 0.75s linear;
+	        -o-animation: fa-spin 0.75s linear;
+	        animation: fa-spin 0.75s linear;
+	    }
+
+	    .fa-star:active {
+	        -webkit-animation: fa-tada 0.75s linear;
+	        -moz-animation: fa-tada 0.75s linear;
+	        -o-animation: fa-tada 0.75s linear;
+	        animation: fa-tada 0.75s linear;
+	    }
+
+	</style>
+
+	<div class="container">
+	    <div id="loader" style="height: 45rem; display: flex; align-items: center; justify-content: center">
+	        <div class="loader" style="border: 1em solid black; border-top: 1em solid teal;
+	            border-radius: 50%; width: 10em; height: 10em; animation: spin 1s linear infinite">
+	            <style type="text/css">
+	                @keyframes spin {
+	                    0% { transform: rotate(0deg); }
+	                    100% { transform: rotate(360deg); }
+	                }
+	            </style>
+	        </div>
+	    </div>
+	    <div class="poll_1">
+	    	
+	    </div>
+	    <div class="poll_2">
+	    	
+	    </div>
+	    <div class="poll_3">
+	    	
+	    </div>
+	    <div class="poll_4">
+	    	
+	    </div>
+	    <div class="poll_5">
+	    	
+	    </div>
+	    <div class="poll_6">
+	    	
+	    </div>
+	    <div class="poll_7">
+	    	
+	    </div>
+	    <div class="poll_8">
+	    	
+	    </div>
+	    <div class="poll_9">
+	    	
+	    </div>
+	    <div class="poll_10">
+	    	
+	    </div>
+	    <div class="poll_11">
+	    	
+	    </div>
+	    <div class="poll_12">
+	    	
+	    </div>
+	    <div class="poll_13">
+	    	
+	    </div>
+	    <div class="poll_14">
+	    	
+	    </div>
+	    <div class="poll_15">
+	    	
+	    </div>
+	    <div class="poll_16">
+	    	
+	    </div>
+	    <div class="poll_17">
+	    	
+	    </div>
+	    <div class="poll_18">
+	    	
+	    </div>
+	    <div class="poll_19">
+	    	
+	    </div>
+	    <div class="poll_20">
+	    	
+	    </div>
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+    <script src="{{ url_for('static', filename='dist/js/get_saved_polls.js') }}">    </script>
+{% endblock %}
