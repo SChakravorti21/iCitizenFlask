@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, session, request, logging, json
+from flask import Blueprint, render_template, flash, redirect, url_for, session, request, logging
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
 from functools import wraps
@@ -130,6 +130,13 @@ def load_dashboard():
 @mod.route('/events/', methods = ['GET', 'POST'])
 @is_logged_in
 def show_events():
+    if request.methods == 'POST':
+        query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+        users = db['users']
+        user = users.find_one(query)
+        prev_saved_events = user[QueryKeys.SAVED_EVENTS]
+        update_user_saved_events(prev_saved_events)
+
     return render_template('events.html')
 
 
