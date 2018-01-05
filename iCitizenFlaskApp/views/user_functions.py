@@ -66,8 +66,7 @@ def update_preferences():
 				location = Geocoder.geocode("{}, {}, {}, {}, {}".format(address, city, state, country, zipcode))
 				print(location)
 			except:
-				error = 'INVALID ADDRESS'
-				flash('INVALID ADDRESS', 'danger')
+				flash('Sorry, we were unable to process your address at this time. Please try again 15 minutes later.', 'warning')
 				return redirect(url_for('functions.update_preferences'))
 
 
