@@ -53,7 +53,7 @@ def register():
             QueryKeys.UPDATE_EVENTS: True,
             QueryKeys.UPDATE_BILLS: True,
             QueryKeys.UPDATE_POLLS: True,
-			QueryKeys.SAVED_EVENTS: []
+			QueryKeys.SAVED_EVENTS: {}
         }).inserted_id
 
         print(str(insert_id))
@@ -201,7 +201,7 @@ def get_user_events():
     comb_json = {QueryKeys.USER_EVENTS: user_events_jsons,
                 QueryKeys.SAVED_EVENTS: saved_events_jsons}
 
-    print('SAVED EVENTS = ', saved_events_jsons)
+    # print('SAVED EVENTS = ', saved_events_jsons)
     return json.dumps(comb_json, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-user-polls/', methods=['POST'])

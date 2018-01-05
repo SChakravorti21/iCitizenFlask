@@ -5,6 +5,22 @@ from iCitizenFlaskApp.views.user_routes import is_logged_in
 
 mod = Blueprint('saved_data', __name__)
 
+@mod.route('/saved-events/', methods=['GET'])
+@is_logged_in
+def saved_events():
+	return render_template('saved_events.html')
+
+@mod.route('/fetch-saved-events/', methods=['GET'])
+@is_logged_in
+def fetch_saved_events():
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	user = users.find_one(query)
+	saved_events = user[QueryKeys.SAVED_EVENTS] if QueryKeys.SAVED_EVENTS in user else {}
+
+	return json.dumps(saved_events, sort_keys=True, indent=4)
+
 @mod.route('/saved-polls/', methods=['GET'])
 @is_logged_in
 def saved_polls():
@@ -20,6 +36,8 @@ def fetch_saved_polls():
 	saved_polls = user[QueryKeys.SAVED_POLLS] if QueryKeys.SAVED_POLLS in user else {}
 
 	return json.dumps(saved_polls, sort_keys=True, indent=4)
+<<<<<<< HEAD
+=======
 
 @mod.route('/saved-legislators/', methods=['GET'])
 @is_logged_in
@@ -36,3 +54,4 @@ def fetch_saved_legislators():
 	saved_legislators = user[QueryKeys.SAVED_LEGISLATORS] if QueryKeys.SAVED_LEGISLATORS in user else {}
 
 	return json.dumps(saved_legislators, sort_keys=True, indent=4)
+>>>>>>> f7e9fe51908438b8e3173e81d4d5f94bb8d72913
