@@ -140,7 +140,7 @@ class Event:
 		for event in event_list:
 
 			ctr = 0
-			event_words = getKeywords(event.title)
+			event_words = Event.getKeywords(event.title)
 
 
 			for word in event_words:
