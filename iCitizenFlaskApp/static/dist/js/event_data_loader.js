@@ -14,11 +14,7 @@ function fetchevents() {
                 for (event of events) {
 
                   html = `
-<<<<<<< HEAD
-                    <div class="card mb-4" style="box-shadow: -5px 5px rgba(120,144,156,0.3);">
-=======
                     <div class="card mb-4" style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
->>>>>>> 5fa8cd0851412e9834ee54f9e05653d704649737
                         <h4 class="card-header" style="background-color: #cadbf7;"> ` + event['org_title'] + `</h4>
                         <div class = "card-block">
                             <div class="row ml-3">
@@ -29,7 +25,8 @@ function fetchevents() {
                                     background-position: center;
                                     background-size: cover;
                                     border: 0.25em solid #59698d;
-                                    border-radius: 1em;"/>
+                                    border-radius: 1em;
+                                    align="middle""/>
 
 
                                <ul class="list-group list-group-flush" style="margin-left: 1em;">
