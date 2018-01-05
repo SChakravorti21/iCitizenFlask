@@ -12,16 +12,24 @@ function fetchevents() {
         dataType: "json",
         success: function(response){
             if(response != null){
-                events = response;
-                var saved_events = response['saved_events'];
-                events = events['user_events'];
+                var saved_events = response["saved_events"];
+                events = response["user_events"];
 
                 for (event of events) {
                   if(count > 15) {
                     break;
                   }
 
-                  var isCurrSaved = 
+                  var saved = "saved=";
+                  if(event["event_id"] in saved_events) {
+                      saved += "'true'";
+                  }
+                  else {
+                    saved += "'false'";
+                  }
+                  console.log(saved);
+
+                  var star = (saved === "saved='true'") ? solidStar : regularStar;
 
                   html = `
                     <div class="card mb-4" style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>

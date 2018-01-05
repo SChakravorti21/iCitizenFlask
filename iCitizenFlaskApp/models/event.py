@@ -49,7 +49,7 @@ class Event:
 			h = (31 * h + ord(c)) & 0xFFFFFFFF
 		hc = ((h + 0x80000000) & 0xFFFFFFFF) - 0x80000000
 
-		self.id = hc
+		self.event_id = hc
 
 
 
@@ -64,7 +64,7 @@ class Event:
 			"img_link": self.img_link,
 			"pts": self.pts,
 			"saved": self.saved,
-			"id": self.id
+			"event_id": self.event_id
 		}
 
 	#param = state, city, max page num, list of subject prefs
@@ -240,7 +240,7 @@ class Event:
 
 # events = Event.get_top_n_events()
 # for e in events:
-# 	print(e.id)
+# 	print(e.event_id)
 
 '''
 for each event in event_list

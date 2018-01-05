@@ -39,4 +39,5 @@ class QueryKeys:
 
 	USER_POLLS = 'user_polls'
 	SAVED_POLLS = 'saved_polls'
+	EVENT_ID = 'event_id'
 	POLL_ID = 'poll_id'
