@@ -135,27 +135,7 @@ def load_dashboard():
 @mod.route('/events/', methods = ['GET', 'POST'])
 @is_logged_in
 def show_events():
-    # if request.methods == 'POST':
-    #     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-    #     users = db['users']
-    #     user = users.find_one(query)
-    #     prev_saved_events = user[QueryKeys.SAVED_EVENTS]
-    #     update_user_saved_events(prev_saved_events)
-
     return render_template('events.html')
-
-
-def update_user_saved_events(prev_saved_events):
-	print('PREV SAVED EVENTS ARE', prev_saved_events)
-
-	new_saved_events = request.form.getlist('box')
-
-	if new_saved_events:
-
-		mergedlist = list(set(prev_saved_events + new_saved_events))
-
-		user = users.find_one_and_update(query, {'$set':{QueryKeys.SAVED_EVENTS: mergedlist}})
-		print('NEW SAVED EVENTS iS ', mergedlist)
 
 
 @mod.route('/polls/', methods=['GET'])
