@@ -111,6 +111,51 @@ def update_preferences():
 		subjects=[(str(subject).strip(), subject) for subject in SUBJECTS],
 		selected_subjects=topics, error=error)
 
+
+@mod.route('/save-event/', methods=['POST'])
+@is_logged_in
+def save_event():
+	event_to_save = request.get_json()
+	event_id = event_to_save[QueryKeys.EVENT_ID]
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+	user = users.find_one(query)
+
+	#this is a dict, where key = event_id and value = event_json
+	curr_saved_events = user[QueryKeys.SAVED_EVENTS] if QueryKeys.SAVED_EVENTS in user else {}
+
+	#if already saved in there
+	if len(curr_saved_events) > 0 and event_id in curr_saved_events:
+		return 'False'
+
+	event_query = QueryKeys.SAVED_EVENTS + '.' + event_id
+	users.find_one_and_update(query, {'$set': {event_query: event_to_save}})
+	print(event_id)
+	#saved_polls : {id: jbasjhfbjsh, another_id: ajsdbljsab}
+	#dot notation selects a key
+
+	return 'True'
+
+
+@mod.route('/delete-saved-event/', methods=['POST'])
+@is_logged_in
+def delete_saved_event():
+	event_to_delete = request.get_json()
+	event_id = event_to_delete[QueryKeys.EVENT_ID]
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+	user = users.find_one(query)
+
+	print(event_id)
+
+	event_query = QueryKeys.SAVED_EVENTS + "." + event_id
+	users.find_one_and_update(query, {'$unset': {event_query: event_to_delete}})
+	return 'True'
+
+
+
 @mod.route('/save-poll/', methods=['POST'])
 @is_logged_in
 def save_poll():
