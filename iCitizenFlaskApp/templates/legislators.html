@@ -2,6 +2,34 @@
 
 {% block body %}
 
+<style type="text/css">
+    a.font-awesome-link {
+        color: rgba(0, 0, 0, 1);
+        text-decoration: none;
+    }
+
+    a.font-awesome-link:hover {
+        color: rgba(0, 0, 0, 0.5); 
+        text-decoration:none; 
+        cursor:pointer;  
+    }
+
+    .fa-star:hover {
+        -webkit-animation: fa-spin 0.75s linear;
+        -moz-animation: fa-spin 0.75s linear;
+        -o-animation: fa-spin 0.75s linear;
+        animation: fa-spin 0.75s linear;
+    }
+
+    .fa-star:active {
+        -webkit-animation: fa-tada 0.75s linear;
+        -moz-animation: fa-tada 0.75s linear;
+        -o-animation: fa-tada 0.75s linear;
+        animation: fa-tada 0.75s linear;
+    }
+
+</style>
+
 <div class="container">
     <div id="loader" style="height: 45rem; display: flex; align-items: center; justify-content: center">
         <div class="loader" style="border: 1em solid black; border-top: 1em solid teal;

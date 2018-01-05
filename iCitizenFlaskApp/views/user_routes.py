@@ -230,9 +230,15 @@ def get_state_legislators():
 
     user = users.find_one(query)
 
-    user_legislators_jsons = user['state_legislators'] if 'state_legislators' in user else None
+    user_legislators_jsons = user[QueryKeys.STATE_LEGISLATORS] if QueryKeys.STATE_LEGISLATORS in user else {}
+    saved_legislators_jsons = user[QueryKeys.SAVED_LEGISLATORS] if QueryKeys.SAVED_LEGISLATORS in user else {}
 
-    return json.dumps(user_legislators_jsons, sort_keys=True, indent=4, default=json_util.default)
+    ret_json = {
+        QueryKeys.STATE_LEGISLATORS: user_legislators_jsons,
+        QueryKeys.SAVED_LEGISLATORS: saved_legislators_jsons
+    }
+
+    return json.dumps(ret_json, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-national-legislators-db/', methods=['POST'])
 @is_logged_in
@@ -242,6 +248,12 @@ def get_national_legislators():
 
     user = users.find_one(query)
 
-    user_legislators_jsons = user['national_legislators'] if 'national_legislators' in user else None
+    user_legislators_jsons = user[QueryKeys.NATIONAL_LEGISLATORS] if QueryKeys.NATIONAL_LEGISLATORS in user else {}
+    saved_legislators_jsons = user[QueryKeys.SAVED_LEGISLATORS] if QueryKeys.SAVED_LEGISLATORS in user else {}
 
-    return json.dumps(user_legislators_jsons, sort_keys=True, indent=4, default=json_util.default)
+    ret_json = {
+        QueryKeys.NATIONAL_LEGISLATORS: user_legislators_jsons,
+        QueryKeys.SAVED_LEGISLATORS: saved_legislators_jsons
+    }
+
+    return json.dumps(ret_json, sort_keys=True, indent=4, default=json_util.default)

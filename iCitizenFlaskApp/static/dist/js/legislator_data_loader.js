@@ -1,6 +1,11 @@
 var nationalInterval, stateInterval;
 var count = 1;
 
+var state, national;
+
+var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
+var solidStar = "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
+
 function fetchnationallegs() {
     $.ajax({
         url: "/get-national-legislators-db/",
@@ -8,8 +13,10 @@ function fetchnationallegs() {
         dataType: "json",
         success: function(response){
             if(response != null){
-                national = response;
+                national = response['national_legislators'];
+                var saved_legislators = response['saved_legislators']
                 count = 1;
+
                 for (legislator of national) {
                     if(count > 10)
                         break;
@@ -32,9 +39,20 @@ function fetchnationallegs() {
                     info += 'Party: ' + party + '<br><br>';
                     info += 'State: ' + legislator['state'];
 
+                    console.log(legislator['id']);
+                    var saved = "saved=" + ( (legislator['id'] in saved_legislators) ? "'true'" : "'false'");
+                    console.log(saved);
+                    var star = (saved === "saved='true'") ? solidStar : regularStar;
+
                     $('#legislator_national_'+count).html(`
                         <div class="card mb-4" style='height: 25rem; box-shadow: -5px 5px rgba(120,144,156,0.3);'>
-                            <h4 class="card-header">` + legislator['last_name'] + ', ' + legislator['first_name'] + `</h4>
+                            <div class='card-header clearfix d-inline-flex'>
+                                <h4 class='mr-auto'>` + legislator['last_name'] + ', ' + legislator['first_name'] + `</h4>
+                                <!-- data-count is used for saving and retrieving polls -->
+                                <div class='star-holder' level='national' data-count='`+ count +`' ` + saved + `>
+                                    ` + star + `
+                                </div>
+                            </div>
                             <div class="card-block">
                                 <div class="row ml-3" style='height: 16rem;'>
                                     <div class="col-sm-3" 
@@ -80,7 +98,9 @@ function fetchstatelegs() {
         dataType: "json",
         success: function(response){
             if(response != null){
-                state = response;
+                state = response['state_legislators'];
+                var saved_legislators = response['saved_legislators'];
+
                 count = 1;
                 for (legislator of state) {
                     if(count > 10)
@@ -89,24 +109,35 @@ function fetchstatelegs() {
                     var party = legislator['party'];
                     var info = '';
                     if( legislator['district'] ){
-                        info += 'District: ' + legislator['photo_url'] + '<br><br>';
+                        info += 'District: ' + legislator['district'] + '<br><br>';
                     }
                     var level = legislator['level'];
                     info += 'Level: ' + level.charAt(0).toUpperCase() + level.substring(1, level.length) + '<br><br>';
                     info += 'Party: ' + party + '<br><br>';
-                    var state = legislator['state'].toUpperCase();
-                    info += 'State: ' + state.charAt(0).toUpperCase() + state.substring(1, level.length).toLowerCase();
+                    info += 'State: ' + legislator['state'].toUpperCase();
 
                     var chamber = legislator['chamber'];
                     chamber = chamber.charAt(0).toUpperCase() + chamber.substring(1, level.length);
+
+                    console.log(legislator['id']);
+                    var saved = "saved=" + ( (legislator['id'] in saved_legislators) ? "'true'" : "'false'");
+                    console.log(saved);
+                    var star = (saved === "saved='true'") ? solidStar : regularStar;
+
                     $('#legislator_state_'+count).html(`
                         <div class="card mb-4" style='height: 25rem; box-shadow: -5px 5px rgba(120,144,156,0.3);'>
-                            <h4 class="card-header">` + legislator['last_name'] + ', ' + legislator['first_name'] + `</h4>
+                            <div class='card-header clearfix d-inline-flex'>
+                                <h4 class='mr-auto'>` + legislator['last_name'] + ', ' + legislator['first_name'] + `</h4>
+                                <!-- data-count is used for saving and retrieving polls -->
+                                <div class='star-holder' level='state' data-count='`+ count +`' ` + saved + `>
+                                    ` + star + `
+                                </div>
+                            </div>
                             <div class="card-block">
                                 <div class="row ml-3" style='height: 16rem;'>
                                     <div class="col-sm-3" 
                                         style='
-                                            background-image: url(` + legislator['district'] + `);
+                                            background-image: url(` + legislator['photo_url'] + `);
                                             background-repeat: no-repeat;
                                             background-position: center;
                                             background-size: cover;
@@ -142,7 +173,54 @@ function fetchstatelegs() {
         }
     });
 }
+
 $(document).ready(function(){
     nationalInterval = setTimeout(fetchnationallegs, 1000);
     stateInterval = setTimeout(fetchstatelegs, 1000);
+
+    $('body').on('click', 'div.star-holder', function() {
+        var div = $(this);
+        var index = $(this).attr('data-count');
+        console.log(state);
+        var legislator = (div.attr('level') === 'national') ? national[index - 1] : state[index - 1];
+
+        if(div.attr('saved') === 'false') {
+            console.log('was not saved');
+
+            $.ajax({
+                url: '/save-legislator/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(legislator),
+                success: function(data) {
+                    if(data) {
+                        console.log('Post successful. Result: ');
+                        console.log(data);
+
+                        div.html(solidStar);
+                        div.attr('saved', 'true');
+                    }
+                }
+            });
+        } else {
+            console.log('was saved');
+            console.log('index: ' + (index - 1));
+
+            $.ajax({
+                url: '/delete-saved-legislator/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({'id': legislator['id']}),
+                success: function(data) {
+                    if(data) {
+                        console.log('Post successful. Result: ');
+                        console.log(data);
+
+                        div.html(regularStar);
+                        div.attr('saved', 'false');
+                    }
+                }
+            });
+        }
+    })
 })

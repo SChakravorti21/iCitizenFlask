@@ -42,6 +42,10 @@ class QueryKeys:
 	EVENT_ID = 'event_id'
 	POLL_ID = 'poll_id'
 
+	NATIONAL_LEGISLATORS = 'national_legislators'
+	STATE_LEGISLATORS = 'state_legislators'
+	SAVED_LEGISLATORS = 'saved_legislators'
+
 	NATIONAL_BILLS = 'national_bills'
 	SAVED_NATIONAL_BILLS = 'saved_national_bills'
 
