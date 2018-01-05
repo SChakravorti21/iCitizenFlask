@@ -14,7 +14,11 @@ function fetchevents() {
                 for (event of events) {
 
                   html = `
+<<<<<<< HEAD
                     <div class="card mb-4" style="box-shadow: -5px 5px rgba(120,144,156,0.3);">
+=======
+                    <div class="card mb-4" style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
+>>>>>>> 5fa8cd0851412e9834ee54f9e05653d704649737
                         <h4 class="card-header" style="background-color: #cadbf7;"> ` + event['org_title'] + `</h4>
                         <div class = "card-block">
                             <div class="row ml-3">
@@ -28,7 +32,7 @@ function fetchevents() {
                                     border-radius: 1em;"/>
 
 
-                               <ul class="list-group list-group-flush">
+                               <ul class="list-group list-group-flush" style="margin-left: 1em;">
                                    <li class="list-group-item">` + event['location'] + `</li>
                                    <li class="list-group-item" style="background-color: #e5e6e8;">` + event['time'] + `</li>
                                    <li class="list-group-item">` + event['price'] + `</li>
@@ -38,29 +42,16 @@ function fetchevents() {
 
                                    </li>
                                </ul>
-
-
-
                             </div>
-
-
                         </div>
-
-
                         <div class="card-footer">
-
-                        <label class="custom-checkbox label_event" style="margin: 20px 0px -10px 20px">
-                            <input type="checkbox" name = "box" style="transform: scale(1.5);"/>
-                            <font size="+0">Add to Saved Events</font>
-                            <br>
-                        </label>
-
+                          <label class="custom-checkbox label_event">
+                              <input type="checkbox" name = "box" style="transform: scale(1.5); margin-right: 0.5em;"/>
+                              <font size="+0">Add to Saved Events</font>
+                              <br>
+                          </label>
                         </div>
-
-
-                    </div>
-
-                  `
+                      </div> `
 
                     $('#event_'+count).html(html);
                     count++;
@@ -77,5 +68,5 @@ function fetchevents() {
 }
 
 $(document).ready(function(){
-    eventInterval = setInterval(fetchevents, 5000);
+    eventInterval = setInterval(fetchevents, 1000);
 })
