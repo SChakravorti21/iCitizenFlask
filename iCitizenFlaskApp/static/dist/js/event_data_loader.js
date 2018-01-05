@@ -97,7 +97,16 @@ $(document).ready(function(){
         var index = $(this).attr('data-count');
         console.log('event being saved:' + index)
 
-        if(div.attr('saved'))
+        if(div.attr('saved') === 'false') {
+            console.log("clicked save button");
+
+            $.ajax({
+                url: 'save_event'
+
+
+            })
+
+        }
 
     });
 
