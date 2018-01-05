@@ -120,7 +120,10 @@ function fetchstatelegs() {
                             <div class="card-footer text-muted">Legislator ID: ` + legislator['id'] + `</div>
                             </div>
                         </div>
-                        `)
+                        `
+                    );
+                    $('#loader').html("");
+                    $('#loader').attr('style', '')
                     count++;
                 }
             }

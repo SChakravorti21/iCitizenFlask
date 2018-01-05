@@ -127,7 +127,10 @@ function fetchpolls() {
                                     <p class='card-text'>` + details + `</p>
                                 </div>
                             </div>
-                        </div> `);
+                        </div> `
+                    );
+                    $('#loader').html("");
+                    $('#loader').attr('style', '')
                     count++;
                 }
             }
