@@ -23,6 +23,9 @@ var pollInterval;
 var count = 1;
 var polls = null;
 
+var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
+var solidStar = "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
+
 function fetchpolls() {
     $.ajax({
         url: "/get-user-polls/",
@@ -31,8 +34,9 @@ function fetchpolls() {
         success: function(response){
             if(response != null){
                 polls = response;
-                console.log(polls['contests']);
-                polls = polls['contests'];
+                var saved_polls = response['saved_polls'];
+                
+                polls = polls['user_polls']['contests'];
                 for (poll of polls) {
                     if(count > 20)
                         break;
@@ -105,14 +109,19 @@ function fetchpolls() {
                         details += 'Link: <a href="' + url + '">' + url + '</a>';
                     }
 
+                    console.log(poll['poll_id']);
+                    console.log(saved_polls);
+                    var saved = "saved=" + ( (poll['poll_id'] in saved_polls) ? "'true'" : "'false'");
+                    console.log(saved);
+                    var star = (saved === "saved='true'") ? solidStar : regularStar;
+
                     $('.poll_'+count).html(`
                         <div class='card mb-4' style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
                             <div class='card-header clearfix d-inline-flex'>
                                 <h4 class='mr-auto'>`+ type +`</h4>
                                 <!-- data-count is used for saving and retrieving polls -->
-                                <div class='' data-count='`+ count +`'>
-                                    <i style='color: tomato;' 
-                                        class='fa-2x far fa-star star-holder' data-fa-transform="shrink-7"></i>
+                                <div class='star-holder' data-count='`+ count +`' ` + saved + `>
+                                    ` + star + `
                                 </div>
                             </div>
                             <div class='card-block'>
@@ -130,19 +139,20 @@ function fetchpolls() {
                         </div> `
                     );
                     $('#loader').html("");
-                    $('#loader').attr('style', '')
+                    $('#loader').attr('style', '');
                     count++;
                 }
-            }
-            if(count >= 20) {
-                console.log("Poll interval has been cleared")
-                clearTimeout(pollInterval)
+
+                console.log("Poll interval has been cleared");
+                clearTimeout(pollInterval);
+
             } else {
                 console.log("Still polling")
             }
         },
         complete: function(response) {
-            setTimeout(pollInterval, 1000);
+            if(response === null)
+                setTimeout(fetchpolls, 1000);
         }
     })
 }
@@ -150,24 +160,48 @@ function fetchpolls() {
 $(document).ready(function(){
     pollInterval = setTimeout(fetchpolls, 1000);
 
-    $('body').on('click', '.star-holder', function() {
-        var index = $(this).parent().attr('data-count');
+    $('body').on('click', 'div.star-holder', function() {
+        var div = $(this);
+        var index = $(this).attr('data-count');
         console.log('Sending: ');
-        console.log(polls[index - 1])
+        console.log('here index: ' + index);
 
-        $.ajax({
-            url: '/save-poll/',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(polls[index - 1]),
-            success: function(data) {
-                if(data) {
-                    console.log('Post successful. Result: ');
-                    console.log(data);
-                    $(this).removeClass("far");
-                    $(this).addClass("fas");
+        if(div.attr('saved') === 'false') {
+            console.log('was not saved');
+            $.ajax({
+                url: '/save-poll/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(polls[index - 1]),
+                success: function(data) {
+                    if(data) {
+                        console.log('Post successful. Result: ');
+                        console.log(data);
+
+                        div.html(solidStar);
+                        div.attr('saved', 'true');
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            console.log('was saved');
+            console.log('index: ' + (index - 1));
+            console.log(polls);
+            $.ajax({
+                url: '/delete-saved-poll/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({'poll_id': polls[index - 1]['poll_id']}),
+                success: function(data) {
+                    if(data) {
+                        console.log('Post successful. Result: ');
+                        console.log(data);
+
+                        div.html(regularStar);
+                        div.attr('saved', 'false');
+                    }
+                }
+            });
+        }
     })
 });

@@ -121,6 +121,8 @@ def update_events(username):
     return "Events have been written"
 
 def update_polls(username):
+    from uuid import uuid4
+
     query = {QueryKeys.USERNAME: username}
     users = db['users']
     user = users.find_one(query)
@@ -137,7 +139,13 @@ def update_polls(username):
     info = service.elections().voterInfoQuery(address=address, electionId="2000", 
         returnAllAvailableData=True, officialOnly=False).execute()
 
-    print(info)
+    if info:
+        # Set a unique id for each poll, used when saving polls
+        contests = info['contests']
+        for data in contests:
+            poll_id = str(uuid4())
+            print('ID when storing: {}'.format(poll_id))
+            data[QueryKeys.POLL_ID] = poll_id
 
     users.find_one_and_update(query, {'$set': {'user_polls': info}})
 

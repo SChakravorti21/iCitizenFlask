@@ -36,3 +36,7 @@ class QueryKeys:
 
 	EVENT_LIST = 'user_events'
 	UPDATE_POLLS = 'update_polls'
+
+	USER_POLLS = 'user_polls'
+	SAVED_POLLS = 'saved_polls'
+	POLL_ID = 'poll_id'

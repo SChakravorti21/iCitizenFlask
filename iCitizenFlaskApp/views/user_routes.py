@@ -52,6 +52,7 @@ def register():
             QueryKeys.UPDATE_DB: True,
             QueryKeys.UPDATE_EVENTS: True,
             QueryKeys.UPDATE_BILLS: True,
+            QueryKeys.UPDATE_POLLS: True,
 			QueryKeys.SAVED_EVENTS: []
         }).inserted_id
 
@@ -77,7 +78,6 @@ def login():
         users = db['users']
 
         user = users.find_one(query)
-        print(user)
 
         if user is None or not sha256_crypt.verify(entered_password, user['password']):
             flash('Invalid username or password', 'danger')
@@ -100,9 +100,13 @@ def logout():
     session[QueryKeys.USERNAME] = None
     session.clear()
 
-    users.find_one_and_update(query, {'$set':{QueryKeys.UPDATE_DB: True}})
-    users.find_one_and_update(query, {'$set':{QueryKeys.UPDATE_BILLS: True}})
-    users.find_one_and_update(query, {'$set':{QueryKeys.UPDATE_EVENTS: True}})
+    users.find_one_and_update(query, {'$set':{
+        QueryKeys.UPDATE_DB: True,
+        QueryKeys.UPDATE_BILLS: True,
+        QueryKeys.UPDATE_POLLS: True,
+        QueryKeys.UPDATE_EVENTS: True}
+    })
+
     flash('You have successfully logged out!', 'success')
     return redirect( url_for('index'))
 
@@ -123,6 +127,7 @@ def load_dashboard():
         return redirect( url_for('functions.update_preferences'))
 
     if user[QueryKeys.UPDATE_DB]:
+        print('calling celery task')
         call_celery_task()
 
     return render_template('dashboard.html', db_client=user)
@@ -212,9 +217,15 @@ def get_user_polls():
 
     user = users.find_one(query)
 
-    user_polls_jsons = user['user_polls'] if 'user_polls' in user else None
+    user_polls_jsons = user[QueryKeys.USER_POLLS] if QueryKeys.USER_POLLS in user else None
+    saved_polls_json = user[QueryKeys.SAVED_POLLS] if QueryKeys.SAVED_POLLS in user else {}
 
-    return json.dumps(user_polls_jsons, sort_keys=True, indent=4, default=json_util.default)
+    ret_json = {
+        QueryKeys.USER_POLLS: user_polls_jsons,
+        QueryKeys.SAVED_POLLS: saved_polls_json 
+    }
+
+    return json.dumps(ret_json, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-state-legislators-db/', methods=['POST'])
 @is_logged_in

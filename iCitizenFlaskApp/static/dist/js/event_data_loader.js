@@ -10,8 +10,9 @@ function fetchevents() {
             if(response != null){
                 events = response;
 
-
                 for (event of events) {
+                  if(count > 10)
+                    break;
 
                   html = `
                     <div class="card mb-4" style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
@@ -55,17 +56,20 @@ function fetchevents() {
                     $('#loader').attr('style', '')
                     count++;
                 }
-            }
-            if(count >= 10) {
-                console.log("Event interval has been cleared")
-                clearInterval(eventInterval)
+
+                console.log("Event interval has been cleared");
+                clearTimeout(eventInterval);
             } else {
-                console.log("Still polling")
+                console.log("Still polling");
             }
+        },
+        complete: function(data) {
+          if(data === null)
+            setTimeout(fetchevents, 1000);
         }
     })
 }
 
 $(document).ready(function(){
-    eventInterval = setInterval(fetchevents, 1000);
+    eventInterval = setTimeout(fetchevents, 1000);
 })

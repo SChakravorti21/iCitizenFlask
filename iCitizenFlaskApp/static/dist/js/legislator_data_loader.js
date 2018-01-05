@@ -11,7 +11,9 @@ function fetchnationallegs() {
                 national = response;
                 count = 1;
                 for (legislator of national) {
-                    console.log(legislator);
+                    if(count > 10)
+                        break;
+
                     var party = legislator['party'];
                     if(party === 'D') {
                         party = 'Democrat';
@@ -57,17 +59,16 @@ function fetchnationallegs() {
                         `)
                     count++;
                 }
-                clearTimeout(nationalInterval)
-            }
-            if(count >= 10) {
-                console.log("National legislator interval has been cleared")
-                clearTimeout(nationalInterval)
+
+                console.log("National legislator interval has been cleared");
+                clearTimeout(nationalInterval);
             } else {
-                console.log("Still polling")
+                console.log("Still polling");
             }
         },
         complete: function(response) {
-            setTimeout(nationalInterval, 1000);
+            if(response === null)
+                setTimeout(fetchnationallegs, 1000);
         }
     })
 }
@@ -82,7 +83,9 @@ function fetchstatelegs() {
                 state = response;
                 count = 1;
                 for (legislator of state) {
-                    console.log(legislator);
+                    if(count > 10)
+                        break;
+
                     var party = legislator['party'];
                     var info = '';
                     if( legislator['district'] ){
@@ -126,8 +129,7 @@ function fetchstatelegs() {
                     $('#loader').attr('style', '')
                     count++;
                 }
-            }
-            if(count >= 10) {
+
                 console.log("State legislator interval has been cleared")
                 clearTimeout(stateInterval)
             } else {
@@ -135,7 +137,8 @@ function fetchstatelegs() {
             }
         },
         complete: function(response) {
-            setTimeout(stateInterval, 1000);
+            if(response === null)
+                setTimeout(fetchstatelegs, 1000);
         }
     });
 }

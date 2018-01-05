@@ -7,6 +7,7 @@ from iCitizenFlaskApp.forms import PreferencesForm
 from iCitizenFlaskApp.dbconfig import db, QueryKeys
 from iCitizenFlaskApp.data import SUBJECTS
 from iCitizenFlaskApp.views.user_routes import is_logged_in
+from iCitizenFlaskApp.views.user_data import call_celery_task
 
 mod = Blueprint('functions', __name__)
 
@@ -102,6 +103,8 @@ def update_preferences():
 				}})
 			# print(user)
 
+			# Uodate the database once preferences are updated
+			call_celery_task()
 			flash('Your preferences have been updated!', 'success')
 			return redirect( url_for('functions.show_profile'))
 
@@ -113,15 +116,35 @@ def update_preferences():
 @is_logged_in
 def save_poll():
 	save = request.get_json()
+	poll_id = save[QueryKeys.POLL_ID]
 
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
 
 	current_user_state = users.find_one(query)
 	current_saved_polls = current_user_state['saved_polls'] if 'saved_polls' in current_user_state else None
-	if current_saved_polls and save in current_saved_polls:
+	if current_saved_polls and poll_id in current_saved_polls:
 		return 'False'
 
-	users.find_one_and_update(query, {'$push': {'saved_polls': save}})
+	print( poll_id)
+	poll_query = QueryKeys.SAVED_POLLS + "." + poll_id
+	users.find_one_and_update(query, {'$set': {poll_query: save}})
+
+	return 'True'
+
+@mod.route('/delete-saved-poll/', methods=['POST'])
+@is_logged_in
+def delete_saved_poll():
+	save = request.get_json()
+	poll_id = save[QueryKeys.POLL_ID]
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+
+	print( poll_id)
+	poll_query = QueryKeys.SAVED_POLLS + "." + poll_id
+	users.find_one_and_update(query, {'$unset': {poll_query: save}})
 
 	return 'True'

@@ -10,6 +10,9 @@ function fetchnationalbills() {
                 var count = 1;
                 national = response;
                 for (bill of national) {
+                    if(count > 10)
+                        break;
+
                     detailsId = 'bill_' + count + '_info';
                     var num = bill['cosponsor_num']
                     if(bill['cosponsor_num'] == null)
@@ -52,13 +55,16 @@ function fetchnationalbills() {
                     $('#loader').attr('style', '')
                     count++;
                 }
-            } 
-            if(count >= 10) {
+
                 console.log("National interval has been cleared")
-                clearInterval(nationalInterval)
+                clearTimeout(nationalInterval)
             } else {
                 console.log("Still polling")
             }
+        },
+        complete: function(data) {
+            if(data === null)
+                setTimeout(fetchnationalbills, 1000); 
         }
     })
 }
@@ -73,6 +79,9 @@ function fetchstatebills() {
                 var count = 11;
                 state = response;
                 for (bill of state) {
+                    if(count >= 20)
+                        break;
+
                     detailsId = 'bill_' + count + '_info';
                     var num = bill['cosponsor_num']
                     if(bill['cosponsor_num'] == null)
@@ -112,17 +121,20 @@ function fetchstatebills() {
                     $('#bill_'+count).html(html);
                     count++;
                 }
-            }
-            if(count >= 20) {
+
                 console.log("State interval has been cleared")
-                clearInterval(stateInterval)
+                clearTimeout(stateInterval)
             } else {
                 console.log("Still polling")
             }
+        }, 
+        complete: function(data) {
+            if(data === null)
+                setTimeout(fetchstatebills, 1000);
         }
     });
 }
 $(document).ready(function(){
-    nationalInterval = setInterval(fetchnationalbills, 3000);
-    stateInterval = setInterval(fetchstatebills, 3000);
+    nationalInterval = setTimeout(fetchnationalbills, 1000);
+    stateInterval = setTimeout(fetchstatebills, 1000);
 })
