@@ -19,8 +19,9 @@ celery_worker_bills = make_celery(app)
 celery_worker_events = make_celery(app)
 celery_worker_polls = make_celery(app)
 
-from iCitizenFlaskApp.views import user_routes, user_functions, user_data
+from iCitizenFlaskApp.views import user_routes, user_functions, user_data, get_saved_data
 
 app.register_blueprint(user_routes.mod)
 app.register_blueprint(user_functions.mod)
 app.register_blueprint(user_data.mod)
+app.register_blueprint(get_saved_data.mod)
