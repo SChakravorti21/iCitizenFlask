@@ -77,5 +77,5 @@ function fetchevents() {
 }
 
 $(document).ready(function(){
-    eventInterval = setInterval(fetchevents, 500);
+    eventInterval = setInterval(fetchevents, 5000);
 })
