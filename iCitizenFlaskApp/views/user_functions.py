@@ -116,7 +116,12 @@ def update_preferences():
 @is_logged_in
 def save_event():
 	event_to_save = request.get_json()
+
+	print('INSIDE SAVE EVENT === ', event_to_save)
+	print(event_to_save.keys())
+
 	event_id = event_to_save[QueryKeys.EVENT_ID]
+	print(event_id)
 
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
@@ -129,10 +134,15 @@ def save_event():
 	if len(curr_saved_events) > 0 and event_id in curr_saved_events:
 		return 'False'
 
-	event_query = QueryKeys.SAVED_EVENTS + '.' + event_id
+	event_query = QueryKeys.SAVED_EVENTS + '.' + str(event_id)
+
+	print('QUERY = ', query)
+	print('EVENT_QUERY = ', event_query)
+	print('EVENT TO SAVE = ', event_to_save)
+
 	users.find_one_and_update(query, {'$set': {event_query: event_to_save}})
-	print(event_id)
-	#saved_polls : {id: jbasjhfbjsh, another_id: ajsdbljsab}
+
+	#saved_events : {id: jbasjhfbjsh, another_id: ajsdbljsab}
 	#dot notation selects a key
 
 	return 'True'
@@ -199,11 +209,7 @@ def save_legislator():
 	save = request.get_json()
 	legislator_id = save['id']
 
-	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-	users = db['users']
-
-	current_user_state = users.find_one(query)
-	current_saved_legislators = current_user_state['saved_polls'] if 'saved_polls' in current_user_state else None
+	current_saved_legislators = current_user_state[QueryKeys.SAVED_LEGISLATORS] if QueryKeys.SAVED_LEGISLATORS in current_user_state else None
 	if current_saved_legislators and legislator_id in current_saved_legislators:
 		return 'False'
 
@@ -219,13 +225,74 @@ def delete_saved_legislator():
 	save = request.get_json()
 	legislator_id = save['id']
 
-	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
-	users = db['users']
-
-	current_user_state = users.find_one(query)
-
 	print( legislator_id)
 	legislator_query = QueryKeys.SAVED_LEGISLATORS + "." + legislator_id
 	users.find_one_and_update(query, {'$unset': {legislator_query: save}})
 
 	return 'Request to delete made'
+
+
+@mod.route('/save-national-bill/', methods=['POST'])
+@is_logged_in
+def save_national_bill():
+	save = request.get_json()
+	bill_id = save['bill_id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+
+@mod.route('/save-state-bill/', methods=['POST'])
+@is_logged_in
+def save_state_bill():
+	save = request.get_json()
+	bill_id = save['bill_id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+	current_saved_bills = current_user_state['saved_state_bills'] if 'saved_state_bills' in current_user_state else None
+	if current_saved_bills and bill_id in current_saved_bills:
+		return 'False'
+
+	print(bill_id)
+	bill_query = "saved_state_bills" + "." + bill_id
+	users.find_one_and_update(query, {'$set': {bill_query: save}})
+
+	return 'True'
+
+@mod.route('/delete-saved-national-bill/', methods=['POST'])
+@is_logged_in
+def delete_national_bill():
+	save = request.get_json()
+	bill_id = save['bill_id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+
+	print(bill_id)
+	bill_query = 'saved_national_bills' + "." + bill_id
+	users.find_one_and_update(query, {'$unset': {bill_query: save}})
+
+	return 'True'
+
+@mod.route('/delete-saved-state-bill/', methods=['POST'])
+@is_logged_in
+def delete_state_bill():
+	save = request.get_json()
+	bill_id = save['bill_id']
+
+	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
+	users = db['users']
+
+	current_user_state = users.find_one(query)
+
+	print(bill_id)
+	bill_query = 'saved_state_bills' + "." + bill_id
+	users.find_one_and_update(query, {'$unset': {bill_query: save}})
+
+	return 'True'

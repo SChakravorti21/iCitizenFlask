@@ -162,8 +162,14 @@ def get_state_bills():
     user = users.find_one(query)
 
     state_bills_jsons = user['state_bills'] if 'state_bills' in user else None
+    saved_bills_jsons = user[QueryKeys.SAVED_STATE_BILLS] if QueryKeys.SAVED_STATE_BILLS in user else None
 
-    return json.dumps(state_bills_jsons, sort_keys=True, indent=4, default=json_util.default)
+    jsons = {
+        QueryKeys.STATE_BILLS: state_bills_jsons,
+        QueryKeys.SAVED_STATE_BILLS: saved_bills_jsons
+    }
+
+    return json.dumps(jsons, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-national-bills-db/', methods=['POST'])
 @is_logged_in
@@ -173,21 +179,26 @@ def get_national_bills():
 
     user = users.find_one(query)
 
-    national_bill_jsons = user['national_bills'] if 'national_bills' in user else None
+    national_bills_jsons = user[QueryKeys.NATIONAL_BILLS] if QueryKeys.NATIONAL_BILLS in user else None
+    saved_bills_jsons = user[QueryKeys.SAVED_NATIONAL_BILLS] if QueryKeys.SAVED_NATIONAL_BILLS in user else None
 
-    return json.dumps(national_bill_jsons, sort_keys=True, indent=4, default=json_util.default)
+    jsons = {
+        QueryKeys.NATIONAL_BILLS: national_bills_jsons,
+        QueryKeys.SAVED_NATIONAL_BILLS: saved_bills_jsons
+    }
+
+    return json.dumps(jsons, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-user-events-db/', methods=['POST'])
 @is_logged_in
 def get_user_events():
     query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
     users = db['users']
-
     user = users.find_one(query)
 
-    user_events_jsons = user[QueryKeys.EVENT_LIST] if QueryKeys.EVENT_LIST in user else None
+    user_events_jsons = user[QueryKeys.USER_EVENTS] if QueryKeys.USER_EVENTS in user else None
     saved_events_jsons = user[QueryKeys.SAVED_EVENTS] if QueryKeys.SAVED_EVENTS in user else {}
-    comb_json = {QueryKeys.EVENT_LIST: user_events_jsons,
+    comb_json = {QueryKeys.USER_EVENTS: user_events_jsons,
                 QueryKeys.SAVED_EVENTS: saved_events_jsons}
 
     print('SAVED EVENTS = ', saved_events_jsons)

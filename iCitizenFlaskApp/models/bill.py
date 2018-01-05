@@ -20,12 +20,6 @@ class Bill(object):
         self.govtrack_link = govtrack_link
         self.url = url
 
-    def printBill(self):
-        print(str(self.level) + "\n")
-        print(str(self.title) + "\n")
-        print(str(self.description) + "\n")
-        print(str(self.author) + "\n")
-
     def json(self):
         return {
             "level": self.level,

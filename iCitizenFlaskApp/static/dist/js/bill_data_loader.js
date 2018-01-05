@@ -1,4 +1,8 @@
 var nationalInterval, stateInterval;
+var nationalBills, stateBills;
+
+var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
+var solidStar = "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
 
 function fetchnationalbills() {
     $.ajax({
@@ -8,11 +12,15 @@ function fetchnationalbills() {
         success: function(response){
             if(response != null){
                 var count = 1;
-                national = response;
-                for (bill of national) {
+                nationalBills = response['national_bills'];
+                var savedBills = response['saved_national_bills'];
+                for (bill of nationalBills) {
                     if(count > 10)
                         break;
 
+                    var saved = "saved=" + ( (bill['bill_id'] in savedBills) ? "'true'" : "'false'");
+                    console.log(saved);
+                    var star = (saved === "saved='true'") ? solidStar : regularStar;
                     detailsId = 'bill_' + count + '_info';
                     var num = bill['cosponsor_num']
                     if(bill['cosponsor_num'] == null)
@@ -29,7 +37,10 @@ function fetchnationalbills() {
 
                     html = `
                         <div class="card mb-4" style="box-shadow: -5px 5px rgba(120,144,156,0.3);">
-                            <div class="card-header">` + bill['level'].toUpperCase() + `</div>
+                            <div class="card-header clearfix d-inline-flex">` + 
+                                `<h4 class='mr-auto'>` + bill['level'].toUpperCase() + `</h4>
+                                <div class='star-holder' level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div> 
+                            </div>
                             <div class="card-block">
                                 <h4 class="card-title" style="height:2.5rem; color:teal">Author: ` + bill['author'] + `</h4>
                                 <h5 class="card-subtitle mb-2 text-muted" style="color:green; height:2rem; display:inline">Bill Title: </h5>
@@ -77,10 +88,15 @@ function fetchstatebills() {
         success: function(response){
             if(response != null){
                 var count = 11;
-                state = response;
-                for (bill of state) {
+                stateBills = response['state_bills'];
+                var savedBills = response['saved_state_bills'];
+                for (bill of stateBills) {
                     if(count >= 20)
                         break;
+                    
+                    var saved = "saved=" + ( (bill['bill_id'] in savedBills) ? "'true'" : "'false'");
+                    console.log(saved);
+                    var star = (saved === "saved='true'") ? solidStar : regularStar;
 
                     detailsId = 'bill_' + count + '_info';
                     var num = bill['cosponsor_num']
@@ -99,7 +115,10 @@ function fetchstatebills() {
 
                     html = `
                         <div class="card mb-4" style="box-shadow: -5px 5px rgba(120,144,156,0.3);">
-                            <div class="card-header">` + bill['level'].toUpperCase() + `</div>
+                            <div class="card-header clearfix d-inline-flex">` + 
+                                `<h4 class='mr-auto'>` + bill['level'].toUpperCase() + `</h4>
+                                <div class='star-holder' level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div>
+                            </div>
                             <div class="card-block">
                                 <h4 class="card-title" style="height:2.5rem; color:teal">Author: ` + bill['author'] + `</h4>
                                 <p></p>
@@ -118,6 +137,7 @@ function fetchstatebills() {
                         </div>
 
                     `
+
                     $('#bill_'+count).html(html);
                     count++;
                 }
@@ -137,4 +157,87 @@ function fetchstatebills() {
 $(document).ready(function(){
     nationalInterval = setTimeout(fetchnationalbills, 1000);
     stateInterval = setTimeout(fetchstatebills, 1000);
+
+    $('body').on('click', 'div.star-holder', function() {
+        var div = $(this);
+        var level = $(this).attr('level');
+        var index = $(this).attr('data-count');
+        console.log('Sending: ');
+        console.log('here index: ' + index);
+        if(level === 'national') {
+            if(div.attr('saved') === 'false') {
+                console.log('was not saved');
+                $.ajax({
+                    url: '/save-national-bill/',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(nationalBills[index - 1]),
+                    success: function(data) {
+                        if(data) {
+                            console.log('Post successful. Result: ');
+                            console.log(data);
+    
+                            div.html(solidStar);
+                            div.attr('saved', 'true');
+                        }
+                    }
+                });
+            } else {
+                console.log('was saved');
+                console.log('index: ' + (index - 1));
+                $.ajax({
+                    url: '/delete-saved-national-bill/',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({'bill_id': nationalBills[index - 1]['bill_id']}),
+                    success: function(data) {
+                        if(data) {
+                            console.log('Post successful. Result: ');
+                            console.log(data);
+    
+                            div.html(regularStar);
+                            div.attr('saved', 'false');
+                        }
+                    }
+                });
+            }
+        } else {
+            if(div.attr('saved') === 'false') {
+                console.log('was not saved');
+                $.ajax({
+                    url: '/save-state-bill/',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(polls[index - 11]),
+                    success: function(data) {
+                        if(data) {
+                            console.log('Post successful. Result: ');
+                            console.log(data);
+    
+                            div.html(solidStar);
+                            div.attr('saved', 'true');
+                        }
+                    }
+                });
+            } else {
+                console.log('was saved');
+                console.log('index: ' + (index - 1));
+                $.ajax({
+                    url: '/delete-saved-state-bill/',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({'bill_id': polls[index - 11]['bill_id']}),
+                    success: function(data) {
+                        if(data) {
+                            console.log('Post successful. Result: ');
+                            console.log(data);
+    
+                            div.html(regularStar);
+                            div.attr('saved', 'false');
+                        }
+                    }
+                });
+            }
+        }
+    })
 })

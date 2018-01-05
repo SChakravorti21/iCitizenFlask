@@ -45,11 +45,12 @@ class Event:
 		self.saved = saved
 
 		h = 0
-		for c in self.title:
+		for c in self.title[:10]:
 			h = (31 * h + ord(c)) & 0xFFFFFFFF
 		hc = ((h + 0x80000000) & 0xFFFFFFFF) - 0x80000000
 
 		self.event_id = hc
+		print('event_id = ', self.event_id)
 
 
 
@@ -240,7 +241,7 @@ class Event:
 
 # events = Event.get_top_n_events()
 # for e in events:
-# 	print(e.event_id)
+# 	print(e.json()['event_id'])
 
 '''
 for each event in event_list

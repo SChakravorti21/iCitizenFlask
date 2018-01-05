@@ -3,7 +3,7 @@ var count = 1;
 var events = null;
 
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
-var solidStar = "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
+var solidStar =   "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
 
 function fetchevents() {
     $.ajax({
@@ -16,6 +16,9 @@ function fetchevents() {
                 events = response["user_events"];
 
                 for (event of events) {
+
+
+
                   if(count > 15) {
                     break;
                   }
@@ -89,7 +92,7 @@ function fetchevents() {
 }
 
 $(document).ready(function(){
-    eventInterval = setTimeout(fetchevents, 1000);
+    eventInterval = setInterval(fetchevents, 2000);
 
     $('body').on('click', 'div.star-holder', function() {
 
@@ -97,12 +100,50 @@ $(document).ready(function(){
         var index = $(this).attr('data-count');
         console.log('event being saved:' + index)
 
-        if(div.attr('saved'))
+        if(div.attr('saved') === 'false') {
+            console.log("clicked save button");
+
+            $.ajax({
+                url: '/save-event/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(events[index - 1]),
+                success: function(data) {
+                  if(data) {
+                        console.log('Post successful. Result: ');
+                        console.log(data);
+
+                        div.html(solidStar);
+                        div.attr('saved', 'true');
+                    }
+                }
+            });
+
+        }
+
+        else {
+            console.log('unclicked save button');
+            console.log('index = ' + (index - 1));
+            console.log(events)
+
+            $.ajax({
+                url: '/delete-saved-event/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(events[index - 1]),
+                success: function(data) {
+                    if(data) {
+                        console.log('Post successful. Result: ');
+                        console.log(data);
+
+                        div.html(regularStar);
+                        div.attr('saved', 'false');
+                    }
+                }
+            });
+        }
 
     });
-
-
-
 
 
 

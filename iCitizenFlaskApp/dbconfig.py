@@ -32,7 +32,7 @@ class QueryKeys:
 	UPDATE_EVENTS = 'update_events'
 	UPDATE_BILLS = 'update_bills'
 
-	EVENT_LIST = 'user_events'
+	USER_EVENTS = 'user_events'
 	SAVED_EVENTS = 'saved_events'
 
 	UPDATE_POLLS = 'update_polls'
@@ -45,3 +45,9 @@ class QueryKeys:
 	NATIONAL_LEGISLATORS = 'national_legislators'
 	STATE_LEGISLATORS = 'state_legislators'
 	SAVED_LEGISLATORS = 'saved_legislators'
+
+	NATIONAL_BILLS = 'national_bills'
+	SAVED_NATIONAL_BILLS = 'saved_national_bills'
+
+	STATE_BILLS = 'state_bills'
+	SAVED_STATE_BILLS = 'saved_state_bills'
