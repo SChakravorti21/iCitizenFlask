@@ -3,6 +3,17 @@
 {% block body %}
 
 <div class="container">
+    <div id="loader" style="height: 45rem; display: flex; align-items: center; justify-content: center">
+        <div class="loader" style="border: 50px solid black; border-top: 50px solid teal;
+            border-radius: 50%; width: 360px; height: 360px; animation: spin .5s linear infinite">
+            <style type="text/css">
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            </style>
+        </div>
+    </div>
     <div id="bill_1"></div>
     <div id="bill_2"></div>
     <div id="bill_3"></div>
