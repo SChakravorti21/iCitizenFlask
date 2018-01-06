@@ -61,11 +61,11 @@ function fetchnationalbills() {
 
                     `
                     $('#bill_'+count).html(html);
-                    $('#loader').html("");
-                    $('#loader').attr('style', '')
                     count++;
                 }
 
+                $('#loader').html("");
+                $('#loader').attr('style', '')
                 console.log("National interval has been cleared")
                 clearInterval(nationalInterval)
             } else {

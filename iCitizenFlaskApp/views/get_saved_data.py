@@ -68,7 +68,7 @@ def get_saved_national_bills():
 
     user = users.find_one(query)
 
-    saved_bills_jsons = user[QueryKeys.SAVED_NATIONAL_BILLS] if QueryKeys.SAVED_NATIONAL_BILLS in user else None
+    saved_bills_jsons = user[QueryKeys.SAVED_NATIONAL_BILLS] if QueryKeys.SAVED_NATIONAL_BILLS in user else {}
 
     return json.dumps(saved_bills_jsons, sort_keys=True, indent=4, default=json_util.default)
 
@@ -80,6 +80,6 @@ def get_saved_state_bills():
 
     user = users.find_one(query)
 
-    saved_bills_jsons = user[QueryKeys.SAVED_STATE_BILLS] if QueryKeys.SAVED_STATE_BILLS in user else None
+    saved_bills_jsons = user[QueryKeys.SAVED_STATE_BILLS] if QueryKeys.SAVED_STATE_BILLS in user else {}
 
     return json.dumps(saved_bills_jsons, sort_keys=True, indent=4, default=json_util.default)
