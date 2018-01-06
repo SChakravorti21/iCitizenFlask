@@ -85,6 +85,7 @@ function fetchlegislators() {
                 clearTimeout(legislatorInterval);
             } else {
                 console.log("Still polling");
+                setTimeout(fetchlegislators, 1000);
             }
         },
         complete: function(response) {

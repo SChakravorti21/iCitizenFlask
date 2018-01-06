@@ -82,6 +82,7 @@ function fetchnationallegs() {
                 clearTimeout(nationalInterval);
             } else {
                 console.log("Still polling");
+                setTimeout(fetchnationallegs, 1000);
             }
         },
         complete: function(response) {
@@ -165,6 +166,7 @@ function fetchstatelegs() {
                 clearTimeout(stateInterval)
             } else {
                 console.log("Still polling")
+                setTimeout(fetchstatelegs, 1000);
             }
         },
         complete: function(response) {

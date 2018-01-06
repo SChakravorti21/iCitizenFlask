@@ -78,7 +78,7 @@ def login():
         username = form.username.data
         entered_password = str(form.password.data)
 
-        query = {'username': username}
+        query = {QueryKeys.USERNAME: username}
         users = db['users']
 
         user = users.find_one(query)

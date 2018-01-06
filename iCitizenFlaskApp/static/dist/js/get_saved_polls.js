@@ -145,6 +145,7 @@ function fetchpolls() {
 
             } else {
                 console.log("Still polling")
+                setTimeout(fetchpolls, 1000);
             }
         },
         complete: function(response) {
@@ -155,6 +156,12 @@ function fetchpolls() {
 }
 
 $(document).ready(function(){
+    console.log(window.location)
+    console.log(window.location.href)
+    console.log(window.location.pathname)
+    console.log(window.location.hash)
+    console.log(window.location.search)
+
     pollInterval = setTimeout(fetchpolls, 10);
 
     $('body').on('click', 'div.star-holder', function() {

@@ -148,6 +148,7 @@ function fetchpolls() {
 
             } else {
                 console.log("Still polling")
+                setTimeout(fetchpolls, 1000);
             }
         },
         complete: function(response) {
