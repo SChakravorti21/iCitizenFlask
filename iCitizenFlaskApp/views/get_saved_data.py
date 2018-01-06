@@ -37,9 +37,9 @@ def fetch_saved_polls():
 
 	user = users.find_one(query)
 
-	if(user[UPDATE_POLLS])
+	if(user[UPDATE_POLLS]):
 		return None
-	
+
 	saved_polls = user[QueryKeys.SAVED_POLLS] if QueryKeys.SAVED_POLLS in user else {}
 
 	return json.dumps(saved_polls, sort_keys=True, indent=4)
