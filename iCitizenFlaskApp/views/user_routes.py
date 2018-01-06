@@ -90,6 +90,13 @@ def login():
             session[QueryKeys.USERNAME] = username
 
             flash('You have successfully logged in!', 'success')
+
+            users.find_one_and_update(query, {'$set':{
+                QueryKeys.UPDATE_DB: True,
+                QueryKeys.UPDATE_BILLS: True,
+                QueryKeys.UPDATE_POLLS: True,
+                QueryKeys.UPDATE_EVENTS: True}
+            })
             
             return redirect( url_for('users.load_dashboard'))
 
@@ -104,13 +111,6 @@ def logout():
     session['logged_in'] = False
     session[QueryKeys.USERNAME] = None
     session.clear()
-
-    users.find_one_and_update(query, {'$set':{
-        QueryKeys.UPDATE_DB: True,
-        QueryKeys.UPDATE_BILLS: True,
-        QueryKeys.UPDATE_POLLS: True,
-        QueryKeys.UPDATE_EVENTS: True}
-    })
 
     flash('You have successfully logged out!', 'success')
     return redirect( url_for('index'))
