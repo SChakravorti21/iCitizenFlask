@@ -13,10 +13,9 @@ function fetchevents() {
         success: function(response){
             if(response != null){
                 var saved_events = response["saved_events"];
+                events = response["user_events"]
 
-                for (event of saved_events) {
-
-
+                for (event of events) {
 
                   if(count > 15) {
                     break;

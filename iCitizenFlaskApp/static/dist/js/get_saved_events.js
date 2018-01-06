@@ -7,7 +7,7 @@ var solidStar =   "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-t
 function fetchevents() {
     $.ajax({
         url: "/fetch-saved-events/",
-        type: "post",
+        type: "get",
         dataType: "json",
         success: function(response){
             if(response != null){
