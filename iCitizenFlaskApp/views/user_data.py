@@ -111,11 +111,9 @@ def update_events(username):
     event_list = EventClass.get_top_n_events(state=state, city=city, pref_subjs = subjects, num_pages = 3, num_events = 15)
 
     user_events_jsons = [event.json() for event in event_list]
-    print('---------------------------------------------------------')
-    print('EVENTssssssssssssssssssS:',user_events_jsons)
 
     users.find_one_and_update(query, {'$set': {'user_events': user_events_jsons}})
-    
+
     user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_EVENTS : False}})
     user = users.find_one(query)
     if user[QueryKeys.UPDATE_BILLS] == False:
