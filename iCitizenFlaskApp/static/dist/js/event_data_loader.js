@@ -63,7 +63,7 @@ function fetchevents() {
                         <div class="card-footer">
                             <div class='star-holder' data-count='`+ count +`' ` + saved + `>`
                                 + star + `
-                                <font>Save Event</font>
+                        
                         </div>
                         </div>
                       </div> `
