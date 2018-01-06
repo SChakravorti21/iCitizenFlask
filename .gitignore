@@ -9,3 +9,10 @@ venv
 /iCitizenFlaskApp/log
 log
 
+
+/home/super/repos/iCitizenFlask/startup.sh
+/home/super/repos/iCitizenFlask/stop.sh
+startup.sh
+stop.sh
+~/repos/iCitizenFlask/startup.sh
+~/repos/iCitizenFlask/stop.sh
