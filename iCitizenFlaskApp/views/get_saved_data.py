@@ -36,6 +36,10 @@ def fetch_saved_polls():
 	users = db['users']
 
 	user = users.find_one(query)
+
+	if(user[UPDATE_POLLS])
+		return None
+	
 	saved_polls = user[QueryKeys.SAVED_POLLS] if QueryKeys.SAVED_POLLS in user else {}
 
 	return json.dumps(saved_polls, sort_keys=True, indent=4)
@@ -52,6 +56,7 @@ def fetch_saved_legislators():
 	users = db['users']
 
 	user = users.find_one(query)
+	if user[UPDATE_]
 	saved_legislators = user[QueryKeys.SAVED_LEGISLATORS] if QueryKeys.SAVED_LEGISLATORS in user else {}
 
 	return json.dumps(saved_legislators, sort_keys=True, indent=4)
