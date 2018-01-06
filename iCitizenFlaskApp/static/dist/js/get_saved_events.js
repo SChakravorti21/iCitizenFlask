@@ -52,7 +52,7 @@ function fetchevents() {
                             </div>
                         </div>
                         <div class="card-footer">
-                            <div class='star-holder' data-count='`+ count +`' ` + saved + `>`
+                            <div class='star-holder' poll_id='` + key + `' data-count='`+ count +`' ` + saved + `>`
                                 + star + `
                                 <font>Save Event</font>
                             </div>
@@ -87,7 +87,7 @@ $(document).ready(function(){
 
         var div = $(this);
         var index = $(this).attr('data-count');
-        console.log('event being saved:' + index)
+        var event_id = div.attr('event_id')
 
         if(div.attr('saved') === 'false') {
             console.log("clicked save button");
@@ -112,14 +112,12 @@ $(document).ready(function(){
 
         else {
             console.log('unclicked save button');
-            console.log('index = ' + (index - 1));
-            console.log(events)
 
             $.ajax({
                 url: '/delete-saved-event/',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(events[index - 1]),
+                data: JSON.stringify({'event_id': event_id}),
                 success: function(data) {
                     if(data) {
                         console.log('Post successful. Result: ');

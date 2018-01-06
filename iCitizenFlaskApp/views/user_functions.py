@@ -148,11 +148,12 @@ def save_event():
 	return 'True'
 
 
-@mod.route('/delete-saved-event/', methods=['POST'])
+@mod.route('/delete-saved-event/', methods=['GET', 'POST'])
 @is_logged_in
 def delete_saved_event():
-	event_to_delete = request.get_json()
-	event_id = event_to_delete[QueryKeys.EVENT_ID]
+	response = request.get_json()
+	print('RESPONSE == === ', reponse)
+	event_id = reponse['event_id']
 
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
