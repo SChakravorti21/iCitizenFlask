@@ -3,30 +3,77 @@
 {% block body %}
 
   <div class="container">
-    <div id="bill_test">
-
-    </div>
     <div class="alert alert-info">
       <h3>You're back!</h3>
       <h3><small>Welcome back, {{session.username}}.</small></h3>
     </div>
-    <img src="https://ih0.redbubble.net/image.264945890.5157/flat,800x800,075,f.jpg"> 
-    <div id="event_test">
+
+    <div class="row">
+      <div class="col-md-6">
+      <div class="page-header" style="margin-bottom: 1em;">
+        <h3>Upcoming Polls</h3>
+      </div>
+
+      <div class="poll_1">
+      
+      </div>
+      <div class="poll_2">
+        
+      </div>
+      <div class="poll_3">
+        
+      </div>
+      <div class="poll_4">
+        
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="page-header" style="margin-bottom: 1em;">
+        <h3>Your National Legislators</h3>
+      </div>
+        <div id="legislator_national_1">
+
+        </div>
+        <div id="legislator_national_2">
+            
+        </div>
+        <div id="legislator_national_3">
+            
+        </div>
+        <div id="legislator_national_4">
+            
+        </div>
+        <div id="legislator_national_5">
+            
+        </div>
+        <div id="legislator_national_6">
+            
+        </div>
+        <div id="legislator_national_7">
+        
+        </div>
+        <div id="legislator_national_8">
+
+        </div>
+        <div id="legislator_national_9">
+
+        </div>
+        <div id="legislator_national_10">
+
+        </div>
+      </div>
 
     </div>
-    <div id="poll_test">
 
-    </div>
   </div>
 
 {% endblock %}
 
 {% block javascript %}
 
-  <script type="text/javascript">
-    console.log("{{ db_client.update_db|safe }}");
-
-  </script>
+  <script src="{{ url_for('static', filename='dist/js/poll_data_loader.js') }}" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='dist/js/legislator_data_loader.js') }}" type="text/javascript"></script>
 
 {% if db_client['update_db'] == True %}
 

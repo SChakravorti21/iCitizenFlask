@@ -1,4 +1,28 @@
 .navbar {
-	background-color: yellow;
-	margin-bottom: 1000px;
+  margin-bottom: 1em;
+}
+
+a.font-awesome-link {
+		color: rgba(0, 0, 0, 1);
+    	text-decoration: none;
+	}
+
+a.font-awesome-link:hover {
+	color: rgba(0, 0, 0, 0.5); 
+	text-decoration:none; 
+	cursor:pointer;  
+}
+
+.fa-star:hover {
+    -webkit-animation: fa-spin 0.75s linear;
+    -moz-animation: fa-spin 0.75s linear;
+    -o-animation: fa-spin 0.75s linear;
+    animation: fa-spin 0.75s linear;
+}
+
+.fa-star:active {
+    -webkit-animation: fa-tada 0.75s linear;
+    -moz-animation: fa-tada 0.75s linear;
+    -o-animation: fa-tada 0.75s linear;
+    animation: fa-tada 0.75s linear;
 }

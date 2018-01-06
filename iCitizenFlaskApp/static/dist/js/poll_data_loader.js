@@ -21,6 +21,7 @@ function convertCamelToTitle(text) {
 
 var pollInterval;
 var count = 1;
+var max_count = (window.location.pathname === '/dashboard/') ? 4 : 20;
 var polls = null;
 
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
@@ -38,7 +39,7 @@ function fetchpolls() {
                 
                 polls = polls['user_polls']['contests'];
                 for (poll of polls) {
-                    if(count > 20)
+                    if(count > max_count)
                         break;
 
                     var type = poll['type'];
@@ -148,13 +149,13 @@ function fetchpolls() {
 
             } else {
                 console.log("Still polling")
-                setTimeout(fetchpolls, 1000);
             }
         },
-        complete: function(response) {
-            if(response === null)
+        complete: function() {
+            if(polls == null)
                 setTimeout(fetchpolls, 1000);
         }
+
     })
 }
 

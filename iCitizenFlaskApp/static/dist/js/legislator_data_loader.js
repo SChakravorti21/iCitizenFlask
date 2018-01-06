@@ -2,6 +2,7 @@ var nationalInterval, stateInterval;
 var count = 1;
 
 var state, national;
+var image_class = (window.location.pathname === '/dashboard/') ? 'col-sm-5' : 'col-sm-3';
 
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
 var solidStar = "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
@@ -55,7 +56,7 @@ function fetchnationallegs() {
                             </div>
                             <div class="card-block">
                                 <div class="row ml-3" style='height: 16rem;'>
-                                    <div class="col-sm-3" 
+                                    <div class=` + image_class + ` 
                                         style='
                                             background-image: url(` + legislator['photo_url'] + `);
                                             background-repeat: no-repeat;
@@ -64,7 +65,7 @@ function fetchnationallegs() {
                                             border: 0.25em solid #59698d;
                                             border-radius: 1em;'>
                                     </div>
-                                    <div class='col-sm-8 pull-left'>
+                                    <div class='col-sm-6 pull-left'>
                                         <h6 class='card-title' style='color: cornflowerblue;'>Chamber: ` + legislator['chamber'] + `</h6><br>
                                         <p class='card-text' style='color: coral;'>` + info + `</p>
                                     </div>
@@ -136,7 +137,7 @@ function fetchstatelegs() {
                             </div>
                             <div class="card-block">
                                 <div class="row ml-3" style='height: 16rem;'>
-                                    <div class="col-sm-3" 
+                                    <div class=` + image_class + `
                                         style='
                                             background-image: url(` + legislator['photo_url'] + `);
                                             background-repeat: no-repeat;
@@ -145,7 +146,7 @@ function fetchstatelegs() {
                                             border: 0.25em solid #59698d;
                                             border-radius: 1em;'>
                                     </div>
-                                    <div class='col-sm-8 pull-left'>
+                                    <div class='col-sm-6 pull-left'>
                                         <h6 class='card-title' style='color: cornflowerblue;'>Chamber: ` + chamber + `</h6><br>
                                         <p class='card-text' style='color: coral;'>` + info + `</p>
                                     </div>
@@ -178,7 +179,10 @@ function fetchstatelegs() {
 
 $(document).ready(function(){
     nationalInterval = setTimeout(fetchnationallegs, 1000);
-    stateInterval = setTimeout(fetchstatelegs, 1000);
+
+    // Only load state legislators if we are not on the dashboard
+    if( image_class === 'col-sm-3')
+        stateInterval = setTimeout(fetchstatelegs, 1000);
 
     $('body').on('click', 'div.star-holder', function() {
         var div = $(this);
