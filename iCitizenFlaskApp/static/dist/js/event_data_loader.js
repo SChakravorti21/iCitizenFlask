@@ -128,7 +128,7 @@ $(document).ready(function(){
                 url: '/delete-saved-event/',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(events[index - 1]),
+                data: JSON.stringify({'event_id': events[index - 1]['event_id']}),
                 success: function(data) {
                     if(data) {
                         console.log('Post successful. Result: ');

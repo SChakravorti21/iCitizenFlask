@@ -15,6 +15,7 @@ def saved_events():
 @mod.route('/fetch-saved-events/', methods=['GET'])
 @is_logged_in
 def fetch_saved_events():
+	print('==================================================================')
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
 
