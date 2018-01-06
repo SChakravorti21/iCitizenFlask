@@ -4,6 +4,10 @@ var nationalBills, stateBills;
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
 var solidStar = "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
 
+var max_count = (window.location.pathname === '/dashboard/') ? 2 : 10;
+var isDash = (window.location.pathname === '/dashboard/')
+console.log(isDash)
+
 function fetchnationalbills() {
     $.ajax({
         url: "/get-national-bills-db/",
@@ -15,7 +19,7 @@ function fetchnationalbills() {
                 nationalBills = response['national_bills'];
                 var savedBills = response['saved_national_bills'];
                 for (bill of nationalBills) {
-                    if(count > 10)
+                    if(count > max_count)
                         break;
 
                     var saved = "saved=" + ( (bill['bill_id'] in savedBills) ? "'true'" : "'false'");
@@ -85,11 +89,11 @@ function fetchstatebills() {
         dataType: "json",
         success: function(response){
             if(response != null){
-                var count = 11;
+                var count = max_count + 1;
                 stateBills = response['state_bills'];
                 var savedBills = response['saved_state_bills'];
                 for (bill of stateBills) {
-                    if(count > 20)
+                    if(count > max_count * 2)
                         break;
                     
                     var saved = "saved=" + ( (bill['bill_id'] in savedBills) ? "'true'" : "'false'");
@@ -138,7 +142,11 @@ function fetchstatebills() {
 
                     $('#bill_'+count).html(html);
                     $('#loader').html("");
-                    $('#loader').attr('style', '')
+                    $('#loader').attr('style', '');
+                    if(isDash) {
+                        $('#dash_loader').html("");
+                        $('#dash_loader').attr('style', '');
+                    }
                     count++;
                 }
 

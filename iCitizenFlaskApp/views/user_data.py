@@ -66,7 +66,8 @@ def update_bills(username):
     user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_BILLS : False}})
     user = users.find_one(query)
     if user[QueryKeys.UPDATE_EVENTS] == False:
-        user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False}})
+        user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False,
+                                                            QueryKeys.IS_UPDATING: False}})
 
     print("Time for bills to finish: {} seconds".format(str(time.time() - start_time)))
     return "Bills written to DB"
@@ -117,7 +118,8 @@ def update_events(username):
     user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_EVENTS : False}})
     user = users.find_one(query)
     if user[QueryKeys.UPDATE_BILLS] == False:
-        user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False}})
+        user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False,
+                                                            QueryKeys.IS_UPDATING: False}})
 
     return "Events have been written"
 

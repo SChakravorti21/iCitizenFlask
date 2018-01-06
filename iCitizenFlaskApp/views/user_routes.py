@@ -95,7 +95,8 @@ def login():
                 QueryKeys.UPDATE_DB: True,
                 QueryKeys.UPDATE_BILLS: True,
                 QueryKeys.UPDATE_POLLS: True,
-                QueryKeys.UPDATE_EVENTS: True}
+                QueryKeys.UPDATE_EVENTS: True,
+                QueryKeys.IS_UPDATING: False}
             })
             
             return redirect( url_for('users.load_dashboard'))
@@ -131,7 +132,8 @@ def load_dashboard():
                 information for you. We will never share any of this information externally.''', 'info')
         return redirect( url_for('functions.update_preferences'))
 
-    if user[QueryKeys.UPDATE_DB]:
+    if user[QueryKeys.UPDATE_DB] and not user[QueryKeys.IS_UPDATING]:
+        users.find_one_and_update(query, {'$set':{QueryKeys.IS_UPDATING: True}})
         print('calling celery task')
         call_celery_task()
 

@@ -14,3 +14,6 @@ def make_celery(app):
     celery.Task = ContextTask
 
     return celery
+
+#redis://localhost:6379/0
+#redis://redis-14399.c11.us-east-1-2.ec2.cloud.redislabs.com:14399

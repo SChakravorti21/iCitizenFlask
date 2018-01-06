@@ -1,6 +1,8 @@
 var eventInterval;
 var count = 1;
 var events = null;
+var max_count_event = (window.location.pathname === '/dashboard/') ? 4 : 15;
+var image_class = (window.location.pathname === '/dashboard/') ? 'col-sm-3' : 'col-sm-3';
 
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
 var solidStar =   "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
@@ -17,7 +19,7 @@ function fetchevents() {
 
                 for (event of events) {
 
-                  if(count > 15) {
+                  if(count > max_count_event) {
                     break;
                   }
 
@@ -37,7 +39,7 @@ function fetchevents() {
                         <h4 class="card-header" style="background-color: #cadbf7;"> ` + event['org_title'] + `</h4>
                         <div class = "card-block">
                             <div class="row ml-3">
-                                <div class="col-sm-3"
+                                <div class=` + image_class + `
                                     style="
                                     background-image: url(` + event['img_link'] + `);
                                     background-repeat: no-repeat;
@@ -63,7 +65,7 @@ function fetchevents() {
                         <div class="card-footer">
                             <div class='star-holder' data-count='`+ count +`' ` + saved + `>`
                                 + star + `
-                        
+
                         </div>
                         </div>
                       </div> `
