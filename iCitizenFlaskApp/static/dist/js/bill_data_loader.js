@@ -62,8 +62,6 @@ function fetchnationalbills() {
 
                     `
                     $('#bill_'+count).html(html);
-                    $('#loader').html("");
-                    $('#loader').attr('style', '')
                     count++;
                 }
 
@@ -75,7 +73,7 @@ function fetchnationalbills() {
         },
         complete: function(data) {
             if(data === null)
-                setTimeout(fetchnationalbills, 1000); 
+                setInterval(fetchnationalbills, 1000); 
         }
     })
 }
@@ -139,6 +137,8 @@ function fetchstatebills() {
                     `
 
                     $('#bill_'+count).html(html);
+                    $('#loader').html("");
+                    $('#loader').attr('style', '')
                     count++;
                 }
 
@@ -150,13 +150,13 @@ function fetchstatebills() {
         }, 
         complete: function(data) {
             if(data === null)
-                setTimeout(fetchstatebills, 1000);
+                setInterval(fetchstatebills, 1000);
         }
     });
 }
 $(document).ready(function(){
-    nationalInterval = setTimeout(fetchnationalbills, 1000);
-    stateInterval = setTimeout(fetchstatebills, 1000);
+    nationalInterval = setInterval(fetchnationalbills, 1000);
+    stateInterval = setInterval(fetchstatebills, 1000);
 
     $('body').on('click', 'div.star-holder', function() {
         var div = $(this);

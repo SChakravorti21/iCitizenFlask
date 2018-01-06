@@ -204,14 +204,14 @@ class Bill(object):
 
                 if bill_id in billPoints:
                     if author_id == legislator.id:
-                        billPoints[bill_id] += 9
-                    else:
                         billPoints[bill_id] += 4
+                    else:
+                        billPoints[bill_id] += 2
                 else:
                     if author_id == legislator.id:
-                        billPoints[bill_id] = 9
-                    else:
                         billPoints[bill_id] = 4
+                    else:
+                        billPoints[bill_id] = 2
                     
                     billPoints[bill_id] += sponsor_num[bill_id]
                     created_bill = cls(level, title, description, author, author_id, bill_id, id, author_party, author_state, cosponsor_num, created_date, 
@@ -271,10 +271,10 @@ class Bill(object):
 
                 if bill_id in billPoints:
                     if author_id in leg_ids:
-                        billPoints[bill_id] += 9
-                    billPoints[bill_id] += 4
+                        billPoints[bill_id] += 4
+                    billPoints[bill_id] += 5
                 else:
-                    billPoints[bill_id] = 4
+                    billPoints[bill_id] = 5
                     billPoints[bill_id] += sponsor_num[bill_id]
                     created_bill = cls(level, title, description, author, author_id, bill_id, id, author_party, author_state, cosponsor_num, created_date, 
                                         last_action = last_action, url = url)

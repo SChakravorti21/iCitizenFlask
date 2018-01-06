@@ -53,7 +53,11 @@ def register():
             QueryKeys.UPDATE_EVENTS: True,
             QueryKeys.UPDATE_BILLS: True,
             QueryKeys.UPDATE_POLLS: True,
-			QueryKeys.SAVED_EVENTS: {}
+			QueryKeys.SAVED_EVENTS: {},
+            QueryKeys.SAVED_NATIONAL_BILLS: {},
+            QueryKeys.SAVED_STATE_BILLS: {},
+            QueryKeys.SAVED_POLLS: {},
+            QueryKeys.SAVED_LEGISLATORS: {}
         }).inserted_id
 
         print(str(insert_id))
@@ -86,6 +90,7 @@ def login():
             session[QueryKeys.USERNAME] = username
 
             flash('You have successfully logged in!', 'success')
+            
             return redirect( url_for('users.load_dashboard'))
 
     # Just render the template if it wasn't a POST request, or if the form failed to validate
@@ -169,6 +174,9 @@ def get_state_bills():
         QueryKeys.SAVED_STATE_BILLS: saved_bills_jsons
     }
 
+    if user[QueryKeys.UPDATE_DB] == True:
+        jsons = None
+
     return json.dumps(jsons, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-national-bills-db/', methods=['POST'])
@@ -187,6 +195,9 @@ def get_national_bills():
         QueryKeys.SAVED_NATIONAL_BILLS: saved_bills_jsons
     }
 
+    if user[QueryKeys.UPDATE_DB] == True:
+        jsons = None
+
     return json.dumps(jsons, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-user-events-db/', methods=['POST'])
@@ -200,6 +211,9 @@ def get_user_events():
     saved_events_jsons = user[QueryKeys.SAVED_EVENTS] if QueryKeys.SAVED_EVENTS in user else {}
     comb_json = {QueryKeys.USER_EVENTS: user_events_jsons,
                 QueryKeys.SAVED_EVENTS: saved_events_jsons}
+
+    if user[QueryKeys.UPDATE_DB] == True:
+        comb_json = None
 
     # print('SAVED EVENTS = ', saved_events_jsons)
     return json.dumps(comb_json, sort_keys=True, indent=4, default=json_util.default)
@@ -220,6 +234,9 @@ def get_user_polls():
         QueryKeys.SAVED_POLLS: saved_polls_json
     }
 
+    if user[QueryKeys.UPDATE_DB] == True:
+        ret_json = None
+
     return json.dumps(ret_json, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-state-legislators-db/', methods=['POST'])
@@ -238,6 +255,9 @@ def get_state_legislators():
         QueryKeys.SAVED_LEGISLATORS: saved_legislators_jsons
     }
 
+    if user[QueryKeys.UPDATE_DB] == True:
+        ret_json = None
+
     return json.dumps(ret_json, sort_keys=True, indent=4, default=json_util.default)
 
 @mod.route('/get-national-legislators-db/', methods=['POST'])
@@ -255,6 +275,9 @@ def get_national_legislators():
         QueryKeys.NATIONAL_LEGISLATORS: user_legislators_jsons,
         QueryKeys.SAVED_LEGISLATORS: saved_legislators_jsons
     }
+
+    if user[QueryKeys.UPDATE_DB] == True:
+        ret_json = None
 
     return json.dumps(ret_json, sort_keys=True, indent=4, default=json_util.default)
 

@@ -103,9 +103,9 @@ def update_preferences():
 			# print(user)
 
 			# Uodate the database once preferences are updated
-			call_celery_task()
+			#call_celery_task()
 			flash('Your preferences have been updated!', 'success')
-			return redirect( url_for('functions.show_profile'))
+			return redirect( url_for('users.load_dashboard'))
 
 	return render_template('update_preferences.html', form=form,
 		subjects=[(str(subject).strip(), subject) for subject in SUBJECTS],
@@ -250,6 +250,15 @@ def save_national_bill():
 	users = db['users']
 
 	current_user_state = users.find_one(query)
+	current_saved_bills = current_user_state['saved_national_bills'] if 'saved_national_bills' in current_user_state else None
+	if current_saved_bills and bill_id in current_saved_bills:
+		return 'False'
+
+	print(bill_id)
+	bill_query = "saved_national_bills" + "." + bill_id
+	users.find_one_and_update(query, {'$set': {bill_query: save}})
+
+	return 'True'
 
 @mod.route('/save-state-bill/', methods=['POST'])
 @is_logged_in
