@@ -117,7 +117,7 @@ function fetchstatebills() {
                                 <h4 class="card-title" style="height:2.5rem; color:teal">Author: ` + bill['author'] + `</h4>
                                 <p></p>
                                 <p class=".text-info card-text" style="line-height: 2rem; font-size: 20px">Bill Description: ` + bill['description'] + `</p>
-                                <a class="btn btn-info" href="`+ bill['url'] + `">Bill Link</a>
+                                <a class="btn btn-info" target="_blank" href="`+ bill['url'] + `">Bill Link</a>
                                 <button class="btn btn-primary float-right" type='button' data-toggle='collapse'
                                     data-target='#` + detailsId + `' aria-expanded="false" aria-controls="collapseExample">
                                     More info

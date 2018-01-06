@@ -251,7 +251,7 @@ class Bill(object):
                 sponsor_num[id] = len(sponsor['sponsors'])
 
             for bill in state_bill_data:
-                level = "national"
+                level = "state"
                 bill_id = bill['id']
 
                 if bill_id not in bill_urls or bill_id not in sponsor_names:

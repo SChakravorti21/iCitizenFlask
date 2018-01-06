@@ -56,7 +56,6 @@ def fetch_saved_legislators():
 	users = db['users']
 
 	user = users.find_one(query)
-	if user[UPDATE_]
 	saved_legislators = user[QueryKeys.SAVED_LEGISLATORS] if QueryKeys.SAVED_LEGISLATORS in user else {}
 
 	return json.dumps(saved_legislators, sort_keys=True, indent=4)
