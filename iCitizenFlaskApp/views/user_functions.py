@@ -152,8 +152,8 @@ def save_event():
 @is_logged_in
 def delete_saved_event():
 	response = request.get_json()
-	print('RESPONSE ==', response)
-	event_id = response['event_id']
+	print('RESPONSE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', response)
+	event_id = response[QueryKeys.EVENT_ID]
 
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']

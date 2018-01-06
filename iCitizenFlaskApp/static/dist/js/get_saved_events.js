@@ -52,9 +52,9 @@ function fetchevents() {
                             </div>
                         </div>
                         <div class="card-footer">
-                            <div class='star-holder' poll_id='` + key + `' data-count='`+ count +`' ` + saved + `>`
+                            <div class='star-holder' event_id='` + key + `' data-count='`+ count +`' ` + saved + `>`
                                 + star + `
-                                <font>Save Event</font>
+                      
                             </div>
                         </div>
                       </div> `
@@ -84,7 +84,6 @@ $(document).ready(function(){
     eventInterval = setInterval(fetchevents, 2000);
 
     $('body').on('click', 'div.star-holder', function() {
-
         var div = $(this);
         var index = $(this).attr('data-count');
         var event_id = div.attr('event_id')
