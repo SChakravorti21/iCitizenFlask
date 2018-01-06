@@ -89,7 +89,7 @@ function fetchstatebills() {
                     if(count >= 20)
                         break;
                     
-                    var saved = "saved='true'"
+                    var saved = "saved='true'";
                     var star = solidStar;
 
                     detailsId = 'bill_' + count + '_info';
