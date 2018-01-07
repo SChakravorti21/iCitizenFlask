@@ -43,7 +43,7 @@ function fetchnationalbills() {
                         <div class="card mb-4" style="box-shadow: -5px 5px rgba(120,144,156,0.3);">
                             <div class="card-header clearfix d-inline-flex">` + 
                                 `<h4 class='mr-auto'>` + bill['level'].toUpperCase() + `</h4>
-                                <div class='star-holder' level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div> 
+                                <div class='bill-star-holder' level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div> 
                             </div>
                             <div class="card-block">
                                 <h4 class="card-title" style="height:2.5rem; color:teal">Author: ` + bill['author'] + `</h4>

@@ -7,6 +7,12 @@ var is_dashboard = (window.location.pathname === '/dashboard/') ? true : false;
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
 var solidStar =   "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
 
+
+/*
+Dynamically updates each div in events.html. Gets a dictionary of saved events and user events
+because it must also display a star for the ones that are saved. It gets this info from
+URL /get-user-events-db/ which is in user_routes.py
+*/
 function fetchevents() {
     $.ajax({
         url: "/get-user-events-db/",
@@ -126,9 +132,18 @@ function fetchevents() {
     })
 }
 
+
 $(document).ready(function(){
     eventInterval = setInterval(fetchevents, 2000);
 
+    /*
+    if the star is clicked and it was not already saved before, then a post request is
+    made to the url 'save-event' in user_functions.py. It passes the Event object
+    that corresponds to the div clicked.
+
+    If the star is clicked but was already saved, a post request is made to 'delete-saved-event'
+    in user_functions.py. It gives the ID of the event that corresponds to the div clicked
+    */
     $('body').on('click', 'div.star-holder-event', function() {
 
         var div = $(this);

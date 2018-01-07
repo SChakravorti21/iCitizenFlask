@@ -44,6 +44,12 @@ class Event:
 		self.pts = pts
 		self.saved = saved
 
+
+		'''
+		The part below uses the first 10 chars of the title to calculate a hashcode
+		which acts as a unique ID for the event. This is used later on when determining which
+		event has been favorited
+		'''
 		h = 0
 		for c in self.title[:10]:
 			h = (31 * h + ord(c)) & 0xFFFFFFFF
@@ -72,7 +78,14 @@ class Event:
 	#returns list of all events
 	@classmethod
 	def scrape(cls, state = 'ny', city = 'new york', max_pg_num = 1):
+		'''
+		Scrapes events from eventbrite with the given location parameters
 
+		@param state : state of user, used to Scrape
+		@param city : city of user, used to Scrape
+		@param max_pg_num : basically, number of pages to scrape from
+		@return list of Event objects
+		'''
 
 		city = city.replace(' ', '-')
 
@@ -127,9 +140,32 @@ class Event:
 		return event_list
 
 
-	#retusn sorted list of events
+	'''
+	1. goes through every combination of words in the event title and the pref subjects words
+	2. finds the list of synonyms for each combination
+	3. finds the max path similarity value in this list of synonyms
+	4. adds this max num to the pts field in events object
+	5. repeat for every combination of event and subject words
+	6. find the average of the pts in the object
+	7. repeat for each event
+	8. sort events by descending order according to pts
+	'''
 	@classmethod
 	def get_sorted_events(cls, state, city, pref_subjs, num_pages):
+
+		'''
+		Calls the scrape method defined above to get all the events from a certain number
+		of pages. Then it finds the max path similarity between every combination of words in
+		every title and in the pref_subjs. It averages all the path similarities for an event
+		and assigns that value to the 'pts' field. At the end, the list is sorted by the 'pts'
+		attribute, and list is returned.
+
+		@param state : state of user, used to scrape Events
+		@param city : city of user, used to scrape Events
+		@param pref_subjs : list of preferred used subjects, used to sort by relevancy
+		@param num_pages : number of pages to scrape from
+		@return list of sorted events
+		'''
 
 		start_time = time.time()
 		event_list = Event.scrape(state = state, city = city, max_pg_num = num_pages)
@@ -140,17 +176,6 @@ class Event:
 
 
 		pref_subjs = [s.replace(',', '') for s in pref_subjs]
-		#goes through every combination of words in the event title and the pref subjects words
-		#finds the list of synonyms for each combination
-		#finds the max path similarity value in this list of synonyms
-		#adds this max num to the pts field in events object
-		#repeat for every combination of event and subject words
-		#find the average of the pts in the object
-		#repeat for each event
-		#sort events by descending order according to pts
-
-
-
 
 		for event in event_list:
 
@@ -221,6 +246,21 @@ class Event:
 
 	@staticmethod
 	def get_top_n_events(state = 'ny', city = 'new york', pref_subjs = ['education, finance, economy, financial, scholarship, school'], num_pages = 5, num_events = 15):
+
+		'''
+		This method is called from user_data.py by a celery worker once the user
+		has reached the dashboard. Once the loading is finished, the user can visit the
+		events page and see his relevant events. This also puts the 'pts' field
+		or relevancy score through the sigmoid function, to map the small relevancy value
+		to a percent.
+
+		@param state : state of user
+		@param city : city of user
+		@param pref_subj : list of preferred subjects, used to find most relevant events
+		@param num_pages : how many pages to scrape events from Eventbrite from
+		@param num_events : how many of the top events do you want?
+		@return list of top n events that are sorted by relevancy
+		'''
 
 		sorted_events = Event.get_sorted_events(state = state, city = city, pref_subjs = pref_subjs, num_pages = num_pages)
 

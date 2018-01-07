@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from os import environ
 
-client = MongoClient("mongodb://iCitizen:icitizenapp1@ds135747.mlab.com:35747/icitizen")
+client = MongoClient("mongodb://127.0.0.1:27017")
 db = client['icitizen']
 
 

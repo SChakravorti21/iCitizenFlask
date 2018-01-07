@@ -20,7 +20,7 @@ function convertCamelToTitle(text) {
 
 
 var pollInterval;
-var count = 1;
+var poll_count = 1;
 var max_count_polls = (window.location.pathname === '/dashboard/') ? 3 : 20;
 var polls = null;
 
@@ -33,13 +33,14 @@ function fetchpolls() {
         type: "post",
         dataType: "json",
         success: function(response){
+            console.log(response)
             if(response != null){
                 polls = response;
                 var saved_polls = response['saved_polls'];
                 
                 polls = polls['user_polls']['contests'];
                 for (poll of polls) {
-                    if(count > max_count_polls)
+                    if(poll_count > max_count_polls)
                         break;
 
                     console.log('adding poll')
@@ -78,7 +79,7 @@ function fetchpolls() {
                         info += 'Referendum Subtitle: ' + poll['referendumSubtitle'];
                     }
 
-                    var detailsId = 'poll_' + count + '_info';
+                    var detailsId = 'poll_' + poll_count + '_info';
                     var details = '';
                     if(poll['candidates']) {
                         var candidates = poll['candidates'];
@@ -114,12 +115,12 @@ function fetchpolls() {
                     var saved = "saved=" + ( (poll['poll_id'] in saved_polls) ? "'true'" : "'false'");
                     var star = (saved === "saved='true'") ? solidStar : regularStar;
 
-                    $('.poll_'+count).html(`
+                    $('.poll_'+poll_count).html(`
                         <div class='card mb-4' style='box-shadow: -5px 5px rgba(120,144,156,0.3);'>
                             <div class='card-header clearfix d-inline-flex'>
                                 <h4 class='mr-auto'>`+ type +`</h4>
                                 <!-- data-count is used for saving and retrieving polls -->
-                                <div class='star-holder-poll' data-count='`+ count +`' ` + saved + `>
+                                <div class='star-holder-poll' data-count='`+ poll_count +`' ` + saved + `>
                                     ` + star + `
                                 </div>
                             </div>
@@ -139,7 +140,7 @@ function fetchpolls() {
                     );
                     $('#loader').html("");
                     $('#loader').attr('style', '');
-                    count++;
+                    poll_count++;
                 }
 
                 console.log("Poll interval has been cleared");

@@ -8,29 +8,36 @@ from iCitizenFlaskApp.models.legislator import Legislator
 from iCitizenFlaskApp.models.bill import Bill
 from iCitizenFlaskApp.models.event import Event as EventClass
 
-from iCitizenFlaskApp import celery_worker_bills, celery_worker_events, celery_worker_polls
+from iCitizenFlaskApp import celery_worker
+import os
 
 mod = Blueprint('data', __name__)
 
+#assigns tasks to celery workers
 def call_celery_task():
     username = session[QueryKeys.USERNAME]
+    query = {QueryKeys.USERNAME: username}
+    users = db['users']
+    user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_EVENTS : True}})
+    user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_POLLS : True}})
+    user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_BILLS : True}})
+    load_polls.delay(username)
     load_bills.delay(username)
     load_events.delay(username)
-    load_polls.delay(username)
     return "Work assigned to celery workers"
 
 
-@celery_worker_bills.task
+@celery_worker.task(ignore_result=True)
 def load_bills(username):
     print("started bills")
     update_bills(username)
 
-@celery_worker_events.task
+@celery_worker.task(ignore_result=True)
 def load_events(username):
     print("started events")
     update_events(username)
 
-@celery_worker_polls.task
+@celery_worker.task(ignore_result=True)
 def load_polls(username):
     print("started polls")
     update_polls(username)
@@ -130,7 +137,7 @@ def update_polls(username):
     users = db['users']
     user = users.find_one(query)
 
-    service = build('civicinfo', 'v2', developerKey='AIzaSyBPGcxWwvhkETJav0mjck4jF1lHRuKiQmc')
+    service = build('civicinfo', 'v2', developerKey=os.environ['GOOGLE_API_KEY'])
     elections = service.elections()
 
     location = user[QueryKeys.LOCATION]
@@ -156,5 +163,9 @@ def update_polls(username):
     users.find_one_and_update(query, {'$set': {'user_polls': info}})
 
     user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_POLLS : False}})
+    user = users.find_one(query)
+    if user[QueryKeys.UPDATE_POLLS] == False:
+        user = users.find_one_and_update(query, {'$set': {QueryKeys.UPDATE_DB : False,
+                                                            QueryKeys.IS_UPDATING: False}})
 
     return "Polls written to DB"

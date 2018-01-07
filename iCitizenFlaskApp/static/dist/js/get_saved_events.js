@@ -4,6 +4,11 @@ var event_count = 1;
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
 var solidStar =   "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
 
+/*
+calls fetch_saved_events from get_saved_data.py and receives a list of all
+saved event objects
+this method loops through the event list and dynamically updates the html on saved_events.html
+*/
 function fetchevents() {
     $.ajax({
         url: "/fetch-saved-events/",
@@ -84,6 +89,15 @@ $(document).ready(function(){
     eventInterval = setInterval(fetchevents, 2000);
 
     $('body').on('click', 'div.star-holder-event', function() {
+      /*
+      if the star is clicked and it was not already saved before, then a post request is
+      made to the url 'save-event' in user_functions.py. It passes the Event object
+      that corresponds to the div clicked.
+
+      If the star is clicked but was already saved, a post request is made to 'delete-saved-event'
+      in user_functions.py. It gives the ID of the event that corresponds to the div clicked
+      */
+
         var div = $(this);
         var index = $(this).attr('data-count');
         var event_id = div.attr('event_id')

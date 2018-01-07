@@ -111,17 +111,21 @@ def update_preferences():
 		subjects=[(str(subject).strip(), subject) for subject in SUBJECTS],
 		selected_subjects=topics, error=error)
 
+'''
+If a star button is clicked on the events page, it routes here
+Saved events is a dictionary with the key being the id (calculated from the hashcode of title)
+and the value being the event object itself
+The dictionary of saved events is updated in the database
 
+@param event object that is to be saved
+@return 'True' or 'False' depending on if the save was successful
+'''
 @mod.route('/save-event/', methods=['POST'])
 @is_logged_in
 def save_event():
 	event_to_save = request.get_json()
 
-	print('INSIDE SAVE EVENT === ', event_to_save)
-	print(event_to_save.keys())
-
 	event_id = event_to_save[QueryKeys.EVENT_ID]
-	print(event_id)
 
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}
 	users = db['users']
@@ -147,12 +151,18 @@ def save_event():
 
 	return 'True'
 
+'''
+If a star button is unclicked on the events page or saved events page, routes here
+deletes the value associated with the given key (event ID) in the database,  and updates
 
+@param event id that is to be deleted
+@return 'True' since the method is only called when the event is already saved,
+				so no chance of error
+'''
 @mod.route('/delete-saved-event/', methods=['POST'])
 @is_logged_in
 def delete_saved_event():
 	response = request.get_json()
-	print('RESPONSE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', response)
 	event_id = response[QueryKeys.EVENT_ID]
 
 	query = {QueryKeys.USERNAME: session[QueryKeys.USERNAME]}

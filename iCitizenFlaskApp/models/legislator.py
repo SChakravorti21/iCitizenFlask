@@ -1,6 +1,11 @@
+'''
+The Legislator class provides a standard template and format for legislator information to be used throughout the application
+'''
+
 import requests, json
 from congress import Congress as national
 from pygeocoder import Geocoder
+import os
 
 class Legislator(object):
 
@@ -44,14 +49,14 @@ class Legislator(object):
 
         legislators = []
         fullAddress = address + ", " + city + ", " + state + " " + zipcode
-        google_params = {"address": fullAddress, "includeOffices": True, "levels": "country", "roles": ["legislatorLowerBody","legislatorUpperBody"], "key": "AIzaSyBLns0lxH3J7iMYIMaWCUtOX5lwsKhdBd4"}
+        google_params = {"address": fullAddress, "includeOffices": True, "levels": "country", "roles": ["legislatorLowerBody","legislatorUpperBody"], "key": os.environ['GOOGLE_API_KEY']}
         google_response = requests.get(google_base+"representatives/", google_params)
         google_data = json.loads(google_response.text)
 
         offices = google_data['offices']
         districtId = offices[1]['divisionId'][36:]
         
-        national_params = {"X-API-Key": "Fl38VvBXk8EFlAmEcG4N0Wq1hi6YPnyzi5YODT9k"}
+        national_params = {"X-API-Key": os.environ['PROPUBLICA_API_KEY']}
         national_senate_response = requests.get(national_base+"members/senate/{}/current.json".format(state), headers=national_params)
 
         national_senate_data = json.loads(national_senate_response.text)
@@ -95,7 +100,7 @@ class Legislator(object):
             location = Geocoder.geocode(fullAddress)
             latitude = location.latitude
             longitude = location.longitude
-        state_params = {"lat": latitude, "long": longitude, "apikey": "70e23970-e0b4-409b-a7d2-3e34f6b88905"}
+        state_params = {"lat": latitude, "long": longitude, "apikey": os.environ['OPENSTATES_API_KEY']}
 
         state_legislative_response = requests.get(state_base+"legislators/geo/", state_params)
         state_legislative_data = json.loads(state_legislative_response.text)
