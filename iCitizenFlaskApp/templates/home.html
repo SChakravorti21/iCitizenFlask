@@ -2,11 +2,129 @@
 
 {% block body %}
 
-  <div class="container">
-    <div class="jumbotron text-center">
-      <h3>iCitizen</h3>
-      <p class="lead">An irl shitpost, brought to you by a turtle with a tranquilizer in its butt.</p>
-    </div>
-  </div>
+	<div class="overlay">
+		<h1>Become an iCitizen</h1>
+		<h4>Get involved with your government</h4>
+	</div>
+
+	<div class="container text-center">
+	  <div id="jumboCarousel" class="carousel slide" data-ride="carousel" data-wrap="true" data-interval="2000">
+	  	<ol class="carousel-indicators">
+	  		<li data-target="#jumboCarousel" data-slide-to="0" class="active"></li>
+	  		<li data-target="#jumboCarousel" data-slide-to="1"></li>
+	  		<li data-target="#jumboCarousel" data-slide-to="2"></li>
+	  		<li data-target="#jumboCarousel" data-slide-to="3"></li>
+	  	</ol>
+	  	<div class="carousel-inner" style=" width:100%; height: 32rem !important;">
+	  		<div class="carousel-item active" style="height: 100%">
+				<img class="d-block w-100" alt="First slide"
+				src="http://www.thesleuthjournal.com/wp-content/uploads/2017/02/government.jpg">
+			</div>
+			<div class="carousel-item" style="height: 100%">
+				<img class="d-block w-100" alt="Second slide"
+				src="https://askgramps.org/files/2016/10/We-the-people.jpg">
+			</div>
+			<div class="carousel-item" style="height: 100%">
+				<img class="d-block w-100" alt="Third slide"
+				src="https://cdn.static-economist.com/sites/default/files/20170610_BLP532_0.jpg">
+			</div>
+			<div class="carousel-item" style="height: 100%">
+				<img class="d-block w-100" alt="Fourth slide"
+				src="http://www.discovernavajo.com/uploads/images/Navajo%20Council%20Chambers(1).jpg">
+			</div>
+	  	</div>
+		<a class="carousel-control-prev" href="#jumboCarousel" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		</a>
+		<a class="carousel-control-next" href="#jumboCarousel" role="button" data-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		</a>
+	  </div>
+	</div>
+	<br>
+	
+	<div class="text-center page-heading">
+		<h2 class="page-heading text-white">Polls</h2>
+	</div>
+
+	<div class="container">
+		<div class="row info-row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<p class="lead">Go to the polls! Seriously though, voting responsibly allows you to
+				make a direct impact on your local and global surroudings. By voting for your preferred
+				legislators and answering questions on referendums, you can actively voice your opinions
+				and qualms about the state of government. We fetch poll information using the Google
+				Civic Information API to help you become aware of polls taking place near you. You can
+				save polls as well, allowing you to revisit just the ones that interest you.</p>
+			</div>
+		</div>
+	</div>
+
+	<div class='poll-image jumbo-image'>
+	</div>
+
+
+	<div class="text-center page-heading">
+		<h2 class="page-heading text-white">Events</h2>
+	</div>
+
+	<div class="container">
+		<div class="row info-row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<p class="lead">Attending political events is a great way to stay in touch
+				with the community and remain aware of pressing matters. We use machine learning
+				to aggregate events from Eventbrite that will be most relevant to you, taking out the hassle of
+				finding those events. You can even save events, so you can be sure never to
+				miss out on the ones that interest you the most.</p>
+			</div>
+		</div>
+	</div>
+
+	<div class='events-image jumbo-image'>
+	</div>
+
+	<div class="text-center page-heading">
+		<h2 class="page-heading text-white">Legislators</h2>
+	</div>
+
+	<div class="container">
+		<div class="row info-row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<p class="lead">Above all people, your national and state legislators make the
+				biggest impact on government. It can be difficult to find and stay on top of
+				what your legislators are up to. We make this task easier by finding and putting
+				all of your legislators in one place, providing you with avenues for contacting them
+				as well. <br>All legislator data is obtained from the Propublica and OpenStates APIs.</p>
+			</div>
+		</div>
+	</div>
+
+	<div class='legislators-image jumbo-image'>
+	</div>
+
+	<div class="text-center page-heading">
+		<h2 class="page-heading text-white">Bills</h2>
+	</div>
+
+	<div class="container">
+		<div class="row info-row">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<p class="lead">You might be curious as to what bills your legislators introduce
+				to make changes happen. This information is rather obscure for the layperson
+				and difficult to obtain, so we search for bills using the subjects you are interested in.
+				We make additional bill information easy for you to obtain, and you can also
+				save bills of interest to you. Don't stay in the dark! 
+				<br>All bill information is obtained from the Propublica and OpenStates APIs.</p>
+			</div>
+		</div>
+	</div>
+
+	<div class='bills-image jumbo-image'>
+	</div>
+
 
 {% endblock %}

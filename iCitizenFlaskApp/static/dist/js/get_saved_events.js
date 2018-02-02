@@ -1,5 +1,5 @@
 var eventInterval;
-var count = 1;
+var event_count = 1;
 
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
 var solidStar =   "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
@@ -16,7 +16,7 @@ function fetchevents() {
                 for (var key in saved_events) {
                   event = saved_events[key]
 
-                  if(count > 15) {
+                  if(event_count > 15) {
                     break;
                   }
 
@@ -43,7 +43,7 @@ function fetchevents() {
                                    <li class="list-group-item">` + event['location'] + `</li>
                                    <li class="list-group-item" style="background-color: #e5e6e8;">` + event['time'] + `</li>
                                    <li class="list-group-item">` + event['price'] + `</li>
-                                   <li class="list-group-item" style="background-color: #e5e6e8;">Relevance Score: ` + event['pts'] + `</li>
+                                   <li class="list-group-item" style="background-color: #e5e6e8;">Relevance Score: ` + event['pts'] + `%</li>
                                    <li class="list-group-item">
                                       <a class="btn btn-info" target="_blank" href="`+ event['link'] + `">More Info</a>
 
@@ -52,19 +52,19 @@ function fetchevents() {
                             </div>
                         </div>
                         <div class="card-footer">
-                            <div class='star-holder' event_id='` + key + `' data-count='`+ count +`' ` + saved + `>`
+                            <div class='star-holder-event' event_id='` + key + `' data-count='`+ event_count +`' ` + saved + `>`
                                 + star + `
-                      
+
                             </div>
                         </div>
                       </div> `
 
 
 
-                    $('#event_'+count).html(html);
+                    $('#event_'+event_count).html(html);
                     $('#loader').html("");
                     $('#loader').attr('style', '')
-                    count++;
+                    event_count++;
                 }
 
                 console.log("Event interval has been cleared");
@@ -83,7 +83,7 @@ function fetchevents() {
 $(document).ready(function(){
     eventInterval = setInterval(fetchevents, 2000);
 
-    $('body').on('click', 'div.star-holder', function() {
+    $('body').on('click', 'div.star-holder-event', function() {
         var div = $(this);
         var index = $(this).attr('data-count');
         var event_id = div.attr('event_id')

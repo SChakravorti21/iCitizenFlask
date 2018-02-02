@@ -4,7 +4,7 @@ from textblob import Word
 from textblob import TextBlob
 from textblob.wordnet import Synset
 import time
-
+import math
 
 
 
@@ -235,6 +235,14 @@ class Event:
 
 			for i in range(0, len(sorted_events) - num_events):
 				top_n.pop(-1)
+
+
+		e = 2.718281828459
+
+		for event in top_n:
+			score = 1/(1 + (e ** (-10 * event.pts))) * 100
+			stepper = pow(10.0, 2)
+			event.pts = math.trunc(stepper * score) / stepper
 
 		return top_n
 

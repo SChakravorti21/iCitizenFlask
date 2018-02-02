@@ -3,6 +3,7 @@ from iCitizenFlaskApp.celery_worker import make_celery
 import datetime
 
 app = Flask(__name__)
+app.secret_key = 'secret123'
 
 @app.before_request
 def before_request():

@@ -1,11 +1,49 @@
-.navbar {
-  margin-bottom: 1em;
+body {
+    background-color: rgb(247, 248, 243);
+}
+
+.navbar {  
+    margin-bottom: 1em;
+}
+
+.overlay { 
+    color:#fff;
+    position:absolute;
+    z-index:1;
+    top: 280px;
+    left:25%;
+    width:50%;
+    text-align:center;
+}
+
+.carousel {
+    border: solid 0.2em gray;
+    border-radius: 2em;
+    overflow: hidden;
+    background: gray;
+}
+
+.page-heading {
+    background: gray;
+    background-size: cover;
+    padding: 0.5em;
+}
+
+.footer {
+    padding-top: 1em;
+    padding-bottom: 0.5em;
+    background-color: gray;
+    color: rgba(247, 248, 243, 0.7);
+}
+
+p.lead {
+    margin-top: 1em;
 }
 
 a.font-awesome-link {
-		color: rgba(0, 0, 0, 1);
-    	text-decoration: none;
-	}
+	color: rgba(0, 0, 0, 1);
+	text-decoration: none;
+}
 
 a.font-awesome-link:hover {
 	color: rgba(0, 0, 0, 0.5); 
@@ -25,4 +63,32 @@ a.font-awesome-link:hover {
     -moz-animation: fa-tada 0.75s linear;
     -o-animation: fa-tada 0.75s linear;
     animation: fa-tada 0.75s linear;
+}
+
+.jumbo-image {
+    height: 75vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    border-top-style: solid;
+    border-color: gray;
+    border-width: 0.15em;
+    border-radius: 0;
+    margin-top: 1rem;
+}
+
+.poll-image {
+    background-image: url('http://riverhillcurrent.com/wp-content/uploads/2016/11/voting_colr.jpg');
+}
+
+.events-image {
+    background-image: url('http://ww1.hdnux.com/photos/62/22/70/13184556/3/920x920.jpg');
+}
+
+.legislators-image {
+    background-image: url('https://bloximages.newyork1.vip.townnews.com/postbulletin.com/content/tncms/assets/v3/editorial/b/65/b6539c3a-bbff-5650-b78a-e329185c0fa8/5888c3d1900db.image.jpg?resize=1200%2C776');
+}
+
+.bills-image {
+    background-image: url('https://static01.nyt.com/images/2017/12/21/opinion/21EDSALL1/21EDSALL1-master768.jpg');
 }

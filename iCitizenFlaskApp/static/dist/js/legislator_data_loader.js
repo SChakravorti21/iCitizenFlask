@@ -50,7 +50,7 @@ function fetchnationallegs() {
                             <div class='card-header clearfix d-inline-flex'>
                                 <h4 class='mr-auto'>` + legislator['last_name'] + ', ' + legislator['first_name'] + `</h4>
                                 <!-- data-count is used for saving and retrieving polls -->
-                                <div class='star-holder' level='national' data-count='`+ count +`' ` + saved + `>
+                                <div class='star-holder-legislator' level='national' data-count='`+ count +`' ` + saved + `>
                                     ` + star + `
                                 </div>
                             </div>
@@ -131,7 +131,7 @@ function fetchstatelegs() {
                             <div class='card-header clearfix d-inline-flex'>
                                 <h4 class='mr-auto'>` + legislator['last_name'] + ', ' + legislator['first_name'] + `</h4>
                                 <!-- data-count is used for saving and retrieving polls -->
-                                <div class='star-holder' level='state' data-count='`+ count +`' ` + saved + `>
+                                <div class='star-holder-legislator' level='state' data-count='`+ count +`' ` + saved + `>
                                     ` + star + `
                                 </div>
                             </div>
@@ -184,7 +184,7 @@ $(document).ready(function(){
     if( image_class === 'col-sm-3')
         stateInterval = setTimeout(fetchstatelegs, 1000);
 
-    $('body').on('click', 'div.star-holder', function() {
+    $('body').on('click', 'div.star-holder-legislator', function() {
         var div = $(this);
         var index = $(this).attr('data-count');
         console.log(state);

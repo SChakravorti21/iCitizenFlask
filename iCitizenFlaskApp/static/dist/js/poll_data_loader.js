@@ -119,7 +119,7 @@ function fetchpolls() {
                             <div class='card-header clearfix d-inline-flex'>
                                 <h4 class='mr-auto'>`+ type +`</h4>
                                 <!-- data-count is used for saving and retrieving polls -->
-                                <div class='star-holder' data-count='`+ count +`' ` + saved + `>
+                                <div class='star-holder-poll' data-count='`+ count +`' ` + saved + `>
                                     ` + star + `
                                 </div>
                             </div>
@@ -160,7 +160,7 @@ function fetchpolls() {
 $(document).ready(function(){
     pollInterval = setTimeout(fetchpolls, 1000);
 
-    $('body').on('click', 'div.star-holder', function() {
+    $('body').on('click', 'div.star-holder-poll', function() {
         var div = $(this);
         var index = $(this).attr('data-count');
         console.log('Sending: ');

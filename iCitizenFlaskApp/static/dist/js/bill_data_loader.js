@@ -1,10 +1,10 @@
-var nationalInterval, stateInterval;
+var nationalBillInterval, stateBillInterval;
 var nationalBills, stateBills;
 
 var regularStar = "<i style='color: tomato;' class='fa-2x far fa-star' data-fa-transform='shrink-7'></i>";
 var solidStar = "<i style='color: tomato;' class='fa-2x fas fa-star' data-fa-transform='shrink-7'></i>";
 
-var max_count = (window.location.pathname === '/dashboard/') ? 2 : 10;
+var max_count_bill = (window.location.pathname === '/dashboard/') ? 2 : 10;
 var isDash = (window.location.pathname === '/dashboard/')
 console.log(isDash)
 
@@ -19,7 +19,7 @@ function fetchnationalbills() {
                 nationalBills = response['national_bills'];
                 var savedBills = response['saved_national_bills'];
                 for (bill of nationalBills) {
-                    if(count > max_count)
+                    if(count > max_count_bill)
                         break;
 
                     var saved = "saved=" + ( (bill['bill_id'] in savedBills) ? "'true'" : "'false'");
@@ -70,7 +70,7 @@ function fetchnationalbills() {
                 }
 
                 console.log("National interval has been cleared")
-                clearTimeout(nationalInterval)
+                clearTimeout(nationalBillInterval)
             } else {
                 console.log("Still polling")
             }
@@ -89,11 +89,11 @@ function fetchstatebills() {
         dataType: "json",
         success: function(response){
             if(response != null){
-                var count = max_count + 1;
+                var count = max_count_bill + 1;
                 stateBills = response['state_bills'];
                 var savedBills = response['saved_state_bills'];
                 for (bill of stateBills) {
-                    if(count > max_count * 2)
+                    if(count > max_count_bill * 2)
                         break;
                     
                     var saved = "saved=" + ( (bill['bill_id'] in savedBills) ? "'true'" : "'false'");
@@ -119,7 +119,7 @@ function fetchstatebills() {
                         <div class="card mb-4" style="box-shadow: -5px 5px rgba(120,144,156,0.3);">
                             <div class="card-header clearfix d-inline-flex">` + 
                                 `<h4 class='mr-auto'>` + bill['level'].toUpperCase() + `</h4>
-                                <div class='star-holder' level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div>
+                                <div class='bill-star-holder' level="`+ bill['level'] + `" data-count='`+ count +`' ` + saved + `>` + star + `</div>
                             </div>
                             <div class="card-block">
                                 <h4 class="card-title" style="height:2.5rem; color:teal">Author: ` + bill['author'] + `</h4>
@@ -143,15 +143,11 @@ function fetchstatebills() {
                     $('#bill_'+count).html(html);
                     $('#loader').html("");
                     $('#loader').attr('style', '');
-                    if(isDash) {
-                        $('#dash_loader').html("");
-                        $('#dash_loader').attr('style', '');
-                    }
                     count++;
                 }
 
                 console.log("State interval has been cleared")
-                clearTimeout(stateInterval)
+                clearTimeout(stateBillInterval)
             } else {
                 console.log("Still polling")
             }
@@ -163,10 +159,10 @@ function fetchstatebills() {
     });
 }
 $(document).ready(function(){
-    nationalInterval = setInterval(fetchnationalbills, 1000);
-    stateInterval = setInterval(fetchstatebills, 1000);
+    nationalBillInterval = setInterval(fetchnationalbills, 1000);
+    stateBillInterval = setInterval(fetchstatebills, 1000);
 
-    $('body').on('click', 'div.star-holder', function() {
+    $('body').on('click', 'div.bill-star-holder', function() {
         var div = $(this);
         var level = $(this).attr('level');
         var index = $(this).attr('data-count');
@@ -216,7 +212,7 @@ $(document).ready(function(){
                     url: '/save-state-bill/',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(stateBills[index - 11]),
+                    data: JSON.stringify(stateBills[index - 1 - max_count_bill]),
                     success: function(data) {
                         if(data) {
                             console.log('Post successful. Result: ');
@@ -234,7 +230,7 @@ $(document).ready(function(){
                     url: '/delete-saved-state-bill/',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({'bill_id': stateBills[index - 11]['bill_id']}),
+                    data: JSON.stringify({'bill_id': stateBills[index - 1 - max_count_bill]['bill_id']}),
                     success: function(data) {
                         if(data) {
                             console.log('Post successful. Result: ');
