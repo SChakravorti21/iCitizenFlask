@@ -28,7 +28,7 @@ python-congress==0.3.5
 pytz==2017.3
 redis==2.10.6
 requests==2.18.4
-rsa==3.4.2
+rsa==4.7
 six==1.11.0
 textblob==0.15.0
 uritemplate==3.0.0
